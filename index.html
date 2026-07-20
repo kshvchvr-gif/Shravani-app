@@ -1019,12 +1019,12 @@ Generate a JSON chapter object. Return ONLY valid JSON (no markdown, no backtick
 
 RULES:
 - Generate 5-8 theory sections explaining key concepts in pure Hindi (Devanagari script only, no Roman/English words). Use proper Hindi terms. Keep scientific names in brackets if needed.
-- Generate 10-15 learn questions (mix of MCQ and fill-in-blank)
-- Generate 10-15 exercise questions (mix of MCQ and fill-in-blank)
+- Generate 10-15 learn questions (mix of MCQ and fill-in-blank) ALL in pure Hindi (Devanagari only)
+- Generate 10-15 exercise questions (mix of MCQ and fill-in-blank) ALL in pure Hindi (Devanagari only)
 - Questions should be age-appropriate for Class ${classLevel}
 - Make theory sections educational with examples
 - ALL text must be based on the extracted textbook content
-- Return ONLY the JSON object, nothing else`;
+- IMPORTANT: Every single word in theory, questions, and answers MUST be in Devanagari Hindi script. No English words anywhere.`;
 
   const systemPrompt='You are an expert Class '+classLevel+' '+getSubjectName(sub)+' teacher. You create study materials from textbook content. ALL content must be in pure Hindi (Devanagari script only). Always respond with valid JSON only.';
 
@@ -1388,40 +1388,76 @@ async function convertOldChapters(){
   if(!key){alert('Pehle Gemini API Key daalo!');return;}
   const btn=document.getElementById('convertBtn');const status=document.getElementById('convertStatus');
   btn.disabled=true;btn.textContent='⏳ Converting...';
-  const subIds=['science','maths','hindi','english','history','geography','civics','grammar'];
+
   let total=0,done=0;
-  for(const sid of subIds){
-    const chapters=getSubjectChapters(sid);
-    if(!chapters||!chapters.length)continue;
-    for(let i=0;i<chapters.length;i++){
-      const ch=chapters[i];
+
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!k||!k.startsWith('lh_sub_'))continue;
+    const subId=k.replace('lh_sub_','');
+    const data=getSubjectData(subId);
+    if(!data||!data.chapters||!data.chapters.length)continue;
+
+    for(let ci=0;ci<data.chapters.length;ci++){
+      const ch=data.chapters[ci];
       total++;
       try{
         let updated=false;
-        if(ch.theory&&ch.theory.sections){
-          for(let s=0;s<ch.theory.sections.length;s++){
-            const sec=ch.theory.sections[s];
-            const txt=sec.text||sec.content||'';
-            if(/[a-zA-Z]{3,}/.test(txt)){
-              const r=await callGemini('Convert this to pure Hindi (Devanagari script only). Keep the same meaning. Replace English words with proper Hindi equivalents. Only output the converted Hindi text:\n'+txt,'You are a Hindi transliterator. Convert English words to Devanagari Hindi. Keep scientific terms in brackets. Only output Hindi text.',500);
-              if(r&&r.trim().length>10){
-                if(sec.text)sec.text=r.trim();
-                else sec.content=r.trim();
-                updated=true;
+        const toConvert=[];
+
+        if(ch.theory){
+          if(ch.theory.title&&/[a-zA-Z]{3,}/.test(ch.theory.title))toConvert.push({obj:ch.theory,key:'title',val:ch.theory.title});
+          if(ch.theory.sections){
+            for(let s=0;s<ch.theory.sections.length;s++){
+              const sec=ch.theory.sections[s];
+              const txt=sec.text||sec.content||sec.description||'';
+              if(/[a-zA-Z]{3,}/.test(txt))toConvert.push({obj:sec,key:sec.text?'text':sec.content?'content':'description',val:txt});
+            }
+          }
+          if(ch.theory.text&&/[a-zA-Z]{3,}/.test(ch.theory.text))toConvert.push({obj:ch.theory,key:'text',val:ch.theory.text});
+        }
+
+        if(ch.name&&/[a-zA-Z]{3,}/.test(ch.name))toConvert.push({obj:ch,key:'name',val:ch.name});
+        if(ch.label&&/[a-zA-Z]{3,}/.test(ch.label))toConvert.push({obj:ch,key:'label',val:ch.label});
+
+        const qFields=['learn','exercise'];
+        for(const field of qFields){
+          if(ch[field]&&Array.isArray(ch[field])){
+            for(let qi=0;qi<ch[field].length;qi++){
+              const q=ch[field][qi];
+              if(q.q&&/[a-zA-Z]{3,}/.test(q.q))toConvert.push({obj:q,key:'q',val:q.q});
+              if(Array.isArray(q.o)){
+                for(let oi=0;oi<q.o.length;oi++){
+                  if(/[a-zA-Z]{3,}/.test(q.o[oi]))toConvert.push({obj:q.o,key:oi,val:q.o[oi]});
+                }
+              }
+              if(q.answer&&/[a-zA-Z]{3,}/.test(q.answer))toConvert.push({obj:q,key:'answer',val:q.answer});
+              if(q.display&&/[a-zA-Z]{3,}/.test(q.display))toConvert.push({obj:q,key:'display',val:q.display});
+            }
+          }
+        }
+
+        const batchText=toConvert.map((t,idx)=>`[${idx}]: ${t.val}`).join('\n');
+        if(batchText.length>5){
+          const r=await callGemini('Convert each line to pure Hindi (Devanagari script only). Replace all English words with Hindi equivalents. Keep meaning same. Return ONLY converted lines in same format [0]: text [1]: text etc:\n'+batchText,'You convert Hinglish/English to pure Devanagari Hindi. Output format must match input. Example: [0]: My name is Shravani → [0]: मेरा नाम श्रावणी है',2000);
+          if(r){
+            const lines=r.split(/\n/).filter(l=>l.trim());
+            for(const line of lines){
+              const m=line.match(/^\[(\d+)\]:\s*(.+)/);
+              if(m){
+                const idx=parseInt(m[1]);const val=m[2].trim();
+                if(idx<toConvert.length&&val.length>1){
+                  toConvert[idx].obj[toConvert[idx].key]=toConvert[idx].key===parseInt(toConvert[idx].key)?val:val;
+                  updated=true;
+                }
               }
             }
           }
         }
-        if(ch.theory&&ch.theory.title){
-          const t=ch.theory.title;
-          if(/[a-zA-Z]{3,}/.test(t)){
-            const r=await callGemini('Convert to pure Hindi Devanagari: '+t,'Only output Hindi text.',100);
-            if(r&&r.trim().length>2){ch.theory.title=r.trim();updated=true;}
-          }
-        }
+
         if(updated){
-          chapters[i]=ch;
-          saveSubjectChapters(sid,chapters);
+          data.chapters[ci]=ch;
+          saveSubjectData(subId,data);
         }
         done++;
         status.textContent=`✅ ${done}/${total} chapters converted`;
@@ -1429,7 +1465,7 @@ async function convertOldChapters(){
     }
   }
   btn.disabled=false;btn.textContent='🔄 Convert All Chapters';
-  status.textContent=`✅ Done! ${done} chapters processed. Purane chapters ab Hindi me hain.`;
+  status.textContent=`✅ Done! ${done} chapters processed.`;
 }
 
 // ══════════════════════════════════════
