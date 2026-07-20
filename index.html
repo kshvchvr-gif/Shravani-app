@@ -516,50 +516,12 @@ if(window.speechSynthesis){window.speechSynthesis.onvoiceschanged=initVoices;ini
 
 let _ttsAudio=null;
 const BHASHINI_TTS="https://bhashini-tts-proxy.shravani-tts.workers.dev";
-
-const HI_DICT={
-"photosynthesis":"प्रकाश संश्लेषण","chlorophyll":"क्लोरोफिल","mitochondria":"माइटोकॉन्ड्रिया","nucleus":"केंद्रक","cytoplasm":"साइटोप्लाज़्म","cell":"कोशिका","atom":"परमाणु","molecule":"अणु","electron":"इलेक्ट्रॉन","proton":"प्रोटॉन","neutron":"न्यूट्रॉन","gravity":"गुरुत्वाकर्षण","velocity":"वेग","acceleration":"त्वरण","friction":"घर्षण","energy":"ऊर्जा","force":"बल","mass":"द्रव्यमान","temperature":"तापमान","evaporation":"वाष्पीकरण","condensation":"संघनन","precipitation":"वर्षा","erosion":"अपरदana","weathering":"अपक्षय","volcanic":"ज्वालामुखी","earthquake":"भूकंप","ecosystem":"पारिस्थितिकी तंत्र","organism":"जीव","bacteria":"जीवाणु","virus":"विषाणु","protein":"प्रोटीन","carbon":"कार्बन","oxygen":"ऑक्सीजन","hydrogen":"हाइड्रोजन","nitrogen":"नाइट्रोजन","compound":"यौगिक","solution":"विलयन","acid":"अम्ल","base":"क्षार","reaction":"अभिक्रिया","history":"इतिहास","geography":"भूगोल","science":"विज्ञान","mathematics":"गणित","literature":"साहित्य","philosophy":"दर्शन","democracy":"लोकतंत्र","government":"सरकार","economy":"अर्थव्यवस्था","society":"समाज","culture":"संस्कृति","independence":"स्वतंत्रता","revolution":"क्रांति","constitution":"संविधान","republic":"गणराज्य","population":"जनसंख्या","agriculture":"कृषि","industry":"उद्योग","technology":"प्रौद्योगिकी","education":"शिक्षा","environment":"पर्यावरण","pollution":"प्रदूषण","forest":"वन","mountain":"पर्वत","river":"नदी","ocean":"महासागर","continent":"महाद्वीप","renewable":"नवीकरणीय","fossil":"जीवाश्म","combustion":"दहन","oxidation":"ऑक्सीकरण","reduction":"अपचयन","velocity":"वेइ�","acceleration":"त्वरण","frequency":"आवृत्ति","wavelength":"तरंगदैर्घ्य","spectrum":"वर्णक्रम","optics":"प्रकाशिकी","magnetism":"चुंबकत्व","electricity":"विद्युत","circuit":"सर्किट","voltage":"वोल्टता","current":"धारा","resistance":"प्रतिरोध","newton":"न्यूटन","einstein":"आइंस्टीन","galileo":"गैलीलियो","pythagoras":"पाइथागोरस","algorithm":"एल्गोरिदम","function":"फलन","variable":"चर","equation":"समीकरण","triangle":"त्रिभुज","rectangle":"आयत","circle":"वृत्त","area":"क्षेत्रफल","perimeter":"परिमाप","volume":"आयतन","fraction":"भिन्न","decimal":"दशमलव","percent":"प्रतिशत","average":"औसत","ratio":"अनुपात","probability":"संभावना","statistics":"सांख्यिकी","cell":"कोशिका","tissue":"ऊतक","organ":"अंग","system":"तंत्र","digestion":"पाचन","circulation":"संचरण","respiration":"श्वसन","reproduction":"प्रजनन","evolution":"विकास","genetics":"आनुवंशिकी","chromosome":"गुणसूत्र","DNA":"डीएनए","gene":"जीन","mutation":"उत्परिवर्तन","species":"प्रजाति","habitat":"आवास","predator":"शिकारी","prey":"शिकार","symbiosis":"सहजीवन","parasite":"परजीवी","antibiotic":"प्रतिजैविक","vaccine":"टीका","immunity":"प्रतिरक्षा","disease":"रोग","symptom":"लक्षण","diagnosis":"निदान","therapy":"चिकित्सा","surgery":"शल्य चिकित्सा","hormone":"हार्मोन","enzyme":"एंजाइम","metabolism":"चयापचय","vitamin":"विटामिन","mineral":"खनिज","protein":"प्रोटीन","carbohydrate":"कार्बोहाइड्रेट","fat":"वसा","fiber":"फाइबर","calorie":"कैलोरी","nutrient":"पोषक","diet":"आहार","deficiency":"कमी","anemia":"रक्तअल्पता","diabetes":"मधुमेह","asthma":"दमा","hypertension":"उच्च रक्तचाप","cholesterol":"कोलेस्ट्रॉल","insulin":"इंसुलिन","glucose":"ग्लूकोज","plasma":"प्लाज़्मा","antibody":"एंटीबॉडी","antigen":"एंटीजन","chromosome":"गुणसूتر","enzyme":"एंज़ाइम","pathogen":"रोगाणु","virus":"वाइरस","bacteria":"बैक्टीरिया","fungal":"कवक","parasite":"परजीवी","microscope":"सूक्ष्मदर्शी","specimen":"नमूना","hypothesis":"परिकल्पना","experiment":"प्रयोग","conclusion":"निष्कर्ष","theory":"सिद्धांत","research":"अनुसंधान","laboratory":"प्रयोगशाला","journal":"पत्रिका","hypothesis":"परिकल्पना","observation":"अवलोकन","variable":"परिवर्ती","control":"नियंत्रण","data":"आंकड़े","graph":"रेखाचित्र","chart":"चार्ट","table":"तालिका","diagram":"चित्र","figure":"आकृति","equation":"समीकरण","formula":"सूत्र","theorem":"प्रमेय","proof":"उपपत्ति","axiom":"अभिगृहीत","postulate":"अभिधारणा","corollary":"अनुम्न","lemma":"उपप्रमेय"
-};
-
-function hasEnglishWords(t){return/[a-zA-Z]{2,}/.test(t);}
-
-function dictReplace(t){
-  const words=t.split(/(\s+)/);
-  return words.map(w=>{
-    if(/^[a-zA-Z]+$/.test(w)){
-      const low=w.toLowerCase();
-      if(HI_DICT[low])return HI_DICT[low];
-      let h='';for(let i=0;i<low.length;i++){
-        const c=low[i];
-        const map={'a':'अ','b':'ब','c':'क','d':'द','e':'ए','f':'फ','g':'ग','h':'ह','i':'इ','j':'ज','k':'क','l':'ल','m':'म','n':'न','o':'ओ','p':'प','q':'क','r':'र','s':'स','t':'ट','u':'उ','v':'व','w':'व','x':'क्स','y':'य','z':'ज़'};
-        h+=(map[c]||c);
-      }
-      return h;
-    }
-    return w;
-  }).join('');
-}
-
-async function pureHindi(text){
-  if(!hasEnglishWords(text))return text;
-  const replaced=dictReplace(text);
-  if(!hasEnglishWords(replaced))return replaced;
-  const key=getGeminiKey();
-  if(!key)return replaced;
-  try{
-    const r=await callGemini('Is Hindi text mein jo English words hain unhe proper Hindi/Devanagari mein badal do. Sirf words translate karo, meaning mat badlo. Pure Hindi mein likho: '+text,'Tum ek Hindi translator ho. English words ko Hindi mein badlo. Example: "Newton ka law" → "न्यूटन का नियम". Sirf converted Hindi text do, kuch mat explanation do.',100);
-    if(r&&r.trim().length>5)return r.trim();
-  }catch(e){}
-  return replaced;
-}
-
 function speakServer(text,langCode){
   return new Promise(async(resolve)=>{
     if(_ttsAudio){_ttsAudio.pause();_ttsAudio=null;}
     try{
-      const finalText=langCode==='hi'?await pureHindi(text):text;
       showStopBtn();
-      const res=await fetch(BHASHINI_TTS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:finalText.substring(0,5000),language:langCode==='hi'?'Hindi':'English',voiceName:'Female2'})});
+      const res=await fetch(BHASHINI_TTS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.substring(0,5000),language:langCode==='hi'?'Hindi':'English',voiceName:'Female2'})});
       if(!res.ok){speakFallback(text,langCode);resolve();return;}
       const blob=await res.blob();
       const url=URL.createObjectURL(blob);
