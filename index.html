@@ -1012,7 +1012,7 @@ Generate a JSON chapter object. Return ONLY valid JSON (no markdown, no backtick
 }
 
 RULES:
-- Generate 5-8 theory sections explaining key concepts in simple Hindi-English mixed language
+- Generate 5-8 theory sections explaining key concepts in pure Hindi (Devanagari script only, no Roman/English words). Use proper Hindi terms. Keep scientific names in brackets if needed.
 - Generate 10-15 learn questions (mix of MCQ and fill-in-blank)
 - Generate 10-15 exercise questions (mix of MCQ and fill-in-blank)
 - Questions should be age-appropriate for Class ${classLevel}
@@ -1020,7 +1020,7 @@ RULES:
 - ALL text must be based on the extracted textbook content
 - Return ONLY the JSON object, nothing else`;
 
-  const systemPrompt='You are an expert Class '+classLevel+' '+getSubjectName(sub)+' teacher. You create study materials from textbook content. Always respond with valid JSON only.';
+  const systemPrompt='You are an expert Class '+classLevel+' '+getSubjectName(sub)+' teacher. You create study materials from textbook content. ALL content must be in pure Hindi (Devanagari script only). Always respond with valid JSON only.';
 
   const genResult=await callGemini(genPrompt,systemPrompt,6000);
   if(!genResult){
@@ -1280,8 +1280,8 @@ async function triggerExplain(){
 Chapter: ${ch?ch.name:''}
 सवाल: "${currentQ.q}"
 सही जवाब: "${ans}"
-बच्चे को आसान हिंदी में समझाओ। 5-6 वाक्य। एक emoji। सीधे concept समझाओ।`;
-  const reply=await callGemini(prompt,'तुम अनुभवी Teacher हो। हिंदी में पढ़ाती हो।',1024);
+बच्चे को सिर्फ देवनागरी हिंदी में समझाओ। अंग्रेज़ी शब्दों की जगह हिंदी शब्द लिखो। 5-6 वाक्य। एक emoji। सीधे concept समझाओ।`;
+  const reply=await callGemini(prompt,'तुम अनुभवी Teacher हो। सिर्फ देवनागरी हिंदी में पढ़ाती हो।',1024);
   const text=reply||'सही जवाब है: '+ans+'। इसे याद रखो! 📖✨';
   loading.style.display='none';textDiv.textContent=text;textDiv.classList.remove('hidden');speakRow.classList.remove('hidden');
   document.getElementById('aiSpeakBtn').onclick=()=>speakHI(text);speakHI(text);
@@ -1294,8 +1294,8 @@ async function triggerConfused(){
   const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
   const ans=currentQ.a||currentQ.answer||'';
   const prompt=`बच्चे को यह सवाल समझ नहीं आया: "${currentQ.q}" सही जवाब: "${ans}"
-बहुत आसान हिंदी में, एक और मजेदार example देकर समझाओ। छोटे वाक्य। emoji।`;
-  const reply=await callGemini(prompt,'धैर्यवान Teacher। बच्चा confuse है।',1024);
+सिर्फ देवनागरी हिंदी में, बहुत आसान शब्दों में, एक और मजेदार example देकर समझाओ। अंग्रेज़ी शब्दों की जगह हिंदी शब्द लिखो। छोटे वाक्य। emoji।`;
+  const reply=await callGemini(prompt,'धैर्यवान Teacher। बच्चा confuse है। सिर्फ देवनागरी हिंदी में बोलो।',1024);
   const text=reply||'कोई बात नहीं! याद रखो: '+ans+'। 💪📖';
   loading.style.display='none';textDiv.textContent=text;textDiv.classList.remove('hidden');speakRow.classList.remove('hidden');
   document.getElementById('aiSpeakBtn').onclick=()=>speakHI(text);speakHI(text);
@@ -1357,7 +1357,7 @@ async function sendQuestion(){
   addBubble(q,'user');chatHistory.push({role:'user',content:q});const loadId=addLoadingBubble();
   const sub=SUBJECTS.find(s=>s.id===curSubjectId);const name=localStorage.getItem('lh_name')||'Student';
   const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
-  const sys='तुम प्यारी Teacher हो। '+name+' '+((sub?getSubjectName(sub):'')+(ch?' — '+ch.name:''))+' पढ़ रहा/रही है। हिंदी में जवाब दो। 2-3 वाक्य। emoji।';
+  const sys='तुम प्यारी Teacher हो। '+name+' '+((sub?getSubjectName(sub):'')+(ch?' — '+ch.name:''))+' पढ़ रहा/रही है। सिर्फ हिंदी (देवनागरी लिपि) में जवाब दो। अंग्रेज़ी शब्दों की जगह हिंदी शब्द इस्तेमाल करो। 2-3 वाक्य। emoji।';
   const prompt=chatHistory.map(m=>(m.role==='user'?name+': ':'Teacher: ')+m.content).join('\n')+'\nTeacher:';
   const reply=await callGemini(prompt,sys,1024);
   removeLoadingBubble(loadId);
