@@ -516,12 +516,49 @@ if(window.speechSynthesis){window.speechSynthesis.onvoiceschanged=initVoices;ini
 
 let _ttsAudio=null;
 const BHASHINI_TTS="https://bhashini-tts-proxy.shravani-tts.workers.dev";
+
+function isHindiText(t){
+  const deva=(t.match(/[\u0900-\u097F]/g)||[]).length;
+  const eng=(t.match(/[a-zA-Z]/g)||[]).length;
+  if(eng===0)return true;
+  return deva/(deva+eng)>=0.3;
+}
+
+const EDICT={
+"photosynthesis":"प्रकाश संश्लेषण","chlorophyll":"क्लोरोफिल","mitochondria":"माइटोकॉन्ड्रिया","nucleus":"केंद्रक","cytoplasm":"साइटोप्लाज़्म","atom":"परमाणु","molecule":"अणु","electron":"इलेक्ट्रॉन","proton":"प्रोटॉन","neutron":"न्यूट्रॉन","gravity":"गुरुत्व","friction":"घर्षण","energy":"ऊर्जा","force":"बल","mass":"द्रव्यमान","temperature":"तापमान","evaporation":"वाष्पीकरण","condensation":"संघनन","precipitation":"वर्षा","erosion":"अपरदन","volcanic":"ज्वालामुखी","earthquake":"भूकंप","ecosystem":"पारिस्थितिकी तंत्र","organism":"जीव","bacteria":"जीवाणु","virus":"विषाणु","protein":"प्रोटीन","carbon":"कार्बन","oxygen":"ऑक्सीजन","hydrogen":"हाइड्रोजन","nitrogen":"नाइट्रोजन","compound":"यौगिक","solution":"विलयन","acid":"अम्ल","base":"क्षार","reaction":"अभिक्रिया","history":"इतिहास","geography":"भूगोल","science":"विज्ञान","mathematics":"गणित","literature":"साहित्य","philosophy":"दर्शन","democracy":"लोकतंत्र","government":"सरकार","economy":"अर्थव्यवस्था","society":"समाज","culture":"संस्कृति","independence":"स्वतंत्रता","revolution":"क्रांति","constitution":"संविधान","republic":"गणराज्य","population":"जनसंख्या","agriculture":"कृषि","industry":"उद्योग","technology":"प्रौद्योगिकी","education":"शिक्षा","environment":"पर्यावरण","pollution":"प्रदूषण","forest":"वन","mountain":"पर्वत","river":"नदी","ocean":"महासागर","continent":"महाद्वीप","renewable":"नवीकरणीय","fossil":"जीवाश्म","combustion":"दहन","oxidation":"ऑक्सीकरण","frequency":"आवृत्ति","wavelength":"तरंगदैर्घ्य","spectrum":"वर्णक्रम","electricity":"विद्युत","circuit":"सर्किट","voltage":"वोल्टता","current":"धारा","resistance":"प्रतिरोध","algorithm":"एल्गोरिदम","equation":"समीकरण","triangle":"त्रिभुज","rectangle":"आयत","circle":"वृत्त","area":"क्षेत्रफल","perimeter":"परिमाप","volume":"आयतन","fraction":"भिन्न","decimal":"दशमलव","percent":"प्रतिशत","average":"औसत","ratio":"अनुपात","probability":"संभावना","statistics":"सांख्यिकी","tissue":"ऊतक","organ":"अंग","system":"तंत्र","digestion":"पाचन","circulation":"संचरण","respiration":"श्वसन","reproduction":"प्रजनन","evolution":"विकास","genetics":"आनुवंशिकी","chromosome":"गुणसूत्र","gene":"जीन","mutation":"उत्परिवर्तन","species":"प्रजाति","habitat":"आवास","symbiosis":"सहजीवन","antibiotic":"प्रतिजैविक","vaccine":"टीका","immunity":"प्रतिरक्षा","disease":"रोग","symptom":"लक्षण","diagnosis":"निदान","therapy":"चिकित्सा","hormone":"हार्मोन","enzyme":"एंजाइम","metabolism":"चयापचय","vitamin":"विटामिन","mineral":"खनिज","carbohydrate":"कार्बोहाइड्रेट","calorie":"कैलोरी","microscope":"सूक्ष्मदर्शी","hypothesis":"परिकल्पना","experiment":"प्रयोग","conclusion":"निष्कर्ष","theory":"सिद्धांत","research":"अनुसंधान","laboratory":"प्रयोगशाला","observation":"अवलोकन","data":"आंकड़े","graph":"रेखाचित्र","formula":"सूत्र","theorem":"प्रमेय","velocity":"वेग","acceleration":"त्वरण","momentum":"संवेग","inertia":"जड़त्व","displacement":"विस्थापन","distance":"दूरी","displacement":"विस्थापन","optics":"प्रकाशिकी","magnetism":"चुंबकत्व","nucleus":"केंद्रक","electron":"इलेक्ट्रॉन","proton":"प्रोटॉन","neutron":"न्यूट्रॉन","isotope":"समस्थानिक","valency":"संयोजकता","atomic":"परमाणु","molecular":"अणु","density":"घनत्व","pressure":"दाब","boiling":"उबाल","melting":"गलन","sublimation":"उत्सर्जन","absorption":"अवशोषण","reflection":"परावर्तन","refraction":"अपवर्तन","diffraction":"विवर्तन","interference":"अंतर्व्यतिकरण","amplitude":"आयाम","frequency":"आवृत्ति","wavelength":"तरंगदैर्घ्य","velocity":"वेइ","acceleration":"त्वरण","deceleration":"मंदन","centripetal":"अभिकेंद्रीय","centrifugal":"अपकेंद्रीय","potential":"संभावित","kinetic":"गतिज","friction":"घर्षण","viscosity":"श्यानता","tension":"तनाव","elasticity":"लोच","buoyancy":"उत्प्लावन","thermodynamics":"ऊष्मागतिकी","entropy":"एंट्रॉपी","conductor":"वाहक","insulator":"अविद्युत वाहक","semiconductor":"अर्द्धवाहक","transistor":"ट्रांजिस्टर","capacitor":"संधारित्र","inductor":"प्रेरक","amplifier":"प्रवर्धक","oscillator":"दोलक","diode":"द्विध्रुव","resistor":"प्रतिरोधक","generator":"जनित्र","motor":"मोटर","transformer":"ट्रांसफॉर्मर","battery":"बैटरी","circuit":"सर्किट","voltage":"वोल्टता","current":"धारा","resistance":"प्रतिरोध","ohm":"ओम","watt":"वॉट","joule":"जूल","newton":"न्यूटन","pascal":"पास्कल","hertz":"हर्ट्ज","coulomb":"कूलॉम","farad":"फॉरेड","henry":"हेनरी","tesla":"टेस्ला","weber":"वेबर","lumen":"ल्यूमेन","lux":"लक्स","becquerel":"बेकरेल","gray":"ग्रे","sievert":"सीवर्ट","katal":"कैटल",
+"newton":"न्यूटन","einstein":"आइंस्टीन","galileo":"गैलीलियо","pythagoras":"पाइथागोरस",
+"cell":"कोशिका","process":"प्रक्रिया","product":"उत्पाद","property":"गुण","matter":"पदार्थ"," substance":"पदार्थ","liquid":"द्रव","solid":"ठोस","gas":"गैस","plasma":"प्लाज़्मा",
+"photosynthesis":"प्रकाश संश्लेषण","respiration":"श्वसन","digestion":"पाचन","excretion":"उत्सर्जन",
+"noun":"संज्ञा","verb":"क्रिया","adjective":"विशेषण","adverb":"क्रिया विशेषण","preposition":"संबंधबोधक",
+"chapter":"अध्याय","subject":"विषय","question":"प्रश्न","answer":"उत्तर","exam":"परीक्षा","mark":"अंक","grade":"श्रेणी","pass":"उत्तीर्ण","fail":"अनुत्तीर्ण",
+"earth":"पृथ्वी","sun":"सूर्य","moon":"चंद्रमा","star":"तारा","planet":"ग्रह","satellite":"उपग्रह","orbit":"कक्षा","gravity":"गुरुत्वाकर्षण","solar":"सौर","galaxy":"आकाशगंगा","universe":"ब्रह्मांड",
+"wheel":"पहिया","lever":"शक्ति यंत्र","pulley":"चरखा","machine":"यंत्र",
+"number":"संख्या","addition":"जोड़","subtraction":"घटाव","multiplication":"गुणा","division":"भाग",
+"commerce":"वाणिज्य","trade":"व्यापार","transport":"परिवहन","communication":"संचार","occupation":"व्यवसाय",
+"noun":"संज्ञा","verb":"क्रिया","pronoun":"सर्वनाम","conjunction":"संयोजक","interjection":"विस्मयादिबोधक"
+};
+
+function toHindiScript(t){
+  return t.replace(/\b([a-zA-Z]+)\b/g,(match,w)=>{
+    const low=w.toLowerCase();
+    if(EDICT[low])return EDICT[low];
+    return w;
+  });
+}
+
+function detectAndSpeak(text,langCode){
+  if(langCode!=='hi')return{text,lang:'English'};
+  if(!isHindiText(text))return{text,lang:'English'};
+  return{text:toHindiScript(text),lang:'Hindi'};
+}
+
 function speakServer(text,langCode){
   return new Promise(async(resolve)=>{
     if(_ttsAudio){_ttsAudio.pause();_ttsAudio=null;}
     try{
+      const{text:finalText,lang:bhashLang}=detectAndSpeak(text,langCode);
       showStopBtn();
-      const res=await fetch(BHASHINI_TTS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.substring(0,5000),language:langCode==='hi'?'Hindi':'English',voiceName:'Female2'})});
+      const res=await fetch(BHASHINI_TTS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:finalText.substring(0,5000),language:bhashLang,voiceName:'Female2'})});
       if(!res.ok){speakFallback(text,langCode);resolve();return;}
       const blob=await res.blob();
       const url=URL.createObjectURL(blob);
