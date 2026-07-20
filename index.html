@@ -538,35 +538,66 @@ const EDICT={
 "noun":"संज्ञा","verb":"क्रिया","pronoun":"सर्वनाम","conjunction":"संयोजक","interjection":"विस्मयादिबोधक"
 };
 
-function toHindiScript(t){
-  return t.replace(/\b([a-zA-Z]+)\b/g,(match,w)=>{
-    const low=w.toLowerCase();
-    if(EDICT[low])return EDICT[low];
-    return w;
+function splitSegments(text){
+  const segs=[];let cur='';let curType=null;
+  for(const ch of text){
+    const isD=/[\u0900-\u097F]/.test(ch);
+    const isE=/[a-zA-Z]/.test(ch);
+    const type=isD?'hi':isE?'en':null;
+    if(type===curType||(type===null&&curType)){cur+=ch;}
+    else{
+      if(cur)segs.push({text:cur,lang:curType});
+      cur=ch;curType=type;
+    }
+  }
+  if(cur)segs.push({text:cur,lang:curType});
+  return segs;
+}
+
+function replaceDictInHindi(segs){
+  return segs.map(s=>{
+    if(s.lang!=='hi')return s;
+    const replaced=s.text.replace(/\b([a-zA-Z]{2,})\b/g,(m,w)=>{
+      return EDICT[w.toLowerCase()]||w;
+    });
+    return{text:replaced,lang:'hi'};
   });
 }
 
-function detectAndSpeak(text,langCode){
-  if(langCode!=='hi')return{text,lang:'English'};
-  if(!isHindiText(text))return{text,lang:'English'};
-  return{text:toHindiScript(text),lang:'Hindi'};
+async function bhashiniSpeak(text,lang){
+  return new Promise(async(resolve)=>{
+    try{
+      const res=await fetch(BHASHINI_TTS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text.substring(0,5000),language:lang==='hi'?'Hindi':'English',voiceName:'Female2'})});
+      if(!res.ok){resolve();return;}
+      const blob=await res.blob();
+      const url=URL.createObjectURL(blob);
+      const audio=new Audio(url);
+      audio.onended=()=>{URL.revokeObjectURL(url);resolve();};
+      audio.onerror=()=>{URL.revokeObjectURL(url);resolve();};
+      audio.play();
+    }catch(e){resolve();}
+  });
 }
 
 function speakServer(text,langCode){
   return new Promise(async(resolve)=>{
-    if(_ttsAudio){_ttsAudio.pause();_ttsAudio=null;}
-    try{
-      const{text:finalText,lang:bhashLang}=detectAndSpeak(text,langCode);
-      showStopBtn();
-      const res=await fetch(BHASHINI_TTS,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:finalText.substring(0,5000),language:bhashLang,voiceName:'Female2'})});
-      if(!res.ok){speakFallback(text,langCode);resolve();return;}
-      const blob=await res.blob();
-      const url=URL.createObjectURL(blob);
-      _ttsAudio=new Audio(url);
-      _ttsAudio.onended=()=>{hideStopBtn();URL.revokeObjectURL(url);_ttsAudio=null;resolve();};
-      _ttsAudio.onerror=()=>{hideStopBtn();URL.revokeObjectURL(url);_ttsAudio=null;resolve();};
-      _ttsAudio.play();
-    }catch(e){speakFallback(text,langCode);resolve();}
+    if(window.speechSynthesis)window.speechSynthesis.cancel();
+    showStopBtn();
+    if(langCode!=='hi'){
+      await bhashiniSpeak(text,'en');
+      hideStopBtn();resolve();return;
+    }
+    if(!isHindiText(text)){
+      await bhashiniSpeak(text,'en');
+      hideStopBtn();resolve();return;
+    }
+    let segs=splitSegments(text);
+    segs=replaceDictInHindi(segs);
+    for(const seg of segs){
+      if(!seg.text.trim())continue;
+      await bhashiniSpeak(seg.text,seg.lang==='en'?'en':'hi');
+    }
+    hideStopBtn();resolve();
   });
 }
 function speakFallback(t,r=.92){
