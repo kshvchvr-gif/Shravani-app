@@ -453,6 +453,12 @@ img{max-width:100%}
     </div>
     <div style="font-family:'Hind',sans-serif;font-size:.75rem;color:#7B7A9A;margin-bottom:14px">Free API key 👉 <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#C77DFF">Google AI Studio</a></div>
 
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-bottom:4px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📝 Convert Old Chapters to Hindi</div>
+      <div id="convertStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-bottom:8px">Purane Hinglish chapters ko pure Hindi me convert karega</div>
+      <button onclick="convertOldChapters()" id="convertBtn" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer;width:100%">🔄 Convert All Chapters</button>
+    </div>
+
     <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
       <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">🔄 WiFi Sync (Laptop ↔ Phone)</div>
       <div id="syncStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-bottom:8px">Checking connection...</div>
@@ -1375,6 +1381,55 @@ function showSettingsModal(){
   document.getElementById('settingsModal').classList.remove('hidden');
   const k=localStorage.getItem('gemini_key');if(k)document.getElementById('apiKeyInput').value=k;
   checkSync();
+}
+
+async function convertOldChapters(){
+  const key=getGeminiKey();
+  if(!key){alert('Pehle Gemini API Key daalo!');return;}
+  const btn=document.getElementById('convertBtn');const status=document.getElementById('convertStatus');
+  btn.disabled=true;btn.textContent='⏳ Converting...';
+  const subIds=['science','maths','hindi','english','history','geography','civics','grammar'];
+  let total=0,done=0;
+  for(const sid of subIds){
+    const chapters=getSubjectChapters(sid);
+    if(!chapters||!chapters.length)continue;
+    for(let i=0;i<chapters.length;i++){
+      const ch=chapters[i];
+      total++;
+      try{
+        let updated=false;
+        if(ch.theory&&ch.theory.sections){
+          for(let s=0;s<ch.theory.sections.length;s++){
+            const sec=ch.theory.sections[s];
+            const txt=sec.text||sec.content||'';
+            if(/[a-zA-Z]{3,}/.test(txt)){
+              const r=await callGemini('Convert this to pure Hindi (Devanagari script only). Keep the same meaning. Replace English words with proper Hindi equivalents. Only output the converted Hindi text:\n'+txt,'You are a Hindi transliterator. Convert English words to Devanagari Hindi. Keep scientific terms in brackets. Only output Hindi text.',500);
+              if(r&&r.trim().length>10){
+                if(sec.text)sec.text=r.trim();
+                else sec.content=r.trim();
+                updated=true;
+              }
+            }
+          }
+        }
+        if(ch.theory&&ch.theory.title){
+          const t=ch.theory.title;
+          if(/[a-zA-Z]{3,}/.test(t)){
+            const r=await callGemini('Convert to pure Hindi Devanagari: '+t,'Only output Hindi text.',100);
+            if(r&&r.trim().length>2){ch.theory.title=r.trim();updated=true;}
+          }
+        }
+        if(updated){
+          chapters[i]=ch;
+          saveSubjectChapters(sid,chapters);
+        }
+        done++;
+        status.textContent=`✅ ${done}/${total} chapters converted`;
+      }catch(e){done++;status.textContent=`⚠️ ${done}/${total} (some errors)`;}
+    }
+  }
+  btn.disabled=false;btn.textContent='🔄 Convert All Chapters';
+  status.textContent=`✅ Done! ${done} chapters processed. Purane chapters ab Hindi me hain.`;
 }
 
 // ══════════════════════════════════════
