@@ -1,0 +1,6 @@
+node_modules/
+admin-data/
+android/
+.capacitor/
+*.apk
+.DS_Store

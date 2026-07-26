@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shravani Learning - Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:#f4f0ff;color:#2D2A4A;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:linear-gradient(180deg,#2D2A4A,#4a3f6b);padding:20px 0;z-index:100;display:flex;flex-direction:column}
+.sidebar .logo{text-align:center;padding:0 16px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar .logo h1{font-family:'Baloo 2',cursive;color:white;font-size:1.2rem;font-weight:800}
+.sidebar .logo p{color:rgba(255,255,255,.5);font-size:.75rem}
+.sidebar nav{flex:1;padding:12px 0}
+.sidebar nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;color:rgba(255,255,255,.6);text-decoration:none;font-size:.88rem;font-weight:600;transition:all .2s;cursor:pointer}
+.sidebar nav a:hover,.sidebar nav a.active{background:rgba(255,255,255,.1);color:white}
+.sidebar nav a .icon{font-size:1.1rem;width:24px;text-align:center}
+.sidebar .status{padding:12px 16px;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar .status .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.sidebar .status .dot.on{background:#27AE60}.sidebar .status .dot.off{background:#E74C3C}
+.sidebar .status span{color:rgba(255,255,255,.6);font-size:.78rem}
+.main{margin-left:220px;padding:24px 32px}
+.page{display:none}.page.active{display:block}
+.page-title{font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:#2D2A4A;margin-bottom:20px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:white;border-radius:16px;padding:18px;border:2px solid #E8E8F0;text-align:center}
+.stat-card .num{font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;color:#C77DFF}
+.stat-card .label{font-size:.8rem;color:#7B7A9A;margin-top:2px}
+.card{background:white;border-radius:16px;padding:20px;border:2px solid #E8E8F0;margin-bottom:16px}
+.card h3{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:700;color:#2D2A4A;margin-bottom:12px}
+.btn{font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 18px;border:none;border-radius:12px;cursor:pointer;transition:transform .1s}
+.btn:hover{transform:scale(1.02)}.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white}
+.btn-success{background:#27AE60;color:white}
+.btn-warning{background:#FF9F43;color:white}
+.btn-danger{background:#E74C3C;color:white}
+.btn-info{background:#48CAE4;color:white}
+.btn-sm{padding:6px 12px;font-size:.78rem}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-weight:700;font-size:.85rem;color:#2D2A4A;margin-bottom:4px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 14px;border:2px solid #E8E8F0;border-radius:12px;font-family:'Nunito',sans-serif;font-size:.9rem;color:#2D2A4A;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group textarea:focus{border-color:#C77DFF}
+.form-group textarea{resize:vertical;min-height:80px}
+.device-list{max-height:400px;overflow-y:auto}
+.device-item{display:flex;align-items:center;gap:12px;padding:12px;border-bottom:1px solid #f0f0f0}
+.device-item:last-child{border:none}
+.device-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#48CAE4,#C77DFF);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.9rem;flex-shrink:0}
+.device-info{flex:1}
+.device-name{font-weight:700;font-size:.9rem}
+.device-meta{font-size:.78rem;color:#7B7A9A}
+.usage-bar{height:6px;background:#E8E8F0;border-radius:3px;margin-top:4px;overflow:hidden}
+.usage-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#48CAE4,#C77DFF);transition:width .3s}
+.toggle{position:relative;width:48px;height:26px;display:inline-block}
+.toggle input{display:none}
+.toggle .slider{position:absolute;top:0;left:0;right:0;bottom:0;background:#E8E8F0;border-radius:13px;cursor:pointer;transition:.3s}
+.toggle .slider:before{content:'';position:absolute;width:20px;height:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+.toggle input:checked+.slider{background:#27AE60}
+.toggle input:checked+.slider:before{transform:translateX(22px)}
+.toast{position:fixed;bottom:20px;right:20px;background:#27AE60;color:white;padding:12px 20px;border-radius:12px;font-weight:700;font-size:.88rem;z-index:999;animation:slideIn .3s;display:none}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.empty{text-align:center;padding:40px;color:#7B7A9A;font-size:.9rem}
+.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mt{margin-top:12px}
+@media(max-width:768px){.sidebar{width:60px}.sidebar .logo h1,.sidebar .logo p,.sidebar nav a span,.sidebar .status span{display:none}.sidebar nav a{justify-content:center;padding:10px}.main{margin-left:60px;padding:16px}}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo"><h1>Shravani</h1><p>Admin Panel</p></div>
+  <nav>
+    <a class="active" onclick="showPage('overview')"><span class="icon">📊</span><span>Overview</span></a>
+    <a onclick="showPage('users')"><span class="icon">👥</span><span>Users</span></a>
+    <a onclick="showPage('config')"><span class="icon">⚙️</span><span>Config</span></a>
+    <a onclick="showPage('content')"><span class="icon">📝</span><span>Content</span></a>
+    <a onclick="showPage('devices')"><span class="icon">📱</span><span>Devices</span></a>
+  </nav>
+  <div class="status">
+    <span><span class="dot" id="statusDot"></span> <span id="statusText">Connecting...</span></span>
+  </div>
+</div>
+
+<div class="main">
+  <!-- OVERVIEW -->
+  <div class="page active" id="page-overview">
+    <div class="page-title">Dashboard</div>
+    <div class="stat-grid" id="statGrid"></div>
+    <div class="card">
+      <h3>📈 Daily Usage (Last 7 Days)</h3>
+      <div id="dailyChart" style="min-height:200px"></div>
+    </div>
+    <div class="card">
+      <h3>🏆 Top Users</h3>
+      <div id="topUsers"></div>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div class="page" id="page-users">
+    <div class="page-title">User Usage Details</div>
+    <div id="userDetails"></div>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="page" id="page-config">
+    <div class="page-title">Remote Config</div>
+    <div class="card">
+      <h3>🔒 App Lock</h3>
+      <div class="flex">
+        <label class="toggle"><input type="checkbox" id="cfgLock" onchange="saveConfig()"><span class="slider"></span></label>
+        <span id="cfgLockLabel" style="font-size:.88rem;color:#7B7A9A">Unlocked</span>
+      </div>
+      <div class="form-group mt">
+        <label>Lock Message</label>
+        <input type="text" id="cfgLockMsg" placeholder="App is under maintenance..." onchange="saveConfig()">
+      </div>
+    </div>
+    <div class="card">
+      <h3>📢 Broadcast Message</h3>
+      <div class="form-group">
+        <textarea id="cfgBroadcast" placeholder="Message for all users (shows on app open)..." onchange="saveConfig()"></textarea>
+      </div>
+      <button class="btn btn-warning" onclick="saveConfig()">Send to All</button>
+      <button class="btn btn-sm" style="background:#E8E8F0;color:#7B7A9A;margin-left:8px" onclick="document.getElementById('cfgBroadcast').value='';saveConfig()">Clear</button>
+    </div>
+    <div class="card">
+      <h3>🔑 Gemini API Key</h3>
+      <div class="form-group">
+        <input type="password" id="cfgApiKey" placeholder="AIza..." onchange="saveConfig()">
+      </div>
+      <button class="btn btn-info" onclick="saveConfig()">Update Key</button>
+    </div>
+    <div class="card">
+      <h3>📤 Export / Import Config</h3>
+      <div class="flex">
+        <button class="btn btn-success" onclick="exportConfig()">Export Config JSON</button>
+        <label class="btn btn-info" style="cursor:pointer">Import Config<input type="file" accept=".json" onchange="importConfig(event)" style="display:none"></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="page" id="page-content">
+    <div class="page-title">Content Management</div>
+    <div class="card">
+      <h3>📤 Push Content Update</h3>
+      <p style="font-size:.82rem;color:#7B7A9A;margin-bottom:12px">Push updates to all connected phones. Updates auto-apply on next app sync.</p>
+      <div class="form-group">
+        <label>Update Type</label>
+        <select id="contentType">
+          <option value="new_subject">New Subject</option>
+          <option value="new_chapter">New Chapter</option>
+          <option value="update_chapter">Update Chapter</option>
+          <option value="new_questions">Add Questions</option>
+          <option value="remove_chapter">Remove Chapter</option>
+          <option value="custom">Custom JSON</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Label (for reference)</label>
+        <input type="text" id="contentLabel" placeholder="e.g. Added fractions chapter">
+      </div>
+      <div class="form-group">
+        <label>Data (JSON)</label>
+        <textarea id="contentData" rows="8" placeholder='{"subjectId":"math","chapter":{"name":"Fractions","questions":[...]}}'></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="pushContent()">Push Update to All Phones</button>
+    </div>
+    <div class="card">
+      <h3>📋 Pending Updates (sent but not yet cleared)</h3>
+      <div id="pendingUpdates"></div>
+      <button class="btn btn-sm" style="background:#E8E8F0;color:#7B7A9A;margin-top:8px" onclick="clearContent()">Clear All Pending</button>
+    </div>
+  </div>
+
+  <!-- DEVICES -->
+  <div class="page" id="page-devices">
+    <div class="page-title">Connected Devices</div>
+    <div class="card">
+      <h3>📱 All Devices</h3>
+      <div class="device-list" id="deviceList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var data={usage:[],devices:{}};
+var cfg={};
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar nav a').forEach(function(a){a.classList.remove('active')});
+  event.currentTarget.classList.add('active');
+}
+
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  setTimeout(function(){t.style.display='none';},2500);
+}
+
+function api(method,url,body){
+  var opts={method:method,headers:{'Content-Type':'application/json'}};
+  if(body)opts.body=JSON.stringify(body);
+  return fetch(url,opts).then(function(r){return r.json();});
+}
+
+function timeAgo(iso){
+  if(!iso)return 'Never';
+  var diff=Date.now()-new Date(iso).getTime();
+  var mins=Math.floor(diff/60000);
+  if(mins<1)return 'Just now';
+  if(mins<60)return mins+'m ago';
+  var hrs=Math.floor(mins/60);
+  if(hrs<24)return hrs+'h ago';
+  return Math.floor(hrs/24)+'d ago';
+}
+
+function refresh(){
+  api('GET','/api/admin/usage').then(function(d){
+    data=d;
+    document.getElementById('statusDot').className='dot on';
+    document.getElementById('statusText').textContent='Connected';
+    renderOverview();renderUsers();renderDevices();renderPending();
+  }).catch(function(){
+    document.getElementById('statusDot').className='dot off';
+    document.getElementById('statusText').textContent='Offline';
+  });
+  api('GET','/api/admin/config').then(function(c){
+    cfg=c;renderConfig();
+  });
+}
+
+function renderOverview(){
+  var users={};var totalMin=0;var totalSessions=0;
+  var daily={};
+  data.usage.forEach(function(r){
+    (r.users||[]).forEach(function(u){
+      if(!users[u.name])users[u.name]={minutes:0,sessions:0,days:{}};
+      var ud=u.usage||{};
+      Object.keys(ud).forEach(function(d){
+        users[u.name].minutes+=ud[d].minutes||0;
+        users[u.name].sessions+=ud[d].sessions||0;
+        if(!users[u.name].days[d])users[u.name].days[d]=0;
+        users[u.name].days[d]+=ud[d].minutes||0;
+        if(!daily[d])daily[d]=0;
+        daily[d]+=ud[d].minutes||0;
+        totalMin+=ud[d].minutes||0;
+        totalSessions+=ud[d].sessions||0;
+      });
+    });
+  });
+  var userNames=Object.keys(users);
+  var onlineDevices=Object.keys(data.devices).length;
+
+  document.getElementById('statGrid').innerHTML=
+    '<div class="stat-card"><div class="num">'+userNames.length+'</div><div class="label">Total Users</div></div>'+
+    '<div class="stat-card"><div class="num">'+totalMin+'</div><div class="label">Total Minutes</div></div>'+
+    '<div class="stat-card"><div class="num">'+totalSessions+'</div><div class="label">Total Sessions</div></div>'+
+    '<div class="stat-card"><div class="num">'+onlineDevices+'</div><div class="label">Devices</div></div>';
+
+  // Daily chart
+  var days=Object.keys(daily).sort().slice(-7);
+  if(days.length===0){
+    document.getElementById('dailyChart').innerHTML='<div class="empty">No usage data yet</div>';
+  }else{
+    var maxMin=Math.max.apply(null,days.map(function(d){return daily[d];}))||1;
+    var chartHtml='<div style="display:flex;align-items:flex-end;gap:8px;height:180px;padding:10px 0">';
+    days.forEach(function(d){
+      var pct=Math.round(daily[d]/maxMin*150);
+      chartHtml+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">'+
+        '<span style="font-size:.7rem;font-weight:700;color:#2D2A4A">'+daily[d]+'m</span>'+
+        '<div style="width:100%;max-width:60px;height:'+pct+'px;background:linear-gradient(180deg,#C77DFF,#48CAE4);border-radius:8px 8px 4px 4px;transition:height .3s"></div>'+
+        '<span style="font-size:.68rem;color:#7B7A9A">'+d.slice(5)+'</span></div>';
+    });
+    chartHtml+='</div>';
+    document.getElementById('dailyChart').innerHTML=chartHtml;
+  }
+
+  // Top users
+  var sorted=userNames.sort(function(a,b){return users[b].minutes-users[a].minutes;}).slice(0,10);
+  if(sorted.length===0){
+    document.getElementById('topUsers').innerHTML='<div class="empty">No users yet</div>';
+  }else{
+    var topHtml='';
+    sorted.forEach(function(name,i){
+      var u=users[name];
+      var pct=Math.round(u.minutes/Math.max(sorted.length>0?users[sorted[0]].minutes:1,1)*100);
+      topHtml+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0">'+
+        '<div style="width:28px;font-family:\'Baloo 2\',cursive;font-weight:800;color:#C77DFF;font-size:1rem">#'+(i+1)+'</div>'+
+        '<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#FF6B9D,#C77DFF);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem">'+name.charAt(0).toUpperCase()+'</div>'+
+        '<div style="flex:1"><div style="font-weight:700;font-size:.9rem">'+name+'</div>'+
+        '<div class="usage-bar" style="width:200px"><div class="usage-fill" style="width:'+pct+'%"></div></div></div>'+
+        '<div style="text-align:right"><div style="font-weight:700;font-size:.9rem">⏱ '+u.minutes+' min</div>'+
+        '<div style="font-size:.75rem;color:#7B7A9A">📝 '+u.sessions+' sessions</div></div></div>';
+    });
+    document.getElementById('topUsers').innerHTML=topHtml;
+  }
+}
+
+function renderUsers(){
+  var users={};
+  data.usage.forEach(function(r){
+    (r.users||[]).forEach(function(u){
+      if(!users[u.name])users[u.name]={minutes:0,sessions:0,days:{}};
+      var ud=u.usage||{};
+      Object.keys(ud).forEach(function(d){
+        users[u.name].minutes+=ud[d].minutes||0;
+        users[u.name].sessions+=ud[d].sessions||0;
+        if(!users[u.name].days[d])users[u.name].days[d]={minutes:0,sessions:0};
+        users[u.name].days[d].minutes+=ud[d].minutes||0;
+        users[u.name].days[d].sessions+=ud[d].sessions||0;
+      });
+    });
+  });
+  var names=Object.keys(users).sort(function(a,b){return users[b].minutes-users[a].minutes;});
+  if(names.length===0){
+    document.getElementById('userDetails').innerHTML='<div class="card"><div class="empty">No users yet. Wait for phones to connect.</div></div>';
+    return;
+  }
+  var html='';
+  names.forEach(function(name){
+    var u=users[name];
+    var days=Object.keys(u.days).sort().slice(-14);
+    html+='<div class="card"><h3>👤 '+name+' <span style="font-size:.8rem;font-weight:400;color:#7B7A9A">- '+u.minutes+' min total | '+u.sessions+' sessions</span></h3>';
+    if(days.length>0){
+      html+='<table style="width:100%;font-size:.82rem;border-collapse:collapse">';
+      html+='<tr style="border-bottom:2px solid #E8E8F0;text-align:left"><th style="padding:6px 8px;color:#7B7A9A">Date</th><th style="padding:6px 8px;color:#7B7A9A">Minutes</th><th style="padding:6px 8px;color:#7B7A9A">Sessions</th></tr>';
+      days.reverse().forEach(function(d){
+        var dd=u.days[d];
+        html+='<tr style="border-bottom:1px solid #f0f0f0"><td style="padding:6px 8px">'+d+'</td><td style="padding:6px 8px;font-weight:700">'+dd.minutes+' min</td><td style="padding:6px 8px">'+dd.sessions+'</td></tr>';
+      });
+      html+='</table>';
+    }else{
+      html+='<div style="color:#7B7A9A;font-size:.82rem">No daily data</div>';
+    }
+    html+='</div>';
+  });
+  document.getElementById('userDetails').innerHTML=html;
+}
+
+function renderConfig(){
+  document.getElementById('cfgLock').checked=!!cfg.locked;
+  document.getElementById('cfgLockLabel').textContent=cfg.locked?'Locked':'Unlocked';
+  document.getElementById('cfgLockMsg').value=cfg.lockMsg||'';
+  document.getElementById('cfgBroadcast').value=cfg.broadcast||'';
+  document.getElementById('cfgApiKey').value=cfg.apiKey||'';
+}
+
+function saveConfig(){
+  var newCfg={
+    locked:document.getElementById('cfgLock').checked,
+    lockMsg:document.getElementById('cfgLockMsg').value,
+    broadcast:document.getElementById('cfgBroadcast').value,
+    apiKey:document.getElementById('cfgApiKey').value
+  };
+  document.getElementById('cfgLockLabel').textContent=newCfg.locked?'Locked':'Unlocked';
+  api('POST','/api/admin/config',newCfg).then(function(){toast('Config saved!');});
+}
+
+function pushContent(){
+  var type=document.getElementById('contentType').value;
+  var label=document.getElementById('contentLabel').value;
+  var dataStr=document.getElementById('contentData').value;
+  if(!label){alert('Enter a label!');return;}
+  if(!dataStr){alert('Enter data!');return;}
+  try{JSON.parse(dataStr);}catch(e){alert('Invalid JSON!');return;}
+  api('POST','/api/admin/content',{type:type,label:label,data:JSON.parse(dataStr)}).then(function(){
+    toast('Content pushed to all phones!');
+    document.getElementById('contentLabel').value='';
+    document.getElementById('contentData').value='';
+    renderPending();
+  });
+}
+
+function renderPending(){
+  api('GET','/api/admin/config').then(function(c){
+    var updates=c.contentUpdates||[];
+    if(updates.length===0){
+      document.getElementById('pendingUpdates').innerHTML='<div class="empty">No pending updates</div>';
+      return;
+    }
+    var html='';
+    updates.slice().reverse().forEach(function(u){
+      html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0">'+
+        '<div><span style="background:#C77DFF;color:white;padding:2px 8px;border-radius:6px;font-size:.72rem;font-weight:700">'+u.type+'</span> '+
+        '<span style="font-weight:600;font-size:.88rem;margin-left:6px">'+u.label+'</span></div>'+
+        '<span style="font-size:.75rem;color:#7B7A9A">'+timeAgo(u.createdAt)+'</span></div>';
+    });
+    document.getElementById('pendingUpdates').innerHTML=html;
+  });
+}
+
+function clearContent(){
+  if(!confirm('Clear all pending content updates?'))return;
+  api('DELETE','/api/admin/content').then(function(){toast('Cleared!');renderPending();});
+}
+
+function renderDevices(){
+  var devs=Object.keys(data.devices);
+  if(devs.length===0){
+    document.getElementById('deviceList').innerHTML='<div class="empty">No devices connected yet</div>';
+    return;
+  }
+  var html='';
+  devs.forEach(function(id){
+    var d=data.devices[id];
+    var users=(d.users||[]).join(', ')||'Unknown';
+    html+='<div class="device-item">'+
+      '<div class="device-avatar">'+users.charAt(0).toUpperCase()+'</div>'+
+      '<div class="device-info"><div class="device-name">'+users+'</div>'+
+      '<div class="device-meta">Last seen: '+timeAgo(d.lastSeen)+' | Config sync: '+timeAgo(d.lastConfigSync)+'</div>'+
+      '<div class="device-meta" style="font-size:.7rem;word-break:break-all">'+(d.userAgent||'').slice(0,80)+'</div></div></div>';
+  });
+  document.getElementById('deviceList').innerHTML=html;
+}
+
+function exportConfig(){
+  api('GET','/api/admin/config').then(function(c){
+    var blob=new Blob([JSON.stringify(c,null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='shravani-config-'+new Date().toISOString().slice(0,10)+'.json';
+    a.click();
+  });
+}
+
+function importConfig(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var imported=JSON.parse(ev.target.result);
+      api('POST','/api/admin/config',imported).then(function(){
+        toast('Config imported!');refresh();
+      });
+    }catch(err){alert('Invalid JSON file');}
+  };
+  reader.readAsText(file);
+}
+
+refresh();
+setInterval(refresh,15000);
+</script>
+</body>
+</html>
