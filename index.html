@@ -829,6 +829,71 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 }
 
 // ══════════════════════════════════════
+// AUTO UPDATE CHECKER
+// ══════════════════════════════════════
+const APP_VERSION='1.0.0';
+const GITHUB_REPO='kshvchvr-gif/Shravani-app';
+async function checkForUpdate(){
+  try{
+    if(!window.Capacitor||!window.Capacitor.Plugins||!window.Capacitor.Plugins.UpdatePlugin)return;
+    const res=await fetch('https://api.github.com/repos/'+GITHUB_REPO+'/releases/latest');
+    if(!res.ok)return;
+    const release=await res.json();
+    const latestVersion=release.tag_name.replace('v','');
+    if(latestVersion===APP_VERSION)return;
+    const apkAsset=release.assets.find(a=>a.name.endsWith('.apk'));
+    if(!apkAsset)return;
+    showUpdatePopup(latestVersion,apkAsset.browser_download_url);
+  }catch(e){console.log('Update check failed:',e);}
+}
+function showUpdatePopup(version,url){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999999;display:flex;align-items:center;justify-content:center';
+  overlay.innerHTML=`<div style="background:white;border-radius:20px;padding:28px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)">
+    <div style="font-size:2.5rem;margin-bottom:8px">🔄</div>
+    <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A;margin-bottom:6px">Update Available!</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:.9rem;color:#7B7A9A;margin-bottom:16px">Version ${version} is now available.</div>
+    <div id="updateProgress" style="display:none;margin-bottom:12px">
+      <div style="background:#E8E8F0;border-radius:10px;height:8px;overflow:hidden">
+        <div id="updateProgressBar" style="background:linear-gradient(135deg,#FF6B9D,#C77DFF);height:100%;width:0%;transition:width .3s;border-radius:10px"></div>
+      </div>
+      <div id="updateStatus" style="font-family:'Nunito',sans-serif;font-size:.8rem;color:#7B7A9A;margin-top:6px">Downloading...</div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:10px 20px;background:#E8E8F0;color:#7B7A9A;border:none;border-radius:12px;cursor:pointer">Later</button>
+      <button id="updateBtn" onclick="downloadUpdate('${url}',this)" style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:10px 24px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">Update</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+async function downloadUpdate(url){
+  const progress=document.getElementById('updateProgress');
+  const bar=document.getElementById('updateProgressBar');
+  const status=document.getElementById('updateStatus');
+  const btn=document.getElementById('updateBtn');
+  progress.style.display='block';btn.style.display='none';
+  try{
+    const plugins=window.Capacitor.Plugins;
+    if(plugins.UpdatePlugin&&plugins.UpdatePlugin.downloadAndInstall){
+      status.textContent='Downloading...';
+      bar.style.width='50%';
+      await plugins.UpdatePlugin.downloadAndInstall({url:url});
+    }else{
+      status.textContent='Opening download...';
+      bar.style.width='80%';
+      window.open(url,'_blank');
+    }
+    bar.style.width='100%';
+    status.textContent='Download complete! Install the APK.';
+  }catch(e){
+    status.textContent='Download failed. Tap to retry.';
+    btn.style.display='inline-block';btn.textContent='Retry';
+    btn.onclick=()=>downloadUpdate(url);
+  }
+}
+setTimeout(checkForUpdate,5000);
+
+// ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
 
