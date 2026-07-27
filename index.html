@@ -589,6 +589,52 @@ img{max-width:100%}
   </div>
 </div>
 
+<!-- ═══ ADMIN PANEL (hidden - triple-tap on title) ═══ -->
+<div class="modal-overlay hidden" id="adminModal">
+  <div class="modal" style="max-width:400px">
+    <button class="modal-close" onclick="document.getElementById('adminModal').classList.add('hidden')">✕</button>
+    <h2>🔧 Admin Panel</h2>
+    <label style="font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;color:#7B7A9A">Gemini API Key:</label>
+    <textarea id="adminApiKey" rows="2" style="width:100%;font-family:'Nunito',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A;resize:none;word-break:break-all" placeholder="Key yahan paste karo..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button onclick="adminPasteKey()" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📋 Paste</button>
+      <button onclick="saveAdminKey()" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">💾 Save</button>
+    </div>
+    <div id="adminStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-bottom:8px"></div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📡 Server URL</div>
+      <input type="text" id="serverUrlInput" value="" placeholder="https://your-server.com" style="width:100%;font-family:'Nunito',sans-serif;font-size:.85rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:10px;color:#2D2A4A;margin-bottom:6px">
+      <button onclick="var u=document.getElementById('serverUrlInput').value.trim();if(u){localStorage.setItem('sl_server_url',u);SL_SERVER=u;alert('Server URL saved!');}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#27AE60;color:white;border:none;border-radius:12px;cursor:pointer">💾 Save URL</button>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">🔄 WiFi Sync</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="adminSyncUp()" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#27AE60;color:white;border:none;border-radius:12px;cursor:pointer">📤 Sync to Laptop</button>
+        <button onclick="adminSyncDown()" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📥 Load from Laptop</button>
+      </div>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:14px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">💾 Export / Import</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="adminExport()" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">📤 Export</button>
+        <label style="display:inline-block;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border-radius:12px;cursor:pointer">
+          📥 Import <input type="file" accept=".json" onchange="adminImport(event)" style="display:none">
+        </label>
+      </div>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:14px">
+      <button onclick="if(confirm('Delete ALL data? This cannot be undone!')){localStorage.clear();location.reload()}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#E74C3C;color:white;border:none;border-radius:12px;cursor:pointer">🗑️ Reset All Data</button>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:14px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📊 Usage Stats</div>
+      <div id="usageStatsContainer"></div>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:14px">
+      <button onclick="if(confirm('Do you want to logout?')){localStorage.clear();location.reload();}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#7B7A9A;color:white;border:none;border-radius:12px;cursor:pointer;width:100%">🚪 Logout</button>
+    </div>
+  </div>
+</div>
+
 <div id="globalStopTTS" onclick="stopSpeaking()" style="position:fixed;bottom:24px;right:24px;z-index:99999;background:#FF6B6B;color:white;border:none;border-radius:50px;padding:12px 20px;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(255,0,0,.3);display:none;align-items:center;gap:6px">⏹️ Band Karo</div>
 
 <script>
@@ -794,6 +840,189 @@ function recordScore(chId,score,total,wrong){
 }
 
 // ══════════════════════════════════════
+// SERVER TRACKING + REMOTE CONTROL
+// ══════════════════════════════════════
+var SL_SERVER=localStorage.getItem('sl_server_url')||'http://192.168.1.6:3847';
+var DEVICE_ID=localStorage.getItem('sl_device_id');
+if(!DEVICE_ID){DEVICE_ID='dev_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);localStorage.setItem('sl_device_id',DEVICE_ID);}
+var _sessionStart=Date.now();
+
+function getUsers(){try{return JSON.parse(localStorage.getItem('sl_users')||'[]');}catch(e){return[];}}
+function saveUsers(u){localStorage.setItem('sl_users',JSON.stringify(u));}
+
+function reportUsage(){
+  var users=getUsers();
+  var report={deviceId:DEVICE_ID,device:navigator.userAgent,users:[]};
+  users.forEach(function(u){
+    var key='sl_usage_'+u.name;
+    var usage=JSON.parse(localStorage.getItem(key)||'{}');
+    report.users.push({name:u.name,usage:usage});
+  });
+  fetch(SL_SERVER+'/api/usage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)}).then(function(r){}).catch(function(e){});
+}
+
+var _lastSync=localStorage.getItem('sl_last_sync')||'0';
+function checkRemoteLock(){
+  fetch(SL_SERVER+'/api/config?deviceId='+DEVICE_ID+'&lastSync='+_lastSync).then(function(r){return r.json();}).then(function(cfg){
+    if(cfg.locked){
+      alert(cfg.lockMsg||'App is locked by admin');
+    }
+    if(cfg.broadcast){
+      var lastBroadcast=localStorage.getItem('sl_last_broadcast');
+      if(cfg.broadcast!==lastBroadcast){
+        alert('📢 '+cfg.broadcast);
+        localStorage.setItem('sl_last_broadcast',cfg.broadcast);
+      }
+    }
+    if(cfg.apiKey){
+      localStorage.setItem('admin_gemini_key',cfg.apiKey);
+    }
+    if(cfg.subjects){
+      localStorage.setItem('sl_subjects',JSON.stringify(cfg.subjects));
+    }
+    if(cfg.contentUpdates){
+      cfg.contentUpdates.forEach(function(upd){
+        if(upd.type==='add_chapter'&&upd.data){
+          var subId=upd.data.subjectId;
+          var chapters=JSON.parse(localStorage.getItem('sl_chapters_'+subId)||'[]');
+          chapters.push(upd.data.chapter);
+          localStorage.setItem('sl_chapters_'+subId,JSON.stringify(chapters));
+        }
+        if(upd.type==='remove_chapter'&&upd.data){
+          var subId2=upd.data.subjectId;
+          var chId=upd.data.chapterId;
+          if(subId2&&chId){
+            var chapters2=JSON.parse(localStorage.getItem('sl_chapters_'+subId2)||'[]');
+            chapters2=chapters2.filter(function(c){return c.id!==chId;});
+            localStorage.setItem('sl_chapters_'+subId2,JSON.stringify(chapters2));
+          }
+        }
+      });
+    }
+    _lastSync=Date.now().toString();
+    localStorage.setItem('sl_last_sync',_lastSync);
+  }).catch(function(e){});
+}
+
+function saveSession(){
+  var now=Date.now();
+  var mins=Math.round((now-_sessionStart)/60000);
+  if(mins<1)return;
+  var today=new Date().toISOString().slice(0,10);
+  var users=getUsers();
+  users.forEach(function(u){
+    var key='sl_usage_'+u.name;
+    var usage=JSON.parse(localStorage.getItem(key)||'{}');
+    if(!usage[today])usage[today]={minutes:0,sessions:0};
+    usage[today].minutes+=mins;
+    usage[today].sessions+=1;
+    localStorage.setItem(key,JSON.stringify(usage));
+  });
+  _sessionStart=Date.now();
+}
+
+function startScreenTimer(){
+  setInterval(function(){saveSession();reportUsage();},60000);
+  setInterval(function(){checkRemoteLock();},300000);
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){saveSession();}
+    else{_sessionStart=Date.now();reportUsage();checkRemoteLock();}
+  });
+  window.addEventListener('beforeunload',function(){saveSession();reportUsage();});
+}
+setTimeout(startScreenTimer,2000);
+
+function showUsageStats(){
+  var users=getUsers();
+  var html='<div style="max-height:300px;overflow-y:auto">';
+  if(users.length===0){html+='<div style="font-family:\'Nunito\',sans-serif;font-size:.82rem;color:#7B7A9A">No users yet</div>';}
+  users.forEach(function(u){
+    var key='sl_usage_'+u.name;
+    var usage=JSON.parse(localStorage.getItem(key)||'{}');
+    html+='<div style="background:white;border-radius:14px;padding:12px;margin-bottom:8px;border:2px solid #E8E8F0">';
+    html+='<div style="font-family:\'Baloo 2\',cursive;font-size:1rem;font-weight:700;color:#2D2A4A;margin-bottom:6px">'+u.name+'</div>';
+    var days=Object.keys(usage).sort().slice(-7);
+    if(days.length===0){
+      html+='<div style="font-family:\'Nunito\',sans-serif;font-size:.82rem;color:#7B7A9A">No data yet</div>';
+    }else{
+      days.forEach(function(d){
+        var ud=usage[d];
+        html+='<div style="display:flex;justify-content:space-between;font-family:\'Nunito\',sans-serif;font-size:.8rem;padding:3px 0;border-bottom:1px solid #f0f0f0">';
+        html+='<span style="color:#7B7A9A">'+d+'</span>';
+        html+='<span style="font-weight:700;color:#2D2A4A">⏱ '+ud.minutes+'min | 📝 '+ud.sessions+' sessions</span>';
+        html+='</div>';
+      });
+    }
+    html+='</div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+// ═══ ADMIN HELPER FUNCTIONS ═══
+function saveAdminKey(){
+  var v=document.getElementById('adminApiKey').value.trim();
+  if(v){localStorage.setItem('admin_gemini_key',v);document.getElementById('adminStatus').textContent='✅ API Key saved! Restart app to use.';document.getElementById('adminStatus').style.color='#27AE60';}
+  else{document.getElementById('adminStatus').textContent='❌ Enter a valid key';document.getElementById('adminStatus').style.color='#E74C3C';}
+}
+function adminPasteKey(){
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    navigator.clipboard.readText().then(function(t){
+      document.getElementById('adminApiKey').value=t.trim();
+      document.getElementById('adminStatus').textContent='✅ Pasted!';
+      document.getElementById('adminStatus').style.color='#27AE60';
+    }).catch(function(){
+      document.getElementById('adminStatus').textContent='❌ Clipboard access denied — paste manually';
+      document.getElementById('adminStatus').style.color='#E74C3C';
+      document.getElementById('adminApiKey').focus();
+    });
+  }else{
+    document.getElementById('adminStatus').textContent='❌ Tap textarea and paste manually';
+    document.getElementById('adminStatus').style.color='#7B7A9A';
+    document.getElementById('adminApiKey').focus();
+  }
+}
+function adminExport(){
+  var data={};
+  for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);try{data[key]=JSON.parse(localStorage.getItem(key));}catch(e){data[key]=localStorage.getItem(key);}}
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shravani_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);
+}
+function adminImport(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      var data=JSON.parse(ev.target.result);var count=0;
+      for(var key of Object.keys(data)){localStorage.setItem(key,JSON.stringify(data[key]));count++;}
+      alert('✅ '+count+' items imported! Reloading...');location.reload();
+    }catch(err){alert('❌ Invalid JSON!');}
+  };
+  reader.readAsText(file);
+}
+function adminSyncUp(){
+  try{
+    var data={};
+    for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);try{data[key]=JSON.parse(localStorage.getItem(key));}catch(e){data[key]=localStorage.getItem(key);}}
+    fetch(SL_SERVER+'/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(o){alert('✅ Synced! '+Object.keys(o).length+' items saved');}).catch(function(e){alert('❌ Sync failed: '+e.message);});
+  }catch(e){alert('❌ '+e.message);}
+}
+function adminSyncDown(){
+  try{
+    fetch(SL_SERVER+'/api/data').then(function(r){return r.json();}).then(function(data){
+      var count=0;
+      for(var key of Object.keys(data)){
+        var existing=localStorage.getItem(key);
+        var incoming=JSON.stringify(data[key]);
+        if(!existing||incoming.length>existing.length){localStorage.setItem(key,incoming);count++;}
+      }
+      alert('✅ Loaded! '+count+' items restored');
+      if(count>0)setTimeout(function(){location.reload();},500);
+    }).catch(function(e){alert('❌ Load failed: '+e.message);});
+  }catch(e){alert('❌ '+e.message);}
+}
+
+// ══════════════════════════════════════
 // GEMINI API
 // ══════════════════════════════════════
 function getGeminiKey(){const i=document.getElementById('apiKeyInput');if(i&&i.value.trim())return i.value.trim().replace(/^["']+|["']+$/g,'');const s=localStorage.getItem('gemini_key');if(s){const clean=s.replace(/^["']+|["']+$/g,'');if(i)i.value=clean;return clean;}return '';}
@@ -832,7 +1061,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.2';
+const APP_VERSION='1.0.3';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 async function checkForUpdate(){
   try{
@@ -2054,7 +2283,7 @@ function launchConfetti(){
       _tapCount++;
       clearTimeout(_tapTimer);
       _tapTimer=setTimeout(function(){_tapCount=0;},1500);
-      if(_tapCount>=3){_tapCount=0;showSettingsModal();}
+      if(_tapCount>=3){_tapCount=0;document.getElementById('adminModal').classList.remove('hidden');document.getElementById('usageStatsContainer').innerHTML=showUsageStats();var sUrl=document.getElementById('serverUrlInput');if(sUrl)sUrl.value=SL_SERVER;}
     });
   }
 })();
