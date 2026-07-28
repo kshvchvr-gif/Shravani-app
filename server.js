@@ -11,6 +11,7 @@ var USAGE_FILE=path.join(DATA_DIR,'usage.json');
 var CONFIG_FILE=path.join(DATA_DIR,'config.json');
 var CONTENT_FILE=path.join(DATA_DIR,'content.json');
 var DEVICES_FILE=path.join(DATA_DIR,'devices.json');
+var VISITORS_FILE=path.join(DATA_DIR,'visitors.json');
 
 function loadJSON(f,def){try{return JSON.parse(fs.readFileSync(f,'utf8'));}catch(e){return def;}}
 function saveJSON(f,d){fs.writeFileSync(f,JSON.stringify(d,null,2));}
@@ -22,11 +23,27 @@ var appConfig=loadJSON(CONFIG_FILE,{
 });
 var contentUpdates=loadJSON(CONTENT_FILE,[]);
 var devices=loadJSON(DEVICES_FILE,{});
+var visitors=loadJSON(VISITORS_FILE,{total:0,unique:{},history:[]});
 
 function saveUsage(){saveJSON(USAGE_FILE,allUsage);}
 function saveConfig(){saveJSON(CONFIG_FILE,appConfig);}
 function saveContent(){saveJSON(CONTENT_FILE,contentUpdates);}
 function saveDevices(){saveJSON(DEVICES_FILE,devices);}
+function saveVisitors(){saveJSON(VISITORS_FILE,visitors);}
+
+function trackVisitor(req){
+  var ip=req.headers['x-forwarded-for']||req.socket.remoteAddress||'unknown';
+  var ua=req.headers['user-agent']||'';
+  var now=new Date().toISOString();
+  visitors.total++;
+  if(!visitors.unique[ip])visitors.unique[ip]={first:now,count:0,ua:ua};
+  visitors.unique[ip].last=now;
+  visitors.unique[ip].count++;
+  visitors.unique[ip].ua=ua;
+  visitors.history.unshift({ip:ip,time:now,ua:ua.slice(0,120)});
+  if(visitors.history.length>500)visitors.history=visitors.history.slice(0,500);
+  saveVisitors();
+}
 
 var server=http.createServer(function(req,res){
   var parsed=url.parse(req.url,true);
@@ -91,6 +108,22 @@ var server=http.createServer(function(req,res){
     return;
   }
 
+  // ─── WIFI SYNC (laptop ↔ phone data) ───
+  var _syncData={};
+  if(req.method==='GET'&&pathname==='/api/data'){
+    jsonResponse(res,200,_syncData);
+    return;
+  }
+  if(req.method==='POST'&&pathname==='/api/data'){
+    return readBody(req,function(body){
+      try{
+        var incoming=JSON.parse(body);
+        Object.keys(incoming).forEach(function(k){_syncData[k]=incoming[k];});
+        jsonResponse(res,200,{ok:true,count:Object.keys(_syncData).length});
+      }catch(e){jsonResponse(res,400,{error:'Bad JSON'});}
+    });
+  }
+
   // ─── ADMIN API (dashboard calls these) ───
 
   // Get all usage data
@@ -151,8 +184,30 @@ var server=http.createServer(function(req,res){
     return;
   }
 
-  // ─── DASHBOARD ───
+  // ─── VISITOR TRACKING ───
+
+  // Get visitor stats
+  if(req.method==='GET'&&pathname==='/api/admin/visitors'){
+    jsonResponse(res,200,{
+      total:visitors.total,
+      uniqueCount:Object.keys(visitors.unique).length,
+      unique:visitors.unique,
+      history:visitors.history.slice(0,200)
+    });
+    return;
+  }
+
+  // Reset visitors
+  if(req.method==='DELETE'&&pathname==='/api/admin/visitors'){
+    visitors={total:0,unique:{},history:[]};
+    saveVisitors();
+    jsonResponse(res,200,{ok:true});
+    return;
+  }
+
+  // ─── DASHBOARD (tracks visitors automatically) ───
   if(req.method==='GET'&&(pathname==='/'||pathname==='/dashboard')){
+    trackVisitor(req);
     res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});
     res.end(getDashboardHTML());
     return;
@@ -184,12 +239,18 @@ setInterval(function(){
     return new Date(r.receivedAt).getTime()>cutoff;
   });
   if(allUsage.length!==before){saveUsage();console.log('[CLEANUP] Removed '+(before-allUsage.length)+' old records');}
+
+  var vBefore=visitors.history.length;
+  visitors.history=visitors.history.filter(function(v){
+    return new Date(v.time).getTime()>cutoff;
+  });
+  if(visitors.history.length!==vBefore)saveVisitors();
 },6*60*60*1000);
 
 server.listen(PORT,'0.0.0.0',function(){
   console.log('');
   console.log('  ╔══════════════════════════════════════════╗');
-  console.log('  ║   Shravani Learning - Admin Server       ║');
+  console.log('  ║   Ai Teacher - Admin Server v2.0         ║');
   console.log('  ╠══════════════════════════════════════════╣');
   console.log('  ║  Dashboard: http://localhost:'+PORT+'         ║');
   console.log('  ║  Public:    Use localtunnel/ngrok        ║');
