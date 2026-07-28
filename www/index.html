@@ -581,12 +581,6 @@ img{max-width:100%}
     <button class="modal-close" onclick="document.getElementById('settingsModal').classList.add('hidden')">✕</button>
     <h2>⚙️ Settings</h2>
     <div style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.85rem;color:#27AE60;margin-bottom:14px">✅ Hindi TTS: Web Speech API (Offline)</div>
-    <label style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.82rem;font-weight:700;color:#7B7A9A">Gemini API Key:</label>
-    <div style="display:flex;gap:8px;margin:6px 0 12px">
-      <input type="text" id="apiKeyInput" style="flex:1;font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A" placeholder="Enter Gemini API Key">
-      <button onclick="saveApiKey()" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">Save</button>
-    </div>
-    <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:#7B7A9A;margin-bottom:14px">Free API Key 👉 <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#C77DFF">Google AI Studio</a></div>
 
     <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-bottom:4px">
       <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📝 Convert Old Chapters to Hindi</div>
@@ -2264,7 +2258,6 @@ function removeLoadingBubble(id){const el=document.getElementById('lb_'+id);if(e
 // ══════════════════════════════════════
 function showSettingsModal(){
   document.getElementById('settingsModal').classList.remove('hidden');
-  const k=localStorage.getItem('gemini_key');if(k)document.getElementById('apiKeyInput').value=k;
   checkSync();
 }
 
