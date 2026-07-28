@@ -1283,18 +1283,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   loadExtraSubjects();
   const savedKey=localStorage.getItem('gemini_key');if(savedKey){const i=document.getElementById('apiKeyInput');if(i)i.value=savedKey;}
 
-  // Check if user was already logged in
-  var currentUser=localStorage.getItem('sl_current_user');
-  if(currentUser){
-    var users=getUsers();
-    var found=users.find(function(u){return u.name===currentUser;});
-    if(found){
-      doLogin(found);
-      return;
-    }
-  }
-
-  // Show login screen
+  // Always show login screen — user picks account
+  localStorage.removeItem('sl_current_user');
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('welcomeScreen').style.display='none';
   renderLoginScreen();
