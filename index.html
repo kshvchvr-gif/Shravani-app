@@ -1210,7 +1210,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.7';
+const APP_VERSION='1.0.8';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 async function checkForUpdate(){
   try{
@@ -1252,13 +1252,18 @@ async function downloadUpdate(url){
   const btn=document.getElementById('updateBtn');
   progress.style.display='block';btn.style.display='none';
   try{
-    status.textContent='Opening download page...';
-    bar.style.width='80%';
-    window.location.href=url;
+    bar.style.width='50%';
+    status.textContent='Copy link and paste in browser to download';
     bar.style.width='100%';
-    status.textContent='Download started! Install the APK when done.';
+    var copyDiv=document.createElement('div');copyDiv.style.cssText='margin-top:10px;padding:10px;background:#f0f0f5;border-radius:8px;word-break:break-all;font-size:.75rem;color:#555;cursor:pointer;border:1px dashed #C77DFF';
+    copyDiv.textContent=url;
+    copyDiv.onclick=function(){navigator.clipboard.writeText(url).then(function(){copyDiv.textContent='✅ Copied! Open Chrome & paste';copyDiv.style.background='#e8ffe8';setTimeout(function(){copyDiv.textContent=url;copyDiv.style.background='#f0f0f5';},3000);}).catch(function(){var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);copyDiv.textContent='✅ Copied! Open Chrome & paste';});};
+    status.parentElement.appendChild(copyDiv);
+    if(window.Capacitor&&window.Capacitor.isNativePlatform){
+      window.open(url,'_system');
+    }
   }catch(e){
-    status.textContent='Download failed. Copy this link and open in browser:';
+    status.textContent='Copy this link and open in browser:';
     var link=document.createElement('a');link.href=url;link.textContent='Download APK';link.style.cssText='display:block;margin-top:8px;color:#C77DFF;font-weight:700;word-break:break-all';
     status.parentElement.appendChild(link);
   }
