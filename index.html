@@ -16,6 +16,13 @@ img{max-width:100%}
 .hidden{display:none!important}
 img{max-width:100%}
 
+/* LOGIN SCREEN */
+#loginScreen .user-card{background:white;border-radius:16px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;border:2px solid #E8E8F0;transition:transform .12s}
+#loginScreen .user-card:hover{transform:scale(1.02);border-color:#C77DFF}
+#loginScreen .user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FF6B9D,#C77DFF);display:flex;align-items:center;justify-content:center;color:white;font-size:1.1rem;font-weight:700;font-family:'Baloo 2',cursive}
+#loginScreen .user-name{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:#2D2A4A;flex:1}
+#loginScreen .user-lock{font-size:.9rem;color:#7B7A9A}
+
 /* WELCOME */
 #welcomeScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;max-width:460px;width:100%;padding:20px 16px}
 #welcomeAnim{width:180px;height:180px}
@@ -319,8 +326,33 @@ img{max-width:100%}
 <body>
 <canvas id="confettiCanvas"></canvas>
 
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="loginScreen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh;text-align:center;max-width:460px;width:100%;padding:20px 16px">
+  <div style="font-size:3rem;margin-bottom:8px">🌸</div>
+  <h1 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#2D2A4A;margin-bottom:4px">Shravani Learning</h1>
+  <p style="font-family:'Nunito',sans-serif;font-size:.9rem;color:#7B7A9A;margin-bottom:20px">Choose your account or create a new one</p>
+  <div id="loginUserList" style="width:100%;margin-bottom:16px"></div>
+  <div id="loginNewUser" style="width:100%;display:none">
+    <input type="text" id="loginNewName" placeholder="Enter your name..." style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:100%;max-width:260px;color:#2D2A4A;margin-bottom:8px">
+    <input type="password" id="loginNewPin" placeholder="4-digit PIN (optional)" inputmode="numeric" maxlength="4" style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:100%;max-width:260px;color:#2D2A4A;margin-bottom:8px">
+    <button onclick="createUser()" style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;padding:10px 36px;background:linear-gradient(135deg,#6BCB77,#48CAE4);color:white;border:none;border-radius:50px;cursor:pointer;box-shadow:0 4px 14px rgba(107,203,119,.3)">Create ✅</button>
+    <button onclick="document.getElementById('loginNewUser').style.display='none';document.getElementById('loginUserList').style.display='';document.getElementById('loginAddBtn').style.display='';" style="font-family:'Nunito',sans-serif;font-size:.82rem;padding:8px;color:#7B7A9A;background:none;border:none;cursor:pointer;margin-top:6px">⬅ Back</button>
+  </div>
+  <button id="loginAddBtn" onclick="document.getElementById('loginNewUser').style.display='block';document.getElementById('loginUserList').style.display='none';document.getElementById('loginAddBtn').style.display='none';" style="font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:700;padding:8px 20px;border:2px dashed #C77DFF;border-radius:50px;background:rgba(199,125,255,.05);color:#C77DFF;cursor:pointer">➕ New Child</button>
+  <div id="loginPinModal" style="display:none;width:100%;margin-top:10px">
+    <p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#7B7A9A;margin-bottom:8px" id="loginPinName"></p>
+    <input type="password" id="loginPinInput" placeholder="Enter PIN" inputmode="numeric" maxlength="4" style="font-family:'Nunito',sans-serif;font-size:1.1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:160px;color:#2D2A4A;margin-bottom:8px">
+    <br><button onclick="verifyPin()" style="font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;padding:8px 24px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:50px;cursor:pointer">Login ➜</button>
+  </div>
+  <div id="lockScreen" style="display:none;width:100%;text-align:center;margin-top:20px">
+    <div style="font-size:3rem;margin-bottom:10px">🔒</div>
+    <h2 style="font-family:'Baloo 2',cursive;font-size:1.3rem;color:#E74C3C">App Locked</h2>
+    <p style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#7B7A9A" id="lockMsg">Admin has locked the app</p>
+  </div>
+</div>
+
 <!-- ═══ WELCOME ═══ -->
-<div id="welcomeScreen">
+<div id="welcomeScreen" style="display:none">
   <div id="welcomeAnim"></div>
   <div class="img-upload" onclick="document.getElementById('avatarInput').click()" title="Upload your photo">
     <span id="avatarPlaceholder">🌸</span>
@@ -331,7 +363,7 @@ img{max-width:100%}
   <h1>Hello, <span id="welcomeName">Student!</span> 🌸</h1>
   <p>Your complete AI Learning App!<br>Upload, Learn, Play! 📚</p>
   <div style="margin-bottom:14px">
-    <input type="text" id="studentNameInput" placeholder="Enter your name..." style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:220px;color:#2D2A4A" value="">
+    <input type="text" id="studentNameInput" placeholder="Enter your name..." oninput="this.style.borderColor='#E8E8F0'" style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:220px;color:#2D2A4A" value="">
   </div>
   <button class="start-btn" onclick="startApp()">Let's Start! 🎉</button>
 </div>
@@ -350,7 +382,7 @@ img{max-width:100%}
       <div class="streak-display">🔥 <span id="globalStreak">0</span></div>
       <div class="stat-pill">⭐ <span id="globalScore">0</span></div>
       <div class="stat-pill" style="cursor:pointer" onclick="showSettingsModal()">ℹ️</div>
-      <div class="stat-pill" style="cursor:pointer;font-size:.7rem" onclick="if(confirm('Do you want to logout?')){localStorage.clear();location.reload();}">🚪</div>
+      <div class="stat-pill" style="cursor:pointer;font-size:.7rem" onclick="if(confirm('Do you want to logout?'))logoutUser()">🚪</div>
     </div>
   </div>
   <div style="text-align:center;margin-bottom:16px">
@@ -630,7 +662,7 @@ img{max-width:100%}
       <div id="usageStatsContainer"></div>
     </div>
     <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:14px">
-      <button onclick="if(confirm('Do you want to logout?')){localStorage.clear();location.reload();}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#7B7A9A;color:white;border:none;border-radius:12px;cursor:pointer;width:100%">🚪 Logout</button>
+      <button onclick="if(confirm('Do you want to logout?')){logoutUser();document.getElementById('adminModal').classList.add('hidden');}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#7B7A9A;color:white;border:none;border-radius:12px;cursor:pointer;width:100%">🚪 Logout</button>
     </div>
   </div>
 </div>
@@ -865,7 +897,11 @@ var _lastSync=localStorage.getItem('sl_last_sync')||'0';
 function checkRemoteLock(){
   fetch(SL_SERVER+'/api/config?deviceId='+DEVICE_ID+'&lastSync='+_lastSync).then(function(r){return r.json();}).then(function(cfg){
     if(cfg.locked){
-      alert(cfg.lockMsg||'App is locked by admin');
+      document.getElementById('welcomeScreen').style.display='none';
+      document.getElementById('subjectScreen').classList.add('hidden');
+      document.getElementById('loginScreen').style.display='flex';
+      document.getElementById('lockScreen').style.display='block';
+      document.getElementById('lockMsg').textContent=cfg.lockMsg||'Admin has locked the app';
     }
     if(cfg.broadcast){
       var lastBroadcast=localStorage.getItem('sl_last_broadcast');
@@ -909,15 +945,24 @@ function saveSession(){
   var mins=Math.round((now-_sessionStart)/60000);
   if(mins<1)return;
   var today=new Date().toISOString().slice(0,10);
-  var users=getUsers();
-  users.forEach(function(u){
-    var key='sl_usage_'+u.name;
+  if(_loginUser){
+    var key='sl_usage_'+_loginUser.name;
     var usage=JSON.parse(localStorage.getItem(key)||'{}');
     if(!usage[today])usage[today]={minutes:0,sessions:0};
     usage[today].minutes+=mins;
     usage[today].sessions+=1;
     localStorage.setItem(key,JSON.stringify(usage));
-  });
+  }else{
+    var users=getUsers();
+    users.forEach(function(u){
+      var key='sl_usage_'+u.name;
+      var usage=JSON.parse(localStorage.getItem(key)||'{}');
+      if(!usage[today])usage[today]={minutes:0,sessions:0};
+      usage[today].minutes+=mins;
+      usage[today].sessions+=1;
+      localStorage.setItem(key,JSON.stringify(usage));
+    });
+  }
   _sessionStart=Date.now();
 }
 
@@ -931,6 +976,105 @@ function startScreenTimer(){
   window.addEventListener('beforeunload',function(){saveSession();reportUsage();});
 }
 setTimeout(startScreenTimer,2000);
+
+// ══════════════════════════════════════
+// LOGIN SYSTEM (Multi-user + PIN)
+// ══════════════════════════════════════
+var _loginUser=null;
+
+function renderLoginScreen(){
+  var newUserForm=document.getElementById('loginNewUser');
+  var isAdding=newUserForm&&newUserForm.style.display==='block';
+  var users=getUsers();
+  var seen={};
+  users=users.filter(function(u){
+    var key=u.name.toLowerCase();
+    if(seen[key])return false;
+    seen[key]=true;return true;
+  });
+  saveUsers(users);
+  var list=document.getElementById('loginUserList');
+  list.innerHTML='';
+  if(users.length===0&&!isAdding){
+    list.innerHTML='<p style="font-family:\'Nunito\',sans-serif;font-size:.85rem;color:#7B7A9A">Create your first account 👇</p>';
+    return;
+  }
+  users.forEach(function(u){
+    var initials=u.name.charAt(0).toUpperCase();
+    var card=document.createElement('div');
+    card.className='user-card';
+    card.innerHTML='<div class="user-avatar">'+initials+'</div><div class="user-name">'+u.name+'</div><div class="user-lock">'+(u.pin?'🔒':'🔓')+'</div>';
+    card.onclick=function(){
+      if(u.pin){
+        document.getElementById('loginPinModal').style.display='block';
+        document.getElementById('loginPinName').textContent=u.name+"'s PIN:";
+        document.getElementById('loginPinInput').value='';
+        document.getElementById('loginPinInput').focus();
+        window._loginPinUser=u;
+      }else{
+        doLogin(u);
+      }
+    };
+    list.appendChild(card);
+  });
+}
+
+function createUser(){
+  var name=document.getElementById('loginNewName').value.trim();
+  var pin=document.getElementById('loginNewPin').value.trim();
+  if(!name){alert('Please enter a name!');return;}
+  if(pin&&pin.length!==4){alert('PIN must be 4 digits!');return;}
+  var users=getUsers();
+  var exists=users.find(function(u){return u.name.toLowerCase()===name.toLowerCase();});
+  if(exists){alert('Account already exists! Tap on "'+name+'" to login.');return;}
+  users.push({name:name,pin:pin||'',createdAt:Date.now()});
+  saveUsers(users);
+  renderLoginScreen();
+  document.getElementById('loginNewUser').style.display='none';
+  document.getElementById('loginUserList').style.display='';
+  document.getElementById('loginAddBtn').style.display='';
+}
+
+function verifyPin(){
+  var pin=document.getElementById('loginPinInput').value.trim();
+  var u=window._loginPinUser;
+  if(!u)return;
+  if(pin===u.pin){doLogin(u);}
+  else{alert('Wrong PIN!');}
+}
+
+function doLogin(u){
+  _loginUser=u;
+  _sessionStart=Date.now();
+  localStorage.setItem('sl_current_user',u.name);
+  localStorage.setItem('lh_name',u.name);
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('studentNameInput').value=u.name;
+  document.getElementById('welcomeName').textContent=u.name+'!';
+  loadSavedAvatar();
+  buildSubjectGrid();
+  updateGlobalStats();
+  document.getElementById('welcomeScreen').style.display='none';
+  document.getElementById('subjectScreen').classList.remove('hidden');
+  document.getElementById('subGreeting').textContent='Hello, '+u.name+'!';
+  checkRemoteLock();
+  startScreenTimer();
+  setTimeout(reportUsage,2000);
+}
+
+function logoutUser(){
+  if(!_loginUser)return;
+  saveSession();
+  reportUsage();
+  _loginUser=null;
+  localStorage.removeItem('sl_current_user');
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('welcomeScreen').style.display='none';
+  document.getElementById('subjectScreen').classList.add('hidden');
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('gameScreen').classList.add('hidden');
+  renderLoginScreen();
+}
 
 function showUsageStats(){
   var users=getUsers();
@@ -1025,7 +1169,12 @@ function adminSyncDown(){
 // ══════════════════════════════════════
 // GEMINI API
 // ══════════════════════════════════════
-function getGeminiKey(){const i=document.getElementById('apiKeyInput');if(i&&i.value.trim())return i.value.trim().replace(/^["']+|["']+$/g,'');const s=localStorage.getItem('gemini_key');if(s){const clean=s.replace(/^["']+|["']+$/g,'');if(i)i.value=clean;return clean;}return '';}
+function getGeminiKey(){
+  var k=localStorage.getItem('admin_gemini_key');if(k)return k;
+  const i=document.getElementById('apiKeyInput');if(i&&i.value.trim())return i.value.trim().replace(/^["']+|["']+$/g,'');
+  const s=localStorage.getItem('gemini_key');if(s){const clean=s.replace(/^["']+|["']+$/g,'');if(i)i.value=clean;return clean;}
+  return '';
+}
 function saveApiKey(){const i=document.getElementById('apiKeyInput');if(!i)return;const v=i.value.trim().replace(/^["']+|["']+$/g,'');if(v){localStorage.setItem('gemini_key',v);}}
 async function callGemini(prompt,systemPrompt='',maxTokens=250){
   const key=getGeminiKey();if(!key){showSettingsModal();return null;}
@@ -1133,15 +1282,43 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   loadExtraSubjects();
   const savedKey=localStorage.getItem('gemini_key');if(savedKey){const i=document.getElementById('apiKeyInput');if(i)i.value=savedKey;}
-  const name=localStorage.getItem('lh_name')||'Student';
-  document.getElementById('studentNameInput').value=name;
-  document.getElementById('welcomeName').textContent=name+'!';
-  loadSavedAvatar();
+
+  // Check if user was already logged in
+  var currentUser=localStorage.getItem('sl_current_user');
+  if(currentUser){
+    var users=getUsers();
+    var found=users.find(function(u){return u.name===currentUser;});
+    if(found){
+      doLogin(found);
+      return;
+    }
+  }
+
+  // Show login screen
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('welcomeScreen').style.display='none';
+  renderLoginScreen();
+  checkRemoteLock();
 });
 
 function startApp(){
-  const name=document.getElementById('studentNameInput').value.trim()||'Student';
+  var name=document.getElementById('studentNameInput').value.trim();
+  if(!name){
+    document.getElementById('studentNameInput').style.borderColor='#E74C3C';
+    document.getElementById('studentNameInput').placeholder='Please enter your name!';
+    document.getElementById('studentNameInput').focus();
+    return;
+  }
   localStorage.setItem('lh_name',name);
+  if(!_loginUser){
+    _loginUser={name:name};
+    localStorage.setItem('sl_current_user',name);
+  }
+  var users=getUsers();
+  if(!users.find(function(u){return u.name===name;})){
+    users.push({name:name});
+    saveUsers(users);
+  }
   document.getElementById('welcomeScreen').classList.add('hidden');
   document.getElementById('subjectScreen').classList.remove('hidden');
   document.getElementById('subGreeting').textContent='Hello, '+name+'!';
@@ -1151,11 +1328,8 @@ function startApp(){
 }
 function goToWelcome(){
   document.getElementById('subjectScreen').classList.add('hidden');
-  document.getElementById('welcomeScreen').classList.remove('hidden');
-  const name=localStorage.getItem('lh_name')||'Student';
-  document.getElementById('studentNameInput').value=name;
-  document.getElementById('welcomeName').textContent=name+'!';
-  loadSavedAvatar();
+  document.getElementById('loginScreen').style.display='flex';
+  renderLoginScreen();
 }
 function addNewBook(){
   const name=prompt('Enter Book/Subject name:');
@@ -1335,7 +1509,7 @@ async function generateFromImage(){
   if(!uploadedImages.length)return;
   const sub=SUBJECTS.find(s=>s.id===curSubjectId);
   const customName=document.getElementById('chapterNameInput').value.trim();
-  const classLevel=document.getElementById('classLevel').value;
+  const classLevel=document.getElementById('classLevelSelect').value;
 
   document.getElementById('genBtn').disabled=true;
   document.getElementById('genProgress').classList.remove('hidden');
@@ -2033,14 +2207,21 @@ async function sendQuestion(){
   addBubble(q,'user');chatHistory.push({role:'user',content:q});const loadId=addLoadingBubble();
   const sub=SUBJECTS.find(s=>s.id===curSubjectId);const name=localStorage.getItem('lh_name')||'श्रावणी';
   const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
-  const sys='तुम प्यारी Teacher हो। '+name+' '+((sub?getSubjectName(sub):'')+(ch?' — '+ch.name:''))+' पढ़ रहा/रही है। सिर्फ हिंदी (देवनागरी लिपि) में जवाब दो। अंग्रेज़ी शब्दों की जगह हिंदी शब्द इस्तेमाल करो। 2-3 वाक्य। emoji।';
+  const subName=sub?getSubjectName(sub):'';const chName=ch?' — '+ch.name:'';
+  var sys;
+  if(theoryLang==='hi'){
+    sys='तुम प्यारी Teacher हो। '+name+' '+subName+chName+' पढ़ रहा/रही है। सिर्फ हिंदी (देवनागरी लिपि) में जवाब दो। अंग्रेज़ी शब्दों की जगह हिंदी शब्द इस्तेमाल करो। 2-3 वाक्य। emoji।';
+  }else{
+    sys='You are a friendly Teacher. '+name+' is studying '+subName+chName+'. Answer in English. Use simple words for a young student. 2-3 sentences. Add an emoji.';
+  }
   const prompt=chatHistory.map(m=>(m.role==='user'?name+': ':'Teacher: ')+m.content).join('\n')+'\nTeacher:';
   const reply=await callGemini(prompt,sys,1024);
   removeLoadingBubble(loadId);
-  const answer=reply||"Sorry, I didn't understand. Ask again! 😊";
-  addBubble(answer,'ai',true);chatHistory.push({role:'assistant',content:answer});speakHI(answer);
+  const answer=reply||(theoryLang==='hi'?"Sorry, samajh nahi aaya. Dobara pucho! 😊":"Sorry, I didn't understand. Ask again! 😊");
+  addBubble(answer,'ai',true);chatHistory.push({role:'assistant',content:answer});
+  if(theoryLang==='hi')speakHI(answer);else speakEN(answer);
 }
-function addBubble(text,role,ws=false){const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble '+role;const s=document.createElement('span');s.textContent=text;d.appendChild(s);if(ws){const sp=document.createElement('div');sp.className='bubble-speak';sp.textContent='🔊 Listen';sp.onclick=()=>speakHI(text);d.appendChild(sp);}chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
+function addBubble(text,role,ws=false){const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble '+role;const s=document.createElement('span');s.textContent=text;d.appendChild(s);if(ws){const sp=document.createElement('div');sp.className='bubble-speak';sp.textContent='🔊 Listen';sp.onclick=()=>{if(theoryLang==='hi')speakHI(text);else speakEN(text);};d.appendChild(sp);}chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
 let lbId=0;function addLoadingBubble(){const id=++lbId;const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble loading';d.id='lb_'+id;d.innerHTML='<span class="loading-dots"><span></span><span></span><span></span></span>';chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return id;}
 function removeLoadingBubble(id){const el=document.getElementById('lb_'+id);if(el)el.remove();}
 
