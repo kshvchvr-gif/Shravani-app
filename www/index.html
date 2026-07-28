@@ -217,6 +217,9 @@ img{max-width:100%}
 .qbox-header-sub{font-family:'Hind',sans-serif;font-size:.78rem;color:rgba(255,255,255,.85)}
 .qbox-toggle-icon{font-size:1.1rem;color:white;transition:transform .2s}
 .qbox-toggle-icon.open{transform:rotate(180deg)}
+.qbox-lang-toggle{display:flex;gap:4px;margin:0 2px}
+.qbox-lang-btn{font-family:'Baloo 2',cursive;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:50px;border:2px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.85);cursor:pointer;transition:all .2s;white-space:nowrap}
+.qbox-lang-btn.active{background:white;color:#C77DFF;border-color:white}
 .qbox-body{padding:12px 14px;display:block}
 .qbox-chat{max-height:240px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:#C77DFF #F3E8FF}
 .bubble{max-width:85%;padding:9px 13px;border-radius:16px;font-size:.9rem;line-height:1.5;word-break:break-word}
@@ -329,7 +332,7 @@ img{max-width:100%}
 <!-- ═══ LOGIN SCREEN ═══ -->
 <div id="loginScreen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh;text-align:center;max-width:460px;width:100%;padding:20px 16px">
   <div style="font-size:3rem;margin-bottom:8px">🌸</div>
-  <h1 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#2D2A4A;margin-bottom:4px">Shravani Learning</h1>
+  <h1 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#2D2A4A;margin-bottom:4px">Ai Tutor</h1>
   <p style="font-family:'Nunito',sans-serif;font-size:.9rem;color:#7B7A9A;margin-bottom:20px">Choose your account or create a new one</p>
   <div id="loginUserList" style="width:100%;margin-bottom:16px"></div>
   <div id="loginNewUser" style="width:100%;display:none">
@@ -504,7 +507,8 @@ img{max-width:100%}
   <!-- Q BOX -->
   <div class="qbox">
     <div class="qbox-header" onclick="toggleQBox()">
-      <div><div class="qbox-header-title">💬 Ask Any Question!</div><div class="qbox-header-sub">Ask anything — in English or Hindi</div></div>
+      <div style="flex:1;min-width:0"><div class="qbox-header-title">💬 Ask Any Question!</div><div class="qbox-header-sub">Ask anything — in English or Hindi</div></div>
+      <div class="qbox-lang-toggle"><button class="qbox-lang-btn active" id="qboxLangEn" onclick="event.stopPropagation();setQBoxLang('en')">English</button><button class="qbox-lang-btn" id="qboxLangHi" onclick="event.stopPropagation();setQBoxLang('hi')">हिंदी</button></div>
       <div class="qbox-toggle-icon open" id="qboxIcon">▼</div>
     </div>
     <div class="qbox-body" id="qboxBody">
@@ -831,7 +835,22 @@ function renameSubject(subId){
     buildSubjectGrid();
   }
 }
-
+function deleteSubject(subId){
+  const sub=SUBJECTS.find(s=>s.id===subId);
+  if(!sub)return;
+  const name=getSubjectName(sub);
+  const msg=sub.custom?`Delete "${name}" and all its chapters?`:`Clear all data for "${name}"?`;
+  if(!confirm(msg))return;
+  if(sub.custom){
+    const idx=SUBJECTS.indexOf(sub);
+    if(idx>-1)SUBJECTS.splice(idx,1);
+    localStorage.setItem('lh_subjects_extra',JSON.stringify(SUBJECTS.filter(s=>s.id.startsWith('custom_'))));
+  }
+  localStorage.removeItem('lh_sub_'+subId);
+  localStorage.removeItem('lh_subname_'+subId);
+  buildSubjectGrid();
+  updateGlobalStats();
+}
 
 
 // ══════════════════════════════════════
@@ -841,7 +860,7 @@ let curSubjectId=null,curChIdx=0,curSection='theory',shuffledQs=[],curQ=0,score=
 let qAnimObj=null,endAnimObj=null,currentQ=null,qboxOpen=true;
 let chatHistory=[],timerInterval=null,timerSeconds=30,wrongAnswers=[];
 let uploadedImages=[];
-let theoryLang='en';
+let theoryLang=localStorage.getItem('lh_theoryLang')||'en';
 
 // ══════════════════════════════════════
 // PERSISTENCE
@@ -983,6 +1002,8 @@ setTimeout(startScreenTimer,2000);
 var _loginUser=null;
 
 function renderLoginScreen(){
+  // Remove test accounts
+  try{var _u=JSON.parse(localStorage.getItem('sl_users')||'[]');_u=_u.filter(function(x){return x.name.toLowerCase()!=='tani';});localStorage.setItem('sl_users',JSON.stringify(_u));}catch(e){}
   var newUserForm=document.getElementById('loginNewUser');
   var isAdding=newUserForm&&newUserForm.style.display==='block';
   var users=getUsers();
@@ -1210,11 +1231,11 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.4';
+const APP_VERSION='1.0.8';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 async function checkForUpdate(){
   try{
-    if(!window.Capacitor||!window.Capacitor.Plugins||!window.Capacitor.Plugins.UpdatePlugin)return;
+    if(!window.navigator.onLine)return;
     const res=await fetch('https://api.github.com/repos/'+GITHUB_REPO+'/releases/latest');
     if(!res.ok)return;
     const release=await res.json();
@@ -1252,22 +1273,20 @@ async function downloadUpdate(url){
   const btn=document.getElementById('updateBtn');
   progress.style.display='block';btn.style.display='none';
   try{
-    const plugins=window.Capacitor.Plugins;
-    if(plugins.UpdatePlugin&&plugins.UpdatePlugin.downloadAndInstall){
-      status.textContent='Downloading...';
-      bar.style.width='50%';
-      await plugins.UpdatePlugin.downloadAndInstall({url:url});
-    }else{
-      status.textContent='Opening download...';
-      bar.style.width='80%';
-      window.open(url,'_blank');
-    }
+    bar.style.width='50%';
+    status.textContent='Copy link and paste in browser to download';
     bar.style.width='100%';
-    status.textContent='Download complete! Install the APK.';
+    var copyDiv=document.createElement('div');copyDiv.style.cssText='margin-top:10px;padding:10px;background:#f0f0f5;border-radius:8px;word-break:break-all;font-size:.75rem;color:#555;cursor:pointer;border:1px dashed #C77DFF';
+    copyDiv.textContent=url;
+    copyDiv.onclick=function(){navigator.clipboard.writeText(url).then(function(){copyDiv.textContent='✅ Copied! Open Chrome & paste';copyDiv.style.background='#e8ffe8';setTimeout(function(){copyDiv.textContent=url;copyDiv.style.background='#f0f0f5';},3000);}).catch(function(){var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);copyDiv.textContent='✅ Copied! Open Chrome & paste';});};
+    status.parentElement.appendChild(copyDiv);
+    if(window.Capacitor&&window.Capacitor.isNativePlatform){
+      window.open(url,'_system');
+    }
   }catch(e){
-    status.textContent='Download failed. Tap to retry.';
-    btn.style.display='inline-block';btn.textContent='Retry';
-    btn.onclick=()=>downloadUpdate(url);
+    status.textContent='Copy this link and open in browser:';
+    var link=document.createElement('a');link.href=url;link.textContent='Download APK';link.style.cssText='display:block;margin-top:8px;color:#C77DFF;font-weight:700;word-break:break-all';
+    status.parentElement.appendChild(link);
   }
 }
 setTimeout(checkForUpdate,5000);
@@ -1283,18 +1302,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   loadExtraSubjects();
   const savedKey=localStorage.getItem('gemini_key');if(savedKey){const i=document.getElementById('apiKeyInput');if(i)i.value=savedKey;}
 
-  // Check if user was already logged in
-  var currentUser=localStorage.getItem('sl_current_user');
-  if(currentUser){
-    var users=getUsers();
-    var found=users.find(function(u){return u.name===currentUser;});
-    if(found){
-      doLogin(found);
-      return;
-    }
-  }
-
-  // Show login screen
+  // Always show login screen — user picks account
+  localStorage.removeItem('sl_current_user');
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('welcomeScreen').style.display='none';
   renderLoginScreen();
@@ -1325,6 +1334,7 @@ function startApp(){
   loadSavedAvatar();
   buildSubjectGrid();
   updateGlobalStats();
+  setTimeout(function(){setQBoxLang(theoryLang);},100);
 }
 function goToWelcome(){
   document.getElementById('subjectScreen').classList.add('hidden');
@@ -1366,9 +1376,10 @@ function buildSubjectGrid(){
     div.className='sub-card'+(hasData?'':' add-subject-card');
     div.style.background=hasData?sub.color:sub.light;
     div.style.color=hasData?'white':sub.color;
-    const editBtn=sub.custom?`<span onclick="event.stopPropagation();renameSubject('${sub.id}')" style="position:absolute;top:6px;right:8px;font-size:.75rem;cursor:pointer;opacity:.7" title="Rename">✏️</span>`:'';
+    const editBtn=sub.custom?`<span onclick="event.stopPropagation();renameSubject('${sub.id}')" style="position:absolute;top:6px;right:26px;font-size:.75rem;cursor:pointer;opacity:.7" title="Rename">✏️</span>`:'';
+    const delBtn=`<span onclick="event.stopPropagation();deleteSubject('${sub.id}')" style="position:absolute;top:6px;right:8px;font-size:.75rem;cursor:pointer;opacity:.6" title="${sub.custom?'Delete subject':'Clear chapters'}">🗑️</span>`;
     div.style.position='relative';
-    div.innerHTML=`${editBtn}<div class="sub-emoji">${sub.emoji}</div><div class="sub-name">${displayName}</div><div class="sub-chapters">${hasData?chapters.length+' chapters':'Tap to create content'}</div>`;
+    div.innerHTML=`${editBtn}${delBtn}<div class="sub-emoji">${sub.emoji}</div><div class="sub-name">${displayName}</div><div class="sub-chapters">${hasData?chapters.length+' chapters':'Tap to create content'}</div>`;
     div.onclick=()=>openSubject(sub.id);
     grid.appendChild(div);
   });
@@ -1427,7 +1438,7 @@ function buildSubjectDash(){
       const div=document.createElement('div');
       div.className='dash-ch';div.style.background=done?ch.color:sub.light;
       div.style.color=done?'white':sub.color;
-      div.innerHTML=`<div class="dash-ch-name">${ch.label}</div><div class="dash-ch-score">${done?pct+'% ('+sc.score+'/'+sc.total+')':'Not started'}</div><div class="dash-ch-bar"><div class="dash-ch-bar-fill" style="width:${pct}%"></div></div>${done?'<div style="position:absolute;top:8px;right:8px;font-size:.7rem">✅</div>':''}`;
+      div.innerHTML=`<span onclick="event.stopPropagation();deleteChapter(${i})" style="position:absolute;top:6px;left:8px;font-size:.75rem;cursor:pointer;opacity:.6" title="Delete chapter">🗑️</span><div class="dash-ch-name">${ch.label}</div><div class="dash-ch-score">${done?pct+'% ('+sc.score+'/'+sc.total+')':'Not started'}</div><div class="dash-ch-bar"><div class="dash-ch-bar-fill" style="width:${pct}%"></div></div>${done?'<div style="position:absolute;top:8px;right:8px;font-size:.7rem">✅</div>':''}`;
       div.onclick=()=>startChapter(i);grid.appendChild(div);
     });
     const addBtn=document.createElement('div');
@@ -1676,6 +1687,18 @@ function selectChapter(idx){
   curSection='theory';updateSectionBtns();showTheory();
   speakEN(chapters[idx].name);
 }
+function deleteChapter(idx){
+  if(!confirm('Delete this chapter?'))return;
+  const chapters=getSubjectChapters(curSubjectId)||[];
+  if(idx<0||idx>=chapters.length)return;
+  const ch=chapters[idx];
+  chapters.splice(idx,1);
+  saveSubjectChapters(curSubjectId,chapters);
+  const d=getSubjectData(curSubjectId)||{scores:{},wrong:[],totalC:0,totalA:0};
+  if(ch&&d.scores)delete d.scores[ch.id];
+  saveSubjectData(curSubjectId,d);
+  buildSubjectDash();
+}
 function switchSection(sec){
   curSection=sec;updateSectionBtns();
   if(sec==='theory')showTheory();
@@ -1699,9 +1722,9 @@ function showTheory(){
   const chapters=getSubjectChapters(curSubjectId)||[];
   const ch=chapters[curChIdx];if(!ch)return;
 
-  if(theoryLang==='hi'&&!ch.theory_en){
+  if(theoryLang==='en'&&!ch.theory_en){
     const src=ch.theory||{title:ch.name,sections:[]};
-    document.getElementById('theoryContent').innerHTML=`<div class="lang-toggle"><button class="lang-btn active">English</button><button class="lang-btn" onclick="theoryLang='en';showTheory()">हिंदी</button></div><div style="text-align:center;padding:30px"><div class="loading-dots"><span></span><span></span><span></span></div><div style="font-family:'Nunito',sans-serif;color:#7B7A9A;margin-top:8px">📖 Translating to complete English...</div></div>`;
+    document.getElementById('theoryContent').innerHTML=`<div class="lang-toggle"><button class="lang-btn active" onclick="theoryLang='en';showTheory()">English</button><button class="lang-btn" onclick="theoryLang='hi';showTheory()">हिंदी</button></div><div style="text-align:center;padding:30px"><div class="loading-dots"><span></span><span></span><span></span></div><div style="font-family:'Nunito',sans-serif;color:#7B7A9A;margin-top:8px">📖 Translating to complete English...</div></div>`;
     const prompt='Translate this Hinglish theory to complete proper English. Keep the same JSON structure with title and sections. Return ONLY JSON:\n\n'+JSON.stringify(src);
     callGemini(prompt,'Return ONLY valid JSON. Translate title and all section headings/content to complete proper English.',3000).then(r=>{
       if(r){
@@ -1722,10 +1745,10 @@ function showTheory(){
     return;
   }
 
-  const t=theoryLang==='hi'?((ch.theory_en)||(ch.theory||{title:ch.name,sections:[]})):((ch.theory)||{title:ch.name,sections:[]});
+  const t=theoryLang==='en'?((ch.theory_en)||(ch.theory||{title:ch.name,sections:[]})):((ch.theory)||{title:ch.name,sections:[]});
   const badge=document.getElementById('theoryBadge');badge.textContent=ch.name;badge.style.background=ch.color;
   let fullText='';
-  let html=`<div class="lang-toggle"><button class="lang-btn ${theoryLang==='hi'?'active':''}" onclick="theoryLang='hi';showTheory()">English</button><button class="lang-btn ${theoryLang==='en'?'active':''}" onclick="theoryLang='en';showTheory()">हिंदी</button></div>`;
+  let html=`<div class="lang-toggle"><button class="lang-btn ${theoryLang==='en'?'active':''}" onclick="theoryLang='en';showTheory()">English</button><button class="lang-btn ${theoryLang==='hi'?'active':''}" onclick="theoryLang='hi';showTheory()">हिंदी</button></div>`;
   html+=`<div class="theory-title">${t.title}</div>`;
   html+=`<div class="theory-speak"><button class="speak-en" onclick="speakTheoryAll()">🔊 Listen</button><button class="speak-hi" onclick="speakTheoryAllHindi()">🔊 Listen in Hindi</button></div>`;
   (t.sections||[]).forEach((sec,si)=>{
@@ -2202,6 +2225,17 @@ function showEnd(){
 // Q BOX
 // ══════════════════════════════════════
 function toggleQBox(){qboxOpen=!qboxOpen;document.getElementById('qboxBody').style.display=qboxOpen?'block':'none';document.getElementById('qboxIcon').classList.toggle('open',qboxOpen);}
+function setQBoxLang(lang){
+  theoryLang=lang;
+  localStorage.setItem('lh_theoryLang',lang);
+  document.getElementById('qboxLangEn').className='qbox-lang-btn'+(lang==='en'?' active':'');
+  document.getElementById('qboxLangHi').className='qbox-lang-btn'+(lang==='hi'?' active':'');
+  document.getElementById('qboxInput').placeholder=lang==='hi'?'अपना प्रश्न लिखें...':'Type your question...';
+  const chat=document.getElementById('qboxChat');
+  if(chat.children.length===1){
+    chat.innerHTML=lang==='hi'?'<div class="bubble ai"><span>नमस्ते! 🌸 मैं आपकी टीचर हूँ। कोई भी सवाल पूछिए!</span><div class="bubble-speak" onclick="speakHI(this.parentElement.querySelector(\'span\').textContent)">🔊 Listen</div></div>':'<div class="bubble ai"><span>Hello! 🌸 I\'m your Teacher. Ask me any subject question!</span><div class="bubble-speak" onclick="speakHI(this.parentElement.querySelector(\'span\').textContent)">🔊 Listen</div></div>';
+  }
+}
 async function sendQuestion(){
   const inp=document.getElementById('qboxInput');const q=inp.value.trim();if(!q)return;inp.value='';
   addBubble(q,'user');chatHistory.push({role:'user',content:q});const loadId=addLoadingBubble();
