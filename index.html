@@ -1210,7 +1210,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.6';
+const APP_VERSION='1.0.7';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 async function checkForUpdate(){
   try{
@@ -1682,9 +1682,9 @@ function showTheory(){
   const chapters=getSubjectChapters(curSubjectId)||[];
   const ch=chapters[curChIdx];if(!ch)return;
 
-  if(theoryLang==='hi'&&!ch.theory_en){
+  if(theoryLang==='en'&&!ch.theory_en){
     const src=ch.theory||{title:ch.name,sections:[]};
-    document.getElementById('theoryContent').innerHTML=`<div class="lang-toggle"><button class="lang-btn active">English</button><button class="lang-btn" onclick="theoryLang='en';showTheory()">हिंदी</button></div><div style="text-align:center;padding:30px"><div class="loading-dots"><span></span><span></span><span></span></div><div style="font-family:'Nunito',sans-serif;color:#7B7A9A;margin-top:8px">📖 Translating to complete English...</div></div>`;
+    document.getElementById('theoryContent').innerHTML=`<div class="lang-toggle"><button class="lang-btn active" onclick="theoryLang='en';showTheory()">English</button><button class="lang-btn" onclick="theoryLang='hi';showTheory()">हिंदी</button></div><div style="text-align:center;padding:30px"><div class="loading-dots"><span></span><span></span><span></span></div><div style="font-family:'Nunito',sans-serif;color:#7B7A9A;margin-top:8px">📖 Translating to complete English...</div></div>`;
     const prompt='Translate this Hinglish theory to complete proper English. Keep the same JSON structure with title and sections. Return ONLY JSON:\n\n'+JSON.stringify(src);
     callGemini(prompt,'Return ONLY valid JSON. Translate title and all section headings/content to complete proper English.',3000).then(r=>{
       if(r){
@@ -1705,10 +1705,10 @@ function showTheory(){
     return;
   }
 
-  const t=theoryLang==='hi'?((ch.theory_en)||(ch.theory||{title:ch.name,sections:[]})):((ch.theory)||{title:ch.name,sections:[]});
+  const t=theoryLang==='en'?((ch.theory_en)||(ch.theory||{title:ch.name,sections:[]})):((ch.theory)||{title:ch.name,sections:[]});
   const badge=document.getElementById('theoryBadge');badge.textContent=ch.name;badge.style.background=ch.color;
   let fullText='';
-  let html=`<div class="lang-toggle"><button class="lang-btn ${theoryLang==='hi'?'active':''}" onclick="theoryLang='hi';showTheory()">English</button><button class="lang-btn ${theoryLang==='en'?'active':''}" onclick="theoryLang='en';showTheory()">हिंदी</button></div>`;
+  let html=`<div class="lang-toggle"><button class="lang-btn ${theoryLang==='en'?'active':''}" onclick="theoryLang='en';showTheory()">English</button><button class="lang-btn ${theoryLang==='hi'?'active':''}" onclick="theoryLang='hi';showTheory()">हिंदी</button></div>`;
   html+=`<div class="theory-title">${t.title}</div>`;
   html+=`<div class="theory-speak"><button class="speak-en" onclick="speakTheoryAll()">🔊 Listen</button><button class="speak-hi" onclick="speakTheoryAllHindi()">🔊 Listen in Hindi</button></div>`;
   (t.sections||[]).forEach((sec,si)=>{
