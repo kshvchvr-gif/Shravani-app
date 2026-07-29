@@ -248,6 +248,22 @@ var server=http.createServer(function(req,res){
     return;
   }
 
+  // ─── SERVE APP STATIC FILES (www/) ───
+  if(req.method==='GET'&&pathname.startsWith('/app')){
+    var filePath=pathname==='/app'||pathname==='/app/'?'/index.html':pathname.replace('/app','');
+    var fullPath=path.join(__dirname,'www',filePath);
+    var ext=path.extname(fullPath);
+    var mimeTypes={'':'.html','.html':'text/html','.css':'text/css','.js':'application/javascript','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.woff2':'font/woff2'};
+    try{
+      var content=fs.readFileSync(fullPath);
+      res.writeHead(200,{'Content-Type':mimeTypes[ext]||'text/plain','Access-Control-Allow-Origin':'*'});
+      res.end(content);
+    }catch(e){
+      jsonResponse(res,404,{error:'Not found'});
+    }
+    return;
+  }
+
   jsonResponse(res,404,{error:'Not found'});
 });
 
