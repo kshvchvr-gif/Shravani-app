@@ -184,6 +184,12 @@ var server=http.createServer(function(req,res){
     return;
   }
 
+  // ─── STATUS (phone checks connection) ───
+  if(req.method==='GET'&&pathname==='/api/status'){
+    jsonResponse(res,200,{ok:true,url:'http://'+req.headers.host});
+    return;
+  }
+
   // ─── VISITOR TRACKING ───
 
   // Get visitor stats
@@ -203,6 +209,35 @@ var server=http.createServer(function(req,res){
     saveVisitors();
     jsonResponse(res,200,{ok:true});
     return;
+  }
+
+  // ─── GEMINI PROXY (phone asks server to call Gemini, API key stays server-side) ───
+  if(req.method==='POST'&&pathname==='/api/gemini'){
+    return readBody(req,function(body){
+      try{
+        const geminiReq=JSON.parse(body);
+        const key=appConfig.apiKey;
+        if(!key){jsonResponse(res,403,{error:'No API key configured on server. Add one in dashboard.'});return;}
+        const url='https://generativelanguage.googleapis.com/v1beta/models/'+(geminiReq.model||'gemini-3-flash-preview')+':generateContent?key='+encodeURIComponent(key);
+        const https=require('https');const u=new URL(url);
+        const opts={
+          hostname:u.hostname,path:u.pathname+u.search,method:'POST',
+          headers:{'Content-Type':'application/json'}
+        };
+        if(geminiReq.body)opts.headers['Content-Length']=Buffer.byteLength(geminiReq.body,'utf8');
+        const proxyReq=https.request(opts,function(proxyRes){
+          let data='';
+          proxyRes.on('data',function(c){data+=c;});
+          proxyRes.on('end',function(){
+            res.writeHead(proxyRes.statusCode,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+            res.end(data);
+          });
+        });
+        proxyReq.on('error',function(e){jsonResponse(res,500,{error:e.message});});
+        if(geminiReq.body)proxyReq.write(geminiReq.body);
+        proxyReq.end();
+      }catch(e){jsonResponse(res,400,{error:'Bad request'});}
+    });
   }
 
   // ─── DASHBOARD (tracks visitors automatically) ───

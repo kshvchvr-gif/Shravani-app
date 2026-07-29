@@ -575,47 +575,22 @@ img{max-width:100%}
   </div>
 </div>
 
-<!-- ═══ SETTINGS MODAL ═══ -->
+<!-- ═══ ABOUT MODAL ═══ -->
 <div class="modal-overlay hidden" id="settingsModal">
   <div class="modal" style="max-width:400px">
     <button class="modal-close" onclick="document.getElementById('settingsModal').classList.add('hidden')">✕</button>
-    <h2>⚙️ Settings</h2>
-    <div style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.85rem;color:#27AE60;margin-bottom:14px">✅ Hindi TTS: Web Speech API (Offline)</div>
-
-    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-bottom:4px">
-      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📝 Convert Old Chapters to Hindi</div>
-      <div id="convertStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-bottom:8px">Converts old Hinglish chapters to pure Hindi</div>
-      <button onclick="convertOldChapters()" id="convertBtn" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer;width:100%">🔄 Convert All Chapters</button>
-    </div>
-
-    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
-      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">🔄 WiFi Sync (Laptop ↔ Phone)</div>
-      <div id="syncStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-bottom:8px">Checking connection...</div>
-      <div id="syncServerInfo" style="display:none;background:#F3E8FF;border-radius:12px;padding:10px;margin-bottom:10px">
-        <div style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.82rem;color:#2D2A4A;word-break:break-all">
-          📱 Enter this URL on your phone:<br><strong id="syncURL" style="color:#C77DFF"></strong>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="syncToServer()" id="syncUpBtn" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#27AE60;color:white;border:none;border-radius:12px;cursor:pointer">📤 Sync to Laptop</button>
-        <button onclick="syncFromServer()" id="syncDownBtn" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📥 Load from Laptop</button>
-      </div>
-      <div id="syncResult" style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.8rem;margin-top:6px"></div>
-    </div>
-
-    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:14px">
-      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">💾 Export / Import</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="exportData()" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">📤 Export JSON</button>
-        <label style="display:inline-block;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">
-          📥 Import JSON <input type="file" accept=".json" onchange="importData(event)" style="display:none">
-        </label>
+    <h2>ℹ️ About</h2>
+    <div style="text-align:center;padding:10px 0">
+      <div style="font-size:2.5rem;margin-bottom:8px">🌸</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A">Shravani Learning App</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#7B7A9A;margin:4px 0">Version 2.0</div>
+      <div style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.85rem;color:#C77DFF;margin:8px 0">AI-powered Learning for Kids</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:#aaa;margin-top:16px;border-top:1px solid #eee;padding-top:12px">
+        &copy; 2026 Shravani Learning App. All rights reserved.<br>
+        Unauthorized copying or distribution is prohibited.
       </div>
     </div>
-
-    <div style="margin-top:14px">
-      <button onclick="if(confirm('Delete ALL data?')){localStorage.clear();location.reload()}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#E74C3C;color:white;border:none;border-radius:12px;cursor:pointer">🗑️ Delete All Data</button>
-    </div>
+    <button onclick="document.getElementById('settingsModal').classList.add('hidden')" style="display:block;margin:12px auto 0;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;padding:10px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;cursor:pointer">OK</button>
   </div>
 </div>
 
@@ -1182,8 +1157,23 @@ function adminSyncDown(){
 }
 
 // ══════════════════════════════════════
-// GEMINI API
+// GEMINI API — Server proxy first, fallback to client key
 // ══════════════════════════════════════
+
+// Try calling Gemini through the server proxy (API key stays on server)
+async function tryServerGemini(body){
+  if(!window.__syncConnected)return null;
+  try{
+    const res=await fetch((SYNC_URL||'')+'/api/gemini',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({body,model:'gemini-3-flash-preview'})
+    });
+    if(!res.ok)return null;
+    const data=await res.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
+  }catch(e){return null;}
+}
+
 function getGeminiKey(){
   var k=localStorage.getItem('admin_gemini_key');if(k)return k;
   const i=document.getElementById('apiKeyInput');if(i&&i.value.trim())return i.value.trim().replace(/^["']+|["']+$/g,'');
@@ -1192,31 +1182,40 @@ function getGeminiKey(){
 }
 function saveApiKey(){const i=document.getElementById('apiKeyInput');if(!i)return;const v=i.value.trim().replace(/^["']+|["']+$/g,'');if(v){localStorage.setItem('gemini_key',v);}}
 async function callGemini(prompt,systemPrompt='',maxTokens=250){
-  const key=getGeminiKey();if(!key){showSettingsModal();return null;}
+  const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}});
+  const serverResult=await tryServerGemini(body);
+  if(serverResult)return serverResult;
+  const key=getGeminiKey();if(!key){showAdminPanel();return null;}
   try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}})});
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body});
     const data=await res.json();if(!res.ok){console.error('Gemini error:',data);return null;}
     return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
   }catch(e){console.error('Gemini fetch error:',e);return null;}
 }
 async function callGeminiVision(base64Image,mimeType,prompt,systemPrompt='',maxTokens=4000){
-  const key=getGeminiKey();if(!key){showSettingsModal();return null;}
+  const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt},{inlineData:{mimeType,data:base64Image}}]}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}});
+  const serverResult=await tryServerGemini(body);
+  if(serverResult)return serverResult;
+  const key=getGeminiKey();if(!key){showAdminPanel();return null;}
   try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt},{inlineData:{mimeType,data:base64Image}}]}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}})});
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body});
     const data=await res.json();if(!res.ok){console.error('Gemini Vision error:',data);return null;}
     return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
   }catch(e){console.error('Gemini Vision fetch error:',e);return null;}
 }
 async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=4000){
-  const key=getGeminiKey();if(!key){showSettingsModal();return null;}
+  const parts=[{text:prompt}];
+  images.forEach(img=>{
+    const b64=img.split(',')[1];
+    const mt=img.split(';')[0].split(':')[1]||'image/jpeg';
+    parts.push({inlineData:{mimeType:mt,data:b64}});
+  });
+  const body=JSON.stringify({contents:[{role:'user',parts}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}});
+  const serverResult=await tryServerGemini(body);
+  if(serverResult)return serverResult;
+  const key=getGeminiKey();if(!key){showAdminPanel();return null;}
   try{
-    const parts=[{text:prompt}];
-    images.forEach(img=>{
-      const b64=img.split(',')[1];
-      const mt=img.split(';')[0].split(':')[1]||'image/jpeg';
-      parts.push({inlineData:{mimeType:mt,data:b64}});
-    });
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}})});
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body});
     const data=await res.json();if(!res.ok){console.error('Gemini Vision Multi error:',data);return null;}
     return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
   }catch(e){console.error('Gemini Vision Multi fetch error:',e);return null;}
@@ -2258,7 +2257,13 @@ function removeLoadingBubble(id){const el=document.getElementById('lb_'+id);if(e
 // ══════════════════════════════════════
 function showSettingsModal(){
   document.getElementById('settingsModal').classList.remove('hidden');
-  checkSync();
+}
+function showAdminPanel(){
+  document.getElementById('adminModal').classList.remove('hidden');
+  const container=document.getElementById('usageStatsContainer');
+  if(container)container.innerHTML=showUsageStats();
+  const sUrl=document.getElementById('serverUrlInput');
+  if(sUrl)sUrl.value=SL_SERVER;
 }
 
 async function convertOldChapters(){
@@ -2367,6 +2372,7 @@ async function checkSync() {
     const data = await res.json();
     if (data.ok) {
       syncConnected = true;
+      window.__syncConnected = true;
       statusEl.textContent = '✅ Connected to laptop server!';
       statusEl.style.color = '#27AE60';
       infoEl.style.display = 'block';
@@ -2374,6 +2380,7 @@ async function checkSync() {
     }
   } catch (e) {
     syncConnected = false;
+    window.__syncConnected = false;
     statusEl.textContent = '❌ Server not found — run `node server.js` on laptop';
     statusEl.style.color = '#E74C3C';
     infoEl.style.display = 'none';
