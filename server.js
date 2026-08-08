@@ -19,6 +19,7 @@ function saveJSON(f,d){fs.writeFileSync(f,JSON.stringify(d,null,2));}
 var allUsage=loadJSON(USAGE_FILE,[]);
 var appConfig=loadJSON(CONFIG_FILE,{
   locked:false,lockMsg:'',broadcast:'',apiKey:'',
+  openrouterKey:'',nvidiaKey:'',
   subjects:null
 });
 var contentUpdates=loadJSON(CONTENT_FILE,[]);
@@ -91,6 +92,8 @@ var server=http.createServer(function(req,res){
       lockMsg:appConfig.lockMsg,
       broadcast:appConfig.broadcast,
       apiKey:appConfig.apiKey||'',
+      openrouterKey:appConfig.openrouterKey||'',
+      nvidiaKey:appConfig.nvidiaKey||'',
       subjects:appConfig.subjects||null,
       contentUpdates:pendingContent
     });
@@ -145,6 +148,8 @@ var server=http.createServer(function(req,res){
         if(newCfg.lockMsg!==undefined)appConfig.lockMsg=newCfg.lockMsg;
         if(newCfg.broadcast!==undefined)appConfig.broadcast=newCfg.broadcast;
         if(newCfg.apiKey!==undefined)appConfig.apiKey=newCfg.apiKey;
+        if(newCfg.openrouterKey!==undefined)appConfig.openrouterKey=newCfg.openrouterKey;
+        if(newCfg.nvidiaKey!==undefined)appConfig.nvidiaKey=newCfg.nvidiaKey;
         if(newCfg.subjects!==undefined)appConfig.subjects=newCfg.subjects;
         saveConfig();
         console.log('[CONFIG] Updated:',Object.keys(newCfg).join(', '));

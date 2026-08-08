@@ -402,6 +402,12 @@ function checkRemoteLock(){
     if(cfg.apiKey&&!localStorage.getItem('admin_gemini_key')){
       localStorage.setItem('admin_gemini_key',cfg.apiKey);
     }
+    if(cfg.openrouterKey&&!localStorage.getItem('openrouter_key')){
+      localStorage.setItem('openrouter_key',cfg.openrouterKey);
+    }
+    if(cfg.nvidiaKey&&!localStorage.getItem('nvidia_key')){
+      localStorage.setItem('nvidia_key',cfg.nvidiaKey);
+    }
     if(cfg.subjects){
       localStorage.setItem('sl_subjects',JSON.stringify(cfg.subjects));
     }

@@ -151,6 +151,20 @@ body{font-family:'Nunito',sans-serif;background:#f4f0ff;color:#2D2A4A;min-height
       <button class="btn btn-info" onclick="saveConfig()">Update Key</button>
     </div>
     <div class="card">
+      <h3>🔌 OpenRouter API Key <span style="font-size:.7rem;color:#7B7A9A">(backup for Gemini)</span></h3>
+      <div class="form-group">
+        <input type="password" id="cfgOrKey" placeholder="sk-or-v1-..." onchange="saveConfig()">
+      </div>
+      <button class="btn btn-info" onclick="saveConfig()">Update Key</button>
+    </div>
+    <div class="card">
+      <h3>🟢 NVIDIA NIM API Key <span style="font-size:.7rem;color:#7B7A9A">(backup for Gemini)</span></h3>
+      <div class="form-group">
+        <input type="password" id="cfgNvKey" placeholder="nvapi-..." onchange="saveConfig()">
+      </div>
+      <button class="btn btn-info" onclick="saveConfig()">Update Key</button>
+    </div>
+    <div class="card">
       <h3>📤 Export / Import Config</h3>
       <div class="flex">
         <button class="btn btn-success" onclick="exportConfig()">Export Config JSON</button>
@@ -438,6 +452,8 @@ function renderConfig(){
   document.getElementById('cfgLockMsg').value=cfg.lockMsg||'';
   document.getElementById('cfgBroadcast').value=cfg.broadcast||'';
   document.getElementById('cfgApiKey').value=cfg.apiKey||'';
+  document.getElementById('cfgOrKey').value=cfg.openrouterKey||'';
+  document.getElementById('cfgNvKey').value=cfg.nvidiaKey||'';
 }
 
 function saveConfig(){
@@ -445,7 +461,9 @@ function saveConfig(){
     locked:document.getElementById('cfgLock').checked,
     lockMsg:document.getElementById('cfgLockMsg').value,
     broadcast:document.getElementById('cfgBroadcast').value,
-    apiKey:document.getElementById('cfgApiKey').value
+    apiKey:document.getElementById('cfgApiKey').value,
+    openrouterKey:document.getElementById('cfgOrKey').value,
+    nvidiaKey:document.getElementById('cfgNvKey').value
   };
   document.getElementById('cfgLockLabel').textContent=newCfg.locked?'Locked':'Unlocked';
   api('POST','/api/admin/config',newCfg).then(function(){toast('Config saved!');});
