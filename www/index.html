@@ -872,26 +872,6 @@
       </div>
     </div>
     <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
-      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:4px">🔌 OpenRouter API Key <span style="font-size:.7rem;color:#7B7A9A;font-family:'Nunito',sans-serif;font-weight:400">(backup for Gemini)</span></div>
-      <textarea id="adminOrKey" rows="2" style="width:100%;font-family:'Nunito',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A;resize:none;word-break:break-all" placeholder="sk-or-v1-... key yahan paste karo"></textarea>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button onclick="adminPasteProvider('adminOrKey','adminOrStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📋 Paste</button>
-        <button onclick="saveProviderKey('openrouter_key','adminOrKey','adminOrStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">💾 Save</button>
-        <button onclick="window.open('https://openrouter.ai/keys','_blank')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;padding:8px 12px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">🌐 Get Free Key</button>
-      </div>
-      <div id="adminOrStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-top:6px"></div>
-    </div>
-    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
-      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:4px">🟢 NVIDIA NIM API Key <span style="font-size:.7rem;color:#7B7A9A;font-family:'Nunito',sans-serif;font-weight:400">(backup for Gemini)</span></div>
-      <textarea id="adminNvKey" rows="2" style="width:100%;font-family:'Nunito',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A;resize:none;word-break:break-all" placeholder="nvapi-... key yahan paste karo"></textarea>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button onclick="adminPasteProvider('adminNvKey','adminNvStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📋 Paste</button>
-        <button onclick="saveProviderKey('nvidia_key','adminNvKey','adminNvStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">💾 Save</button>
-        <button onclick="window.open('https://build.nvidia.com','_blank')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;padding:8px 12px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">🌐 Get Free Key</button>
-      </div>
-      <div id="adminNvStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-top:6px"></div>
-    </div>
-    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
       <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📡 Server URL</div>
       <input type="text" id="serverUrlInput" value="" placeholder="https://your-server.com" style="width:100%;font-family:'Nunito',sans-serif;font-size:.85rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:10px;color:#2D2A4A;margin-bottom:6px">
       <button onclick="var u=document.getElementById('serverUrlInput').value.trim();if(u){localStorage.setItem('sl_server_url',u);SL_SERVER=u;alert('Server URL saved!');}" style="font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#27AE60;color:white;border:none;border-radius:12px;cursor:pointer">💾 Save URL</button>

@@ -667,31 +667,8 @@ function adminPasteKey(){
     document.getElementById('adminApiKey').focus();
   }
 }
-function adminPasteProvider(elId,stId){
-  if(navigator.clipboard&&navigator.clipboard.readText){
-    navigator.clipboard.readText().then(function(t){
-      document.getElementById(elId).value=t.trim();
-      var st=document.getElementById(stId);if(st){st.textContent='✅ Pasted!';st.style.color='#27AE60';}
-    }).catch(function(){
-      var st=document.getElementById(stId);if(st){st.textContent='❌ Clipboard access denied — paste manually';st.style.color='#E74C3C';}
-      document.getElementById(elId).focus();
-    });
-  }else{
-    var st=document.getElementById(stId);if(st){st.textContent='❌ Tap textarea and paste manually';st.style.color='#7B7A9A';}
-    document.getElementById(elId).focus();
-  }
-}
-function saveProviderKey(store,elId,stId){
-  var v=document.getElementById(elId).value.trim();
-  var st=document.getElementById(stId);
-  if(!v){if(st){st.textContent='❌ Enter a valid key';st.style.color='#E74C3C';}return;}
-  localStorage.setItem(store,v);
-  if(st){st.textContent='✅ API Key saved! Restart app to use.';st.style.color='#27AE60';}
-}
 function prefillAdminKeys(){
-  var i=document.getElementById('adminOrKey');if(i){var k=localStorage.getItem('openrouter_key');if(k)i.value=k;}
-  i=document.getElementById('adminNvKey');if(i){var k2=localStorage.getItem('nvidia_key');if(k2)i.value=k2;}
-  i=document.getElementById('adminApiKey');if(i){var k3=localStorage.getItem('admin_gemini_key');if(k3)i.value=k3;}
+  var i=document.getElementById('adminApiKey');if(i){var k=localStorage.getItem('admin_gemini_key');if(k)i.value=k;}
 }
 function adminExport(){
   var data={};
