@@ -22,6 +22,11 @@ var appConfig=loadJSON(CONFIG_FILE,{
   openrouterKey:'',nvidiaKey:'',
   subjects:null
 });
+// Render dashboard Environment Variables se keys load karo (agar config file
+// mein na hon). Isse restart par bhi keys bachti hain (Render ka filesystem ephemeral hai).
+if(!appConfig.apiKey&&process.env.GEMINI_KEY)appConfig.apiKey=process.env.GEMINI_KEY;
+if(!appConfig.openrouterKey&&process.env.OPENROUTER_KEY)appConfig.openrouterKey=process.env.OPENROUTER_KEY;
+if(!appConfig.nvidiaKey&&process.env.NVIDIA_KEY)appConfig.nvidiaKey=process.env.NVIDIA_KEY;
 var contentUpdates=loadJSON(CONTENT_FILE,[]);
 var devices=loadJSON(DEVICES_FILE,{});
 var visitors=loadJSON(VISITORS_FILE,{total:0,unique:{},history:[]});
