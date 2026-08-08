@@ -143,6 +143,8 @@ function createOpenAIAdapter(cfg){
     endpoint: cfg.endpoint,
 
     async isAvailable(){
+      // proxy config ho to key check ke bina bhi available (key server par)
+      if (cfg.proxy) return true;
       return !!_aiKeyFrom(cfg.keyStorage, cfg.keyInput);
     },
 
@@ -171,6 +173,37 @@ function createOpenAIAdapter(cfg){
         max_tokens: req.maxTokens,
         temperature: 0.7
       });
+
+      // server proxy configured ho to pehle wahan bhejo (key server par,
+      // browser CORS issues bhi avoid hoti hain)
+      if (cfg.proxy) {
+        try {
+          const base = (typeof SL_SERVER !== 'undefined' && SL_SERVER) || '';
+          const res = await fetch(base + cfg.proxy, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: model, body: body }),
+            signal: ctx.signal
+          });
+          const data = await res.json().catch(function(){ return {}; });
+          if (res.ok && data.choices && data.choices[0]) {
+            const c = data.choices[0].message && data.choices[0].message.content;
+            let text = null;
+            if (typeof c === 'string') text = c;
+            else if (Array.isArray(c)) text = c.map(function(x){ return (x && x.text) || ''; }).join('');
+            if (text && text.trim()) {
+              if (data.choices[0].finish_reason === 'length') {
+                return { ok: false, status: res.status, errorType: 'truncated' };
+              }
+              return { ok: true, text: text };
+            }
+            return { ok: false, status: res.status, errorType: null };
+          }
+          return { ok: false, status: res.status, errorType: null };
+        } catch(e){
+          // proxy fail → direct try karo (agar key ho)
+        }
+      }
 
       const res = await fetch(this.endpoint, {
         method: 'POST',
@@ -207,6 +240,7 @@ function createOpenAIAdapter(cfg){
 // server-proxy path active hai) — bina key wale skip hote hain,
 // kyunki unhe fatal error nahi maana jaata.
 function _providerHasKey(cfg){
+  if (cfg.proxy) return true;                       // server proxy configured → key server par
   if (cfg.apiKey && cfg.apiKey.trim()) return true;
   return !!_aiKeyFrom(cfg.keyStorage, cfg.keyInput);
 }

@@ -245,6 +245,36 @@ var server=http.createServer(function(req,res){
     });
   }
 
+  // ─── NVIDIA PROXY (phone asks server to call NVIDIA, API key stays server-side) ───
+  // NVIDIA API browser me CORS allow nahi karta, isliye server se proxy karte hain.
+  if(req.method==='POST'&&pathname==='/api/nvidia'){
+    return readBody(req,function(body){
+      try{
+        const nvReq=JSON.parse(body);
+        const key=appConfig.nvidiaKey;
+        if(!key){jsonResponse(res,403,{error:'No NVIDIA key configured on server. Add one in dashboard.'});return;}
+        const url='https://integrate.api.nvidia.com/v1/chat/completions';
+        const https=require('https');const u=new URL(url);
+        const opts={
+          hostname:u.hostname,path:u.pathname+u.search,method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+key}
+        };
+        if(nvReq.body)opts.headers['Content-Length']=Buffer.byteLength(nvReq.body,'utf8');
+        const proxyReq=https.request(opts,function(proxyRes){
+          let data='';
+          proxyRes.on('data',function(c){data+=c;});
+          proxyRes.on('end',function(){
+            res.writeHead(proxyRes.statusCode,{'Content-Type':'application/json','Access-Control-Allow-Origin':'*'});
+            res.end(data);
+          });
+        });
+        proxyReq.on('error',function(e){jsonResponse(res,500,{error:e.message});});
+        if(nvReq.body)proxyReq.write(nvReq.body);
+        proxyReq.end();
+      }catch(e){jsonResponse(res,400,{error:'Bad request'});}
+    });
+  }
+
   // ─── DASHBOARD (tracks visitors automatically) ───
   if(req.method==='GET'&&(pathname==='/'||pathname==='/dashboard')){
     trackVisitor(req);

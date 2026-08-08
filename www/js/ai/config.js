@@ -58,6 +58,7 @@ const AI_CONFIG = {
       name: 'NVIDIA NIM',
       enabled: true,
       apiKey: '',                       // admin panel se set hoti hai
+      proxy: '/api/nvidia',             // browser CORS block karta hai → server se proxy
       keyStorage: ['nvidia_key'],       // runtime: user apni key localStorage me dal sakta hai (priority)
       keyInput: '',
       openaiCompat: true,
