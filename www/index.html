@@ -2,341 +2,26 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <title>Ai Teacher</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700;900&family=Hind:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;700;900&family=Hind:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/design-system.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Nunito','Hind','Noto Sans Devanagari',sans-serif;min-height:100vh;background:#FFF0F8;background-image:radial-gradient(circle at 10% 20%,#FFE4F3 0%,transparent 50%),radial-gradient(circle at 90% 80%,#E4F0FF 0%,transparent 50%);display:flex;flex-direction:column;align-items:center;padding:env(safe-area-inset-top,16px) 12px 30px;overflow-x:hidden}
-.hidden{display:none!important}
-img{max-width:100%}
-#app{width:100%;max-width:640px;position:relative}
-.hidden{display:none!important}
-img{max-width:100%}
-
-/* LOGIN SCREEN */
-#loginScreen .user-card{background:white;border-radius:16px;padding:12px 16px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;border:2px solid #E8E8F0;transition:transform .12s}
-#loginScreen .user-card:hover{transform:scale(1.02);border-color:#C77DFF}
-#loginScreen .user-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FF6B9D,#C77DFF);display:flex;align-items:center;justify-content:center;color:white;font-size:1.1rem;font-weight:700;font-family:'Baloo 2',cursive}
-#loginScreen .user-name{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:#2D2A4A;flex:1}
-#loginScreen .user-lock{font-size:.9rem;color:#7B7A9A}
-
-/* WELCOME */
-#welcomeScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;max-width:460px;width:100%;padding:20px 16px}
-#welcomeAnim{width:180px;height:180px}
-#welcomeScreen h1{font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:#2D2A4A;margin:8px 0 4px}
-#welcomeScreen h1 span{color:#FF6B9D}
-#welcomeScreen p{color:#7B7A9A;font-size:1rem;margin-bottom:20px}
-.start-btn{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;padding:13px 46px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:50px;cursor:pointer;box-shadow:0 6px 20px rgba(255,107,157,.4);transition:transform .15s}
-.start-btn:hover{transform:scale(1.06)}
-
-/* AVATAR UPLOAD */
-.img-upload{position:relative;width:80px;height:80px;border-radius:50%;overflow:hidden;border:3px solid #FF6B9D;cursor:pointer;margin:0 auto 12px;background:#FFE4F3;display:flex;align-items:center;justify-content:center;font-size:2rem}
-.img-upload img{width:100%;height:100%;object-fit:cover}
-.img-upload input{display:none}
-.img-upload .cam-icon{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.4);color:white;font-size:.6rem;padding:2px;text-align:center;font-family:'Hind','Noto Sans Devanagari',sans-serif}
-
-/* ═══ SCREENS (hidden by default via class="hidden") ═══ */
-#subjectScreen{width:100%;max-width:640px;padding:8px 2px 0}
-.sub-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
-.sub-header-title{font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;color:#2D2A4A}
-.sub-header-title span{color:#FF6B9D}
-.sub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:16px}
-.sub-card{border-radius:20px;padding:20px 14px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s;border:3px solid transparent;position:relative}
-.sub-card:hover{transform:scale(1.04);box-shadow:0 8px 24px rgba(0,0,0,.12)}
-.sub-card .sub-emoji{font-size:2.2rem;margin-bottom:6px}
-.sub-card .sub-name{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700}
-.sub-card .sub-chapters{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.75rem;margin-top:4px;opacity:.8}
-.sub-card .sub-badge{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.5);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.7rem}
-.add-subject-card{border:3px dashed #C77DFF;background:rgba(199,125,255,.05);color:#C77DFF}
-.add-new-book-btn{width:100%;padding:16px;border:3px dashed #C77DFF;border-radius:20px;background:rgba(199,125,255,.05);color:#C77DFF;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;cursor:pointer;transition:background .2s;text-align:center;margin-top:8px;margin-bottom:16px}
-.add-new-book-btn:hover{background:#F3E8FF}
-
-/* IMAGE UPLOAD MODAL */
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:14px}
-.modal{background:white;border-radius:24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;padding:24px 20px;position:relative}
-.modal-close{position:absolute;top:12px;right:14px;font-size:1.4rem;cursor:pointer;color:#7B7A9A;background:none;border:none}
-.modal h2{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A;margin-bottom:12px;text-align:center}
-.modal-subject-name{color:#FF6B9D}
-.upload-zone{border:3px dashed #C77DFF;border-radius:18px;padding:30px 16px;text-align:center;cursor:pointer;transition:background .2s;margin-bottom:14px}
-.upload-zone:hover{background:#F3E8FF}
-.upload-zone .upload-icon{font-size:2.5rem;margin-bottom:8px}
-.upload-zone .upload-text{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:#2D2A4A}
-.upload-zone .upload-sub{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.82rem;color:#7B7A9A;margin-top:4px}
-.upload-zone input{display:none}
-.img-preview{max-height:250px;object-fit:contain;border-radius:14px;margin-bottom:14px;width:100%}
-.gen-btn{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;padding:12px 28px;border:none;border-radius:50px;color:white;cursor:pointer;width:100%;transition:transform .15s}
-.gen-btn:hover{transform:scale(1.03)}
-.gen-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.gen-progress{margin-top:12px}
-.gen-progress-bar{height:8px;background:#EEE;border-radius:20px;overflow:hidden;margin-bottom:6px}
-.gen-progress-fill{height:100%;background:linear-gradient(90deg,#FF6B9D,#C77DFF);border-radius:20px;transition:width .3s}
-.gen-status{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.85rem;color:#7B7A9A;text-align:center}
-.gen-steps{margin-top:12px;text-align:left}
-.gen-step{display:flex;align-items:center;gap:8px;padding:6px 0;font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.85rem;color:#7B7A9A}
-.gen-step.done{color:#27AE60}
-.gen-step.active{color:#C77DFF;font-weight:700}
-.gen-step .step-icon{width:22px;height:22px;border-radius:50%;border:2px solid #E8E8F0;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0}
-.gen-step.done .step-icon{background:#27AE60;border-color:#27AE60;color:white}
-.gen-step.active .step-icon{border-color:#C77DFF;animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-
-/* DASHBOARD */
-#dashboard{width:100%;max-width:640px;padding:8px 2px 0}
-.dash-card{background:white;border-radius:22px;box-shadow:0 6px 24px rgba(0,0,0,.09);padding:20px;margin-bottom:16px;overflow:hidden}
-.dash-title{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;color:#2D2A4A;margin-bottom:10px}
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.dash-ch{border-radius:14px;padding:14px;cursor:pointer;transition:transform .12s;border:2px solid transparent;position:relative;color:white}
-.dash-ch:hover{transform:scale(1.03)}
-.dash-ch-name{font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:700;margin-bottom:4px}
-.dash-ch-score{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.78rem;font-weight:700;opacity:.9}
-.dash-ch-bar{height:6px;background:rgba(255,255,255,.4);border-radius:10px;margin-top:6px;overflow:hidden}
-.dash-ch-bar-fill{height:100%;background:white;border-radius:10px;transition:width .5s}
-.dash-nav{display:flex;gap:8px;margin-bottom:14px;justify-content:center;flex-wrap:wrap}
-.dash-nav button{font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:700;padding:8px 16px;border-radius:50px;border:2.5px solid #E8E8F0;background:white;color:#7B7A9A;cursor:pointer;transition:all .2s}
-.dash-nav button.active{background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border-color:transparent}
-
-/* STATS */
-.summary-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
-.summary-stat{background:#F3E8FF;border-radius:14px;padding:12px;text-align:center}
-.summary-stat .num{font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#2D2A4A}
-.summary-stat .lbl{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.75rem;color:#7B7A9A;font-weight:700}
-.wrong-list{text-align:left;margin:12px 0}
-.wrong-item{background:#FFF5F5;border-radius:12px;padding:10px 14px;margin-bottom:8px;border-left:4px solid #E74C3C;font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.88rem;color:#2D2A4A}
-.wrong-item strong{color:#E74C3C}
-
-/* GAME */
-#gameScreen{width:100%;max-width:640px;padding:8px 2px 0}
-.game-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-.game-title{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#2D2A4A;display:flex;align-items:center;gap:8px;cursor:pointer}
-.game-title span{color:#FF6B9D}
-.stats-row{display:flex;gap:8px;flex-wrap:wrap}
-.stat-pill{background:white;border-radius:20px;padding:4px 14px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;color:#2D2A4A;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.streak-display{background:linear-gradient(135deg,#FFD93D,#FF9F43);border-radius:20px;padding:4px 14px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;color:white;box-shadow:0 2px 8px rgba(255,157,67,.3)}
-.timer-pill{background:white;border-radius:20px;padding:5px 14px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;color:#2D2A4A;box-shadow:0 2px 8px rgba(0,0,0,.07);display:flex;align-items:center;gap:6px}
-.timer-pill.warning{background:#FFEBEE;color:#E74C3C;animation:pulse .5s infinite}
-@keyframes pulse2{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-
-/* CHAPTER TABS */
-.ch-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}
-.ch-scroll::-webkit-scrollbar{display:none}
-.ch-tab{font-family:'Baloo 2',cursive;font-size:.78rem;font-weight:700;padding:6px 13px;border-radius:50px;border:2.5px solid;cursor:pointer;white-space:nowrap;background:white;transition:transform .12s;flex-shrink:0;position:relative}
-.ch-tab:hover{transform:scale(1.05)}
-.ch-tab.active{color:white!important}
-.ch-tab .ch-done{position:absolute;top:-4px;right:-4px;width:14px;height:14px;background:#27AE60;border-radius:50%;font-size:.5rem;color:white;display:flex;align-items:center;justify-content:center}
-
-/* SECTION TOGGLE */
-.section-toggle{display:flex;background:white;border-radius:50px;padding:4px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.08);width:fit-content;margin-left:auto;margin-right:auto;flex-wrap:wrap;justify-content:center}
-.sec-btn{font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:7px 16px;border-radius:50px;border:none;cursor:pointer;background:transparent;color:#7B7A9A;transition:all .2s}
-.sec-btn.active{color:white;box-shadow:0 3px 10px rgba(0,0,0,.15)}
-
-/* PROGRESS */
-.prog-wrap{height:9px;background:#EEE;border-radius:20px;margin-bottom:16px;overflow:hidden}
-.prog-fill{height:100%;border-radius:20px;transition:width .5s ease}
-
-/* THEORY CARD */
-.theory-card{background:white;border-radius:26px;box-shadow:0 8px 30px rgba(0,0,0,.09);padding:28px 20px 20px;position:relative;margin-bottom:16px;border:2px solid #E8E8F0;overflow:visible}
-.theory-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:'Baloo 2',cursive;font-size:.72rem;font-weight:700;padding:3px 16px;border-radius:20px;color:white;white-space:nowrap}
-.theory-title{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A;margin-bottom:12px;text-align:center}
-.theory-section{margin-bottom:14px}
-.theory-section h4{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:#C77DFF;margin-bottom:6px}
-.theory-section p,.theory-section li{font-family:'Hind',sans-serif;font-size:1rem;line-height:1.7;color:#2D2A4A}
-.theory-section ul{padding-left:20px}
-.theory-section li{margin-bottom:4px}
-.theory-example{background:#F3E8FF;border-radius:12px;padding:10px 14px;margin:6px 0;border-left:4px solid #C77DFF;font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.95rem;color:#2D2A4A}
-.theory-speak{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-.theory-speak button{font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:6px 14px;border-radius:50px;cursor:pointer;transition:transform .12s;background:white}
-.theory-speak button:hover{transform:scale(1.04)}
-.theory-speak .speak-en{border:2px solid #48CAE4;color:#48CAE4}
-.theory-speak .speak-hi{border:2px solid #C77DFF;color:#C77DFF}
-.theory-start-btn{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:700;padding:12px 32px;border:none;border-radius:50px;color:white;cursor:pointer;display:block;margin:16px auto 0;transition:transform .15s;box-shadow:0 4px 14px rgba(0,0,0,.13)}
-.theory-start-btn:hover{transform:scale(1.06)}
-.lang-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
-.lang-btn{font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:6px 16px;border-radius:50px;border:2.5px solid #E8E8F0;background:white;cursor:pointer;transition:all .2s}
-.lang-btn.active{background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border-color:transparent}
-
-/* GAME CARD */
-.game-card{background:white;border-radius:26px;box-shadow:0 8px 30px rgba(0,0,0,.09);padding:30px 20px 20px;position:relative;min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-bottom:16px;overflow:visible}
-.ch-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:'Baloo 2',cursive;font-size:.72rem;font-weight:700;padding:3px 16px;border-radius:20px;color:white;white-space:nowrap}
-#questionAnim{width:100px;height:100px;margin-bottom:4px}
-.q-text{font-family:'Baloo 2',cursive;font-size:clamp(1.05rem,3vw,1.5rem);font-weight:700;color:#2D2A4A;margin-bottom:16px;line-height:1.35;white-space:pre-line}
-.q-num{font-size:.78rem;color:#7B7A9A;margin-bottom:4px;font-weight:700}
-
-/* OPTIONS */
-.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;margin-bottom:4px}
-.opt-btn{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.95rem;font-weight:700;padding:12px 8px;border:2.5px solid #E8E8F0;border-radius:14px;background:#FAFAFE;color:#2D2A4A;cursor:pointer;transition:transform .12s,border-color .12s,background .12s;line-height:1.25}
-.opt-btn:hover:not(:disabled){transform:scale(1.04);border-color:#48CAE4;background:#EAF9FF}
-.opt-btn.correct{background:#D5F5E3;border-color:#27AE60;color:#1a6e3a}
-.opt-btn.wrong{background:#FADBD8;border-color:#E74C3C;color:#7b241c}
-.opt-btn:disabled{cursor:default;transform:none}
-
-/* FILL */
-.fill-input{font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:1.1rem;font-weight:700;padding:11px 16px;border:2.5px solid #E8E8F0;border-radius:14px;width:80%;text-align:center;outline:none;color:#2D2A4A;margin-bottom:10px}
-.fill-input:focus{border-color:#48CAE4}
-.fill-input.correct{border-color:#27AE60;background:#D5F5E3;color:#1a6e3a}
-.fill-input.wrong{border-color:#E74C3C;background:#FADBD8;color:#7b241c}
-.submit-btn{font-family:'Baloo 2',cursive;font-size:.98rem;font-weight:700;padding:9px 26px;border:none;border-radius:50px;color:white;cursor:pointer;transition:transform .15s;box-shadow:0 3px 12px rgba(0,0,0,.13)}
-.submit-btn:hover{transform:scale(1.05)}
-
-.feedback{font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;min-height:1.6rem;margin-top:8px}
-.feedback.ok{color:#27AE60}
-.feedback.no{color:#E74C3C}
-
-.btns-row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-.next-btn{font-family:'Baloo 2',cursive;font-size:.98rem;font-weight:700;padding:9px 26px;border:none;border-radius:50px;color:white;cursor:pointer;display:none;transition:transform .15s;box-shadow:0 4px 14px rgba(0,0,0,.13)}
-.next-btn:hover{transform:scale(1.06)}
-.next-btn.show{display:inline-block}
-.explain-btn{font-family:'Baloo 2',cursive;font-size:.92rem;font-weight:700;padding:9px 16px;border:2.5px solid #C77DFF;border-radius:50px;color:#C77DFF;background:white;cursor:pointer;display:none;transition:transform .15s}
-.explain-btn:hover{background:#F3E8FF;transform:scale(1.05)}
-.explain-btn.show{display:inline-block}
-.speak-btn{font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:6px 14px;border:2px solid #48CAE4;border-radius:50px;color:#48CAE4;background:white;cursor:pointer;transition:transform .12s;margin-top:5px}
-.speak-btn:hover{background:#EAF9FF;transform:scale(1.04)}
-
-/* AI PANEL */
-.ai-panel{background:linear-gradient(135deg,#F3E8FF,#E8F0FF);border-radius:20px;padding:0;margin-bottom:12px;border:2px solid #C77DFF33;overflow:hidden}
-.ai-panel-header{display:flex;align-items:center;gap:10px;padding:12px 16px 8px}
-#aiAnim{width:38px;height:38px;flex-shrink:0}
-.ai-label{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:#C77DFF}
-.ai-hindi-box{background:white;border-radius:14px;margin:0 12px 12px;padding:14px 16px;border-left:4px solid #C77DFF}
-.ai-hindi-text{font-family:'Hind',sans-serif;font-size:1.05rem;line-height:1.7;color:#2D2A4A;font-weight:500}
-.ai-speak-row{display:flex;align-items:center;gap:8px;margin-top:10px}
-.ai-speak-hindi-btn{font-family:'Hind',sans-serif;font-size:.82rem;font-weight:700;padding:5px 14px;border:2px solid #C77DFF;border-radius:50px;color:#C77DFF;background:white;cursor:pointer;transition:transform .12s}
-.ai-speak-hindi-btn:hover{background:#F3E8FF;transform:scale(1.04)}
-.loading-dots{display:inline-flex;align-items:center;gap:3px;padding:10px 16px}
-.loading-dots span{display:inline-block;width:7px;height:7px;background:#C77DFF;border-radius:50%;animation:dotpulse 1.2s infinite}
-.loading-dots span:nth-child(2){animation-delay:.2s}
-.loading-dots span:nth-child(3){animation-delay:.4s}
-@keyframes dotpulse{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
-
-/* QUESTIONS BOX */
-.qbox{background:white;border-radius:22px;box-shadow:0 6px 24px rgba(0,0,0,.09);margin-bottom:12px;overflow:hidden;border:2px solid #FFE4F3}
-.qbox-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);cursor:pointer;user-select:none}
-.qbox-header-title{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;color:white;flex:1}
-.qbox-header-sub{font-family:'Hind',sans-serif;font-size:.78rem;color:rgba(255,255,255,.85)}
-.qbox-toggle-icon{font-size:1.1rem;color:white;transition:transform .2s}
-.qbox-toggle-icon.open{transform:rotate(180deg)}
-.qbox-lang-toggle{display:flex;gap:4px;margin:0 2px}
-.qbox-lang-btn{font-family:'Baloo 2',cursive;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:50px;border:2px solid rgba(255,255,255,.5);background:transparent;color:rgba(255,255,255,.85);cursor:pointer;transition:all .2s;white-space:nowrap}
-.qbox-lang-btn.active{background:white;color:#C77DFF;border-color:white}
-.qbox-body{padding:12px 14px;display:block}
-.qbox-chat{max-height:240px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:#C77DFF #F3E8FF}
-.bubble{max-width:85%;padding:9px 13px;border-radius:16px;font-size:.9rem;line-height:1.5;word-break:break-word}
-.bubble.user{align-self:flex-end;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border-bottom-right-radius:4px;font-family:'Hind','Noto Sans Devanagari',sans-serif;font-weight:700}
-.bubble.ai{align-self:flex-start;background:#F3E8FF;color:#2D2A4A;border-bottom-left-radius:4px;font-family:'Hind',sans-serif;font-weight:500;border-left:3px solid #C77DFF}
-.bubble.ai .bubble-speak{font-size:.75rem;margin-top:5px;color:#C77DFF;cursor:pointer;font-weight:700;font-family:'Baloo 2',cursive}
-.bubble.loading{align-self:flex-start;background:#F3E8FF;border-bottom-left-radius:4px}
-.qbox-input-row{display:flex;gap:8px;align-items:center}
-.qbox-input{font-family:'Hind',sans-serif;font-size:.95rem;flex:1;min-width:0;padding:10px 14px;border:2px solid #E8E8F0;border-radius:50px;outline:none;color:#2D2A4A;background:#FAFAFE}
-.qbox-input:focus{border-color:#C77DFF}
-.qbox-send{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;padding:10px 18px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:50px;cursor:pointer;transition:transform .12s;white-space:nowrap}
-.qbox-send:hover{transform:scale(1.05)}
-.qbox-hint{font-family:'Hind',sans-serif;font-size:.75rem;color:#7B7A9A;margin-top:6px;text-align:center}
-
-/* END */
-.end-screen{display:none;text-align:center;width:100%}
-#endAnim{width:140px;height:140px;margin:0 auto}
-.end-screen h2{font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;margin:8px 0 4px}
-.end-screen p{font-size:1rem;color:#7B7A9A;margin-bottom:14px}
-.play-again-btn{font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;padding:11px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,#6BCB77,#48CAE4);color:white;cursor:pointer;box-shadow:0 4px 16px rgba(107,203,119,.35);transition:transform .15s}
-.play-again-btn:hover{transform:scale(1.06)}
-
-/* ADD CHAPTER BUTTON */
-.add-ch-btn{width:100%;padding:14px;border:3px dashed #C77DFF;border-radius:16px;background:rgba(199,125,255,.05);color:#C77DFF;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s;text-align:center;margin-bottom:12px}
-.add-ch-btn:hover{background:#F3E8FF}
-
-/* INTERACTIVE GAME */
-.game-mode-card{background:white;border-radius:26px;box-shadow:0 8px 30px rgba(0,0,0,.09);padding:24px 16px;margin-bottom:16px;border:2px solid #E8E8F0}
-.game-mode-title{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A;text-align:center;margin-bottom:16px}
-.game-mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.game-mode-btn{border-radius:18px;padding:18px 10px;text-align:center;cursor:pointer;border:3px solid transparent;transition:all .2s;background:#FAFAFE}
-.game-mode-btn:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,.1)}
-.game-mode-btn .gm-icon{font-size:2rem;margin-bottom:6px}
-.game-mode-btn .gm-name{font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A}
-.game-mode-btn .gm-desc{font-family:'Nunito',sans-serif;font-size:.72rem;color:#7B7A9A;margin-top:2px}
-.game-mode-btn .gm-diff{font-family:'Baloo 2',cursive;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px;color:white;display:inline-block;margin-top:6px}
-.game-mode-btn .gm-diff.easy{background:#27AE60}
-.game-mode-btn .gm-diff.medium{background:#FF9F43}
-.game-mode-btn .gm-diff.hard{background:#E74C3C}
-.game-hud{display:flex;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.game-hud-item{background:white;border-radius:20px;padding:6px 16px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;color:#2D2A4A;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.game-feedback{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:700;text-align:center;padding:12px;border-radius:16px;margin-top:12px;animation:popIn .3s ease}
-.game-feedback.correct{background:#D5F5E3;color:#1a6e3c}
-.game-feedback.wrong{background:#FADBD8;color:#7b241c}
-
-/* WORD MATCH GAME */
-.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.match-col{display:flex;flex-direction:column;gap:8px}
-.match-item{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;padding:12px 10px;border-radius:14px;border:2.5px solid #E8E8F0;background:#FAFAFE;color:#2D2A4A;cursor:pointer;transition:all .2s;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center}
-.match-item:hover:not(.disabled){transform:scale(1.03);border-color:#48CAE4}
-.match-item.selected{border-color:#C77DFF;background:#F3E8FF;color:#C77DFF;transform:scale(1.05)}
-.match-item.matched{border-color:#27AE60;background:#D5F5E3;color:#1a6e3c;cursor:default;opacity:.8}
-.match-item.wrong-flash{border-color:#E74C3C;background:#FADBD8;animation:shake .4s ease}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-
-/* WORD SCRAMBLE */
-.scramble-word{font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#C77DFF;text-align:center;margin-bottom:16px;letter-spacing:6px;background:#F3E8FF;border-radius:14px;padding:14px 20px;word-break:break-all;line-height:1.6}
-.scramble-answer{display:flex;gap:8px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
-.scramble-slot{width:38px;height:44px;border:2.5px dashed #C77DFF;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#2D2A4A;background:white;transition:all .2s}
-.scramble-slot.filled{border-style:solid;background:#F3E8FF;border-color:#C77DFF}
-.scramble-letters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.scramble-letter{width:38px;height:44px;border:2.5px solid #E8E8F0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#2D2A4A;background:#FAFAFE;cursor:pointer;transition:all .2s}
-.scramble-letter:hover{transform:scale(1.1);border-color:#48CAE4}
-.scramble-letter.used{opacity:.3;pointer-events:none}
-
-/* SPEED ROUND */
-.speed-card{background:white;border-radius:22px;padding:24px 16px;text-align:center;border:2px solid #E8E8F0}
-.speed-question{font-family:'Baloo 2',cursive;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:700;color:#2D2A4A;margin-bottom:16px;line-height:1.35}
-.speed-timer-bar{height:8px;background:#EEE;border-radius:20px;margin-bottom:16px;overflow:hidden}
-.speed-timer-fill{height:100%;border-radius:20px;transition:width .1s linear;background:linear-gradient(90deg,#27AE60,#FFD93D,#E74C3C)}
-.speed-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.speed-opt{font-family:'Baloo 2',cursive;font-size:.92rem;font-weight:700;padding:14px 8px;border:2.5px solid #E8E8F0;border-radius:14px;background:#FAFAFE;color:#2D2A4A;cursor:pointer;transition:all .15s}
-.speed-opt:hover{transform:scale(1.03);border-color:#48CAE4;background:#EAF9FF}
-.speed-opt.correct{background:#D5F5E3;border-color:#27AE60}
-.speed-opt.wrong{background:#FADBD8;border-color:#E74C3C}
-
-/* MEMORY MATCH */
-.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.memory-card{height:80px;border-radius:14px;border:2.5px solid #E8E8F0;background:white;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-family:'Baloo 2',cursive;font-weight:700;color:#2D2A4A;position:relative;overflow:hidden}
-.memory-card:hover{transform:scale(1.04);border-color:#C77DFF}
-.memory-card.flipped{background:#F3E8FF;border-color:#C77DFF}
-.memory-card.matched{background:#D5F5E3;border-color:#27AE60;pointer-events:none}
-.memory-card .card-front{font-size:1.6rem}
-.memory-card .card-back{font-size:.78rem;text-align:center;line-height:1.2;padding:4px}
-.memory-card .card-back.hidden-text{visibility:hidden}
-
-/* STREAK DISPLAY */
-.streak-display{background:linear-gradient(135deg,#FFD93D,#FF9F43);border-radius:20px;padding:4px 14px;font-family:'Baloo 2',cursive;font-weight:700;font-size:.9rem;color:white;box-shadow:0 2px 8px rgba(255,157,67,.3)}
-
-#confettiCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:200}
-@keyframes popIn{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-.pop-in{animation:popIn .32s ease forwards}
-
-@media(max-width:480px){
-  .options-grid{grid-template-columns:1fr}
-  .summary-stats{grid-template-columns:1fr 1fr}
-  .sub-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .sub-card{padding:16px 10px}
-  .sub-card .sub-emoji{font-size:1.8rem}
-  .sub-card .sub-name{font-size:.88rem}
-  .dash-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .sub-header-title{font-size:1.1rem}
-  .game-mode-grid{grid-template-columns:1fr 1fr;gap:8px}
-}
-</style>
 </head>
 <body>
 <canvas id="confettiCanvas"></canvas>
 
-<!-- ═══ LOGIN SCREEN ═══ -->
+<!-- LOGIN -->
 <div id="loginScreen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh;text-align:center;max-width:460px;width:100%;padding:20px 16px">
   <div style="font-size:3rem;margin-bottom:8px">🌸</div>
   <h1 style="font-family:'Baloo 2',cursive;font-size:1.8rem;font-weight:800;color:#2D2A4A;margin-bottom:4px">Ai Tutor</h1>
   <p style="font-family:'Nunito',sans-serif;font-size:.9rem;color:#7B7A9A;margin-bottom:20px">Choose your account or create a new one</p>
   <div id="loginUserList" style="width:100%;margin-bottom:16px"></div>
   <div id="loginNewUser" style="width:100%;display:none">
-    <input type="text" id="loginNewName" placeholder="Enter your name..." style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:100%;max-width:260px;color:#2D2A4A;margin-bottom:8px">
+    <input type="text" id="loginNewName" placeholder="Enter your name..." maxlength="50" style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:100%;max-width:260px;color:#2D2A4A;margin-bottom:8px">
     <input type="password" id="loginNewPin" placeholder="4-digit PIN (optional)" inputmode="numeric" maxlength="4" style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:100%;max-width:260px;color:#2D2A4A;margin-bottom:8px">
     <button onclick="createUser()" style="font-family:'Baloo 2',cursive;font-size:1rem;font-weight:700;padding:10px 36px;background:linear-gradient(135deg,#6BCB77,#48CAE4);color:white;border:none;border-radius:50px;cursor:pointer;box-shadow:0 4px 14px rgba(107,203,119,.3)">Create ✅</button>
     <button onclick="document.getElementById('loginNewUser').style.display='none';document.getElementById('loginUserList').style.display='';document.getElementById('loginAddBtn').style.display='';" style="font-family:'Nunito',sans-serif;font-size:.82rem;padding:8px;color:#7B7A9A;background:none;border:none;cursor:pointer;margin-top:6px">⬅ Back</button>
@@ -354,73 +39,257 @@ img{max-width:100%}
   </div>
 </div>
 
-<!-- ═══ WELCOME ═══ -->
-<div id="welcomeScreen" style="display:none">
-  <div id="welcomeAnim"></div>
+<!-- WELCOME -->
+<div id="welcomeScreen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;max-width:460px;width:100%;padding:20px 16px">
+  <div id="welcomeAnim" style="width:180px;height:180px"></div>
   <div class="img-upload" onclick="document.getElementById('avatarInput').click()" title="Upload your photo">
     <span id="avatarPlaceholder">🌸</span>
     <img id="avatarImg" style="display:none" alt="avatar">
     <input type="file" id="avatarInput" accept="image/*" onchange="loadAvatar(event)">
     <div class="cam-icon">📷 Photo</div>
   </div>
-  <h1>Hello, <span id="welcomeName">Student!</span> 🌸</h1>
-  <p>Your complete AI Learning App!<br>Upload, Learn, Play! 📚</p>
+  <h1 style="font-family:'Baloo 2',cursive;font-size:2.2rem;font-weight:800;color:#2D2A4A;margin:8px 0 4px">Hello, <span id="welcomeName" style="color:#FF6B9D">Student!</span> 🌸</h1>
+  <p style="color:#7B7A9A;font-size:1rem;margin-bottom:20px">Your complete AI Learning App!<br>Upload, Learn, Play! 📚</p>
   <div style="margin-bottom:14px">
-    <input type="text" id="studentNameInput" placeholder="Enter your name..." oninput="this.style.borderColor='#E8E8F0'" style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:220px;color:#2D2A4A" value="">
+    <input type="text" id="studentNameInput" placeholder="Enter your name..." maxlength="50" oninput="this.style.borderColor='#E8E8F0'" style="font-family:'Nunito',sans-serif;font-size:1rem;padding:10px 16px;border:2px solid #E8E8F0;border-radius:14px;outline:none;text-align:center;width:220px;color:#2D2A4A" value="">
   </div>
   <button class="start-btn" onclick="startApp()">Let's Start! 🎉</button>
 </div>
 
-<!-- ═══ SUBJECT SELECTOR ═══ -->
+<!-- ═══ HOME SCREEN (formerly subjectScreen) ═══ -->
 <div id="subjectScreen" class="hidden">
-  <div class="sub-header">
-    <div style="display:flex;align-items:center;gap:10px">
-      <button onclick="goToWelcome()" style="font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:700;padding:6px 12px;border:2px solid #E8E8F0;border-radius:50px;background:white;color:#7B7A9A;cursor:pointer;flex-shrink:0">⬅</button>
-      <div class="img-upload" onclick="document.getElementById('avatarInput2').click()" style="width:40px;height:40px;border-width:2px;margin:0;font-size:1rem">
-        <span id="avatarPlaceholder2">🌸</span><img id="avatarImg2" style="display:none" alt=""><input type="file" id="avatarInput2" accept="image/*" onchange="loadAvatar(event)">
+
+  <!-- SECTION 1: TOP HEADER -->
+  <div class="home-header">
+    <div class="home-header-left">
+      <div class="home-avatar" onclick="document.getElementById('avatarInput2').click()">
+        <span id="avatarPlaceholder2">🌸</span>
+        <img id="avatarImg2" style="display:none" alt="">
+        <input type="file" id="avatarInput2" accept="image/*" onchange="loadAvatar(event)" style="display:none">
       </div>
-      <div class="sub-header-title">📚 <span id="subGreeting">Hi!</span></div>
+      <div class="home-greeting">
+        <div class="home-greeting-small">Hello,</div>
+        <div class="sub-header-title home-greeting-name"><span id="subGreeting">Student!</span></div>
+        <div class="home-motivation">Let's learn something amazing today!</div>
+      </div>
     </div>
-    <div class="stats-row">
-      <div class="streak-display">🔥 <span id="globalStreak">0</span></div>
-      <div class="stat-pill">⭐ <span id="globalScore">0</span></div>
-      <div class="stat-pill" style="cursor:pointer" onclick="showSettingsModal()">ℹ️</div>
-      <div class="stat-pill" style="cursor:pointer;font-size:.7rem" onclick="if(confirm('Do you want to logout?'))logoutUser()">🚪</div>
+    <div class="home-header-right">
+      <button class="home-icon-btn" onclick="showSettingsModal()" aria-label="Info">ℹ️</button>
+      <button class="home-icon-btn" onclick="if(confirm('Do you want to logout?'))logoutUser()" aria-label="Logout">🚪</button>
     </div>
   </div>
-  <div style="text-align:center;margin-bottom:16px">
-    <div style="font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:700;color:#2D2A4A">📚 Choose Subject</div>
-    <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#7B7A9A">Upload photos to create your content, or play existing chapters!</div>
+
+  <!-- SECTION 2: TODAY'S PROGRESS -->
+  <div class="progress-card">
+    <div class="progress-card-header">
+      <span>📊 Today's Progress</span>
+      <span id="todayProgressCount">0 ch</span>
+    </div>
+    <div class="progress-card-body">
+      <div class="progress-item">
+        <div class="progress-icon-wrap" style="background:#FFF3E0"><span>🔥</span></div>
+        <div>
+          <div class="progress-value" id="globalStreak">0</div>
+          <div class="progress-label">Day Streak</div>
+        </div>
+      </div>
+      <div class="progress-divider"></div>
+      <div class="progress-item">
+        <div class="progress-icon-wrap" style="background:#FFF0F8"><span>⭐</span></div>
+        <div>
+          <div class="progress-value"><span id="globalScore">0</span></div>
+          <div class="progress-label">Total XP</div>
+        </div>
+      </div>
+      <div class="progress-divider"></div>
+      <div class="progress-item">
+        <div class="progress-icon-wrap" style="background:#F3E8FF"><span>🏆</span></div>
+        <div>
+          <div class="progress-value" id="homeLevel">1</div>
+          <div class="progress-label">Level</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="sub-grid" id="subGrid"></div>
-  <button class="add-new-book-btn" onclick="addNewBook()">➕ Add New Book</button>
+
+  <!-- SECTION 3: CONTINUE LEARNING -->
+  <div class="continue-card" id="continueCard">
+    <div class="continue-card-inner">
+      <div class="book-cover" id="bookCover">📘</div>
+      <div class="continue-info">
+        <div class="continue-label">📖 Continue Learning</div>
+        <div class="continue-subject" id="continueSubject">Your Subject</div>
+        <div class="continue-chapter" id="continueChapter">Start a chapter</div>
+        <div class="continue-time" id="continueTime">~5 min</div>
+        <button class="continue-btn" id="continueBtn" onclick="continueLastChapter()">Continue ➜</button>
+      </div>
+      <div class="continue-ring-wrap">
+        <svg viewBox="0 0 120 120" class="progress-ring">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#F3E8FF" stroke-width="10"/>
+          <circle class="ring-fill" id="continueRingFill" cx="60" cy="60" r="50" fill="none" stroke="#FF4FA3" stroke-width="10" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 60 60)"/>
+          <text x="60" y="56" text-anchor="middle" class="ring-pct" id="continuePctText">0%</text>
+          <text x="60" y="76" text-anchor="middle" class="ring-label">Progress</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: DAILY GOAL -->
+  <div class="goal-card">
+    <div class="goal-header">
+      <span class="goal-icon">🎯</span>
+      <span class="goal-title">Today's Goal</span>
+      <span class="goal-progress" id="goalText">0 / 3 Chapters</span>
+    </div>
+    <div class="goal-bar">
+      <div class="goal-fill" id="goalFill" style="width:0%"></div>
+    </div>
+    <div class="goal-msg" id="goalMsg">Let's start learning! 🚀</div>
+    <div class="goal-reward hidden" id="goalReward">🎁 Reward: ⭐ 50 Bonus XP!</div>
+  </div>
+
+  <!-- SECTION 5: SUBJECTS -->
+  <div class="subjects-section">
+    <div class="section-header">
+      <span class="section-title">📚 Subjects</span>
+      <button class="see-all-btn" onclick="showAllSubjects()">See All →</button>
+    </div>
+    <div class="sub-grid" id="subGrid"></div>
+  </div>
+
+  <!-- SECTION 6: UPLOAD BOOK -->
+  <div class="upload-book-card" onclick="addNewBook()">
+    <span class="upload-book-plus">+</span>
+    <span class="upload-book-label">Upload New Book</span>
+  </div>
+
+  <!-- SECTION 7: ACHIEVEMENTS -->
+  <div class="achievements-section">
+    <div class="section-header">
+      <span class="section-title">🏅 Achievements</span>
+      <span class="ach-total-xp" id="achTotalXP">⭐ 0 XP</span>
+    </div>
+    <div class="achievements-scroll" id="achievementsScroll"></div>
+  </div>
+
+  <!-- SECTION 8: FLOATING AI TEACHER -->
+  <button class="ai-float-btn" id="aiFloatBtn" onclick="toggleAIOverlay()">🤖</button>
+
+  <!-- AI CHAT OVERLAY -->
+  <div class="ai-overlay hidden" id="aiOverlay">
+    <div class="ai-overlay-header">
+      <div class="ai-overlay-title">🤖 AI Teacher</div>
+      <button class="ai-overlay-close" onclick="toggleAIOverlay()">✕</button>
+    </div>
+    <div class="ai-overlay-chat" id="aiOverlayChat">
+      <div class="bubble ai"><span>Hello! 🌸 I'm your Teacher. Ask me any subject question!</span></div>
+    </div>
+    <div class="ai-overlay-input-row">
+      <input class="ai-overlay-input" id="aiOverlayInput" placeholder="Type your question..." maxlength="500" onkeydown="if(event.key==='Enter')sendHomeQuestion()">
+      <button class="ai-overlay-send" onclick="sendHomeQuestion()">Send</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="navigateHome('home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" onclick="navigateHome('subjects')">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Subjects</span>
+    </button>
+    <button class="nav-item nav-ai-btn" onclick="toggleAIOverlay()">
+      <span class="nav-icon">🤖</span>
+      <span class="nav-label">AI</span>
+    </button>
+    <button class="nav-item" onclick="navigateHome('games')">
+      <span class="nav-icon">🎮</span>
+      <span class="nav-label">Games</span>
+    </button>
+    <button class="nav-item" onclick="showSettingsModal()">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Profile</span>
+    </button>
+  </nav>
 </div>
 
-<!-- ═══ SUBJECT DASHBOARD ═══ -->
+<!-- ═══ SUBJECT DASHBOARD (REDESIGNED) ═══ -->
 <div id="dashboard" class="hidden">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-    <button onclick="goToSubjects()" style="font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:700;padding:6px 14px;border:2px solid #E8E8F0;border-radius:50px;background:white;color:#7B7A9A;cursor:pointer">⬅ Back</button>
-    <div style="font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:#2D2A4A" id="dashSubjectTitle">📚 Subject</div>
-    <div style="flex:1"></div>
-    <button class="add-ch-btn" style="width:auto;margin:0;padding:8px 16px" onclick="showUploadModal()">📷 Upload Page</button>
+
+  <!-- ── TOP APP BAR ── -->
+  <div class="dash-topbar">
+    <button class="dash-back" onclick="goToSubjects()" aria-label="Back">←</button>
+    <div class="dash-topbar-center">
+      <span class="dash-subj-icon" id="dashSubjIcon"></span>
+      <h1 class="dash-subj-name" id="dashSubjectTitle">Subject</h1>
+    </div>
+    <div class="dash-topbar-right">
+      <div class="dash-ring-mini">
+        <svg viewBox="0 0 40 40" class="dash-ring-mini-svg">
+          <circle cx="20" cy="20" r="16" fill="none" stroke="#F0EEF5" stroke-width="3"/>
+          <circle class="dash-ring-mini-fill" id="dashTopRing" cx="20" cy="20" r="16" fill="none" stroke="#FF4FA3" stroke-width="3" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="100.53" transform="rotate(-90 20 20)"/>
+        </svg>
+        <span class="dash-ring-mini-text" id="dashTopPct">0%</span>
+      </div>
+    </div>
   </div>
-  <div class="dash-nav">
-    <button class="active" onclick="showDashView('chapters',this)">📖 Chapters</button>
-    <button onclick="showDashView('stats',this)">📊 Stats</button>
-    <button onclick="showDashView('revision',this)">🔄 Revision</button>
+  <p class="dash-motivation" id="dashMotivation">Let's start learning! 🚀</p>
+
+  <!-- ── VIEW TABS ── -->
+  <div class="dash-view-tabs" id="dashViewTabs">
+    <button class="dash-view-tab active" data-view="chapters" onclick="showDashView('chapters',this)">📖 Chapters</button>
+    <button class="dash-view-tab" data-view="stats" onclick="showDashView('stats',this)">📊 Stats</button>
+    <button class="dash-view-tab" data-view="revision" onclick="showDashView('revision',this)">🔄 Revision</button>
   </div>
-  <div id="dashChapters">
-    <div class="dash-grid" id="dashGrid"></div>
+
+  <!-- ── PROGRESS CARD ── -->
+  <div class="dash-progress-card" id="dashProgressCard"></div>
+
+  <!-- ── CONTINUE LEARNING ── -->
+  <div class="dash-continue-card" id="dashContinueCard"></div>
+
+  <!-- ── FILTER CHIPS ── -->
+  <div class="dash-filter-bar" id="dashFilterBar">
+    <button class="dash-chip active" data-filter="all">All</button>
+    <button class="dash-chip" data-filter="completed">✅ Done</button>
+    <button class="dash-chip" data-filter="pending">⏳ Pending</button>
+    <button class="dash-chip" data-filter="locked">🔒 Locked</button>
   </div>
-  <div id="dashStats" class="hidden">
-    <div class="dash-card"><div class="dash-title">📊 Your Progress</div><div class="summary-stats" id="dashStatsGrid"></div></div>
+
+  <!-- ── SEARCH ── -->
+  <div class="dash-search-bar">
+    <span class="dash-search-icon">🔍</span>
+    <input class="dash-search-input" id="dashSearchInput" placeholder="Search chapters..." maxlength="200" oninput="dashSearchDebounced()">
   </div>
-  <div id="dashRevision" class="hidden">
-    <div class="dash-card"><div class="dash-title">🔄 Wrong Answers to Revise</div><div id="revisionList"></div></div>
+
+  <!-- ── CHAPTER LIST ── -->
+  <div class="dash-chapter-list" id="dashChapterList"></div>
+
+  <!-- ── UPLOAD BUTTON ── -->
+  <div class="dash-upload-area">
+    <button class="dash-upload-btn" onclick="showUploadModal()">📷 + Upload New Chapter</button>
   </div>
+
+  <!-- ── STATS PANEL (hidden by default) ── -->
+  <div id="dashStatsPanel" class="hidden dash-panel">
+    <div class="dash-card-inner">
+      <div class="summary-stats" id="dashStatsGrid"></div>
+    </div>
+  </div>
+
+  <!-- ── REVISION PANEL (hidden by default) ── -->
+  <div id="dashRevisionPanel" class="hidden dash-panel">
+    <div class="dash-card-inner">
+      <div class="dash-revision-title">🔄 Wrong Answers to Revise</div>
+      <div id="revisionList"></div>
+    </div>
+  </div>
+
 </div>
 
-<!-- ═══ GAME SCREEN ═══ -->
+<!-- GAME SCREEN -->
 <div id="gameScreen" class="hidden">
   <div class="game-header">
     <div class="game-title" onclick="goToSubjectDash()">⬅ <span id="gameSubjectName">Subject</span></div>
@@ -440,43 +309,140 @@ img{max-width:100%}
   </div>
   <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 
-  <!-- THEORY -->
   <div id="theoryView" class="theory-card">
     <div class="theory-badge" id="theoryBadge">Chapter</div>
     <div id="theoryContent"></div>
   </div>
 
-  <!-- INTERACTIVE GAME -->
-  <div id="gameView" class="hidden">
-    <div class="game-mode-card">
-      <div class="game-mode-title" id="gameModeTitle">🎮 Choose Your Game!</div>
-      <div class="game-mode-grid" id="gameModeGrid"></div>
-    </div>
-    <div id="activeGameArea" class="hidden">
-      <div class="game-hud">
-        <div class="game-hud-item" id="gameHudScore">⭐ 0</div>
-        <div class="game-hud-item" id="gameHudLevel">Level 1</div>
-        <div class="game-hud-item" id="gameHudTimer">⏱️ --</div>
+  <!-- GAME HOME -->
+  <div id="gameHome" class="hidden">
+    <div class="gh-hero" id="ghHero">
+      <div class="gh-hero-img" id="ghHeroImg">🎮</div>
+      <div class="gh-hero-info">
+        <div class="gh-hero-title" id="ghHeroTitle">Chapter Games</div>
+        <div class="gh-hero-meta" id="ghHeroMeta">
+          <span id="ghGamesCount">0 games</span>
+          <span class="gh-hero-dot">•</span>
+          <span id="ghXpTotal">0 XP</span>
+        </div>
       </div>
-      <div id="gamePlayArea"></div>
-      <div class="game-feedback hidden" id="gameFeedback"></div>
+    </div>
+    <div class="gh-section-label">Available Games</div>
+    <div class="gh-grid" id="ghGrid"></div>
+    <div class="gh-empty hidden" id="ghEmpty">
+      <div class="gh-empty-icon">📭</div>
+      <div class="gh-empty-title">No games available</div>
+      <div class="gh-empty-desc">Complete the chapter to unlock games</div>
+    </div>
+    <div class="gh-ai-row" id="ghAiRow">
+      <button class="gh-ai-btn" onclick="aiGenerateGame()">🤖 AI Generate Game</button>
+      <button class="gh-ai-btn ghost" id="ghHindiBtn" onclick="aiHindiKaro()">🇮🇳 Hindi karo</button>
+      <button class="gh-ai-btn ghost" onclick="aiEasierGame()">🌱 Easier</button>
+      <button class="gh-ai-btn ghost" onclick="aiHarderGame()">🔥 Harder</button>
     </div>
   </div>
 
-  <!-- QUESTION CARD -->
+  <!-- GAME PLAY -->
+  <div id="gamePlay" class="hidden">
+    <div class="gp-header">
+      <button class="gp-back-btn" onclick="exitGame()" aria-label="Exit">✕</button>
+      <div class="gp-title" id="gpTitle">Game</div>
+      <button class="gp-pause-btn" id="gpPauseBtn" onclick="togglePause()" aria-label="Pause">⏸</button>
+    </div>
+    <div class="gp-hud" id="gpHud">
+      <div class="gp-progress-bar">
+        <div class="gp-progress-fill" id="gpProgressFill" style="width:0%"></div>
+      </div>
+      <div class="gp-hud-row">
+        <span class="gp-hud-item">❓ <span id="gpQCounter">0/0</span></span>
+        <span class="gp-hud-item">⭐ <span id="gpScore">0</span> XP</span>
+        <span class="gp-hud-item" id="gpTimerWrap">⏱️ <span id="gpTimer">--</span></span>
+      </div>
+    </div>
+    <div class="gp-pause-overlay hidden" id="gpPauseOverlay">
+      <div class="gp-pause-box">
+        <div class="gp-pause-icon">⏸</div>
+        <div class="gp-pause-title">Game Paused</div>
+        <div class="gp-pause-btns">
+          <button class="gp-pause-action-btn primary" onclick="resumeGame()">▶ Resume</button>
+          <button class="gp-pause-action-btn" onclick="exitGame()">✕ Exit Game</button>
+        </div>
+      </div>
+    </div>
+    <div id="gpPlayArea"></div>
+    <div class="gp-feedback hidden" id="gpFeedback"></div>
+  </div>
+
+  <!-- GAME RESULT -->
+  <div id="gameResult" class="hidden">
+    <div class="gr-anim" id="grAnim"></div>
+    <div class="gr-title" id="grTitle">Great Job!</div>
+    <div class="gr-stats" id="grStats">
+      <div class="gr-stat">
+        <div class="gr-stat-icon">⭐</div>
+        <div class="gr-stat-val" id="grXp">0</div>
+        <div class="gr-stat-lbl">XP</div>
+      </div>
+      <div class="gr-stat">
+        <div class="gr-stat-icon">🌟</div>
+        <div class="gr-stat-val" id="grStars">★★★</div>
+        <div class="gr-stat-lbl">Stars</div>
+      </div>
+      <div class="gr-stat">
+        <div class="gr-stat-icon">🎯</div>
+        <div class="gr-stat-val" id="grAccuracy">0%</div>
+        <div class="gr-stat-lbl">Accuracy</div>
+      </div>
+      <div class="gr-stat">
+        <div class="gr-stat-icon">⏱️</div>
+        <div class="gr-stat-val" id="grTime">--</div>
+        <div class="gr-stat-lbl">Time</div>
+      </div>
+    </div>
+    <div class="gr-detail" id="grDetail">
+      <div class="gr-detail-row">✅ Correct: <span id="grCorrect">0</span></div>
+      <div class="gr-detail-row">❌ Mistakes: <span id="grWrong">0</span></div>
+      <div class="gr-detail-row">🔥 Best Streak: <span id="grStreak">0</span></div>
+    </div>
+    <div class="gr-weak hidden" id="grWeak">
+      <div class="gr-section-label">📚 Review These <span id="grWeakCount" style="font-size:.8rem;color:#7B7A9A"></span></div>
+      <div id="grWeakList"></div>
+    </div>
+    <div class="gr-coins" id="grCoins">
+      <span id="grCoinCount">🪙 +0</span>
+    </div>
+    <div class="gr-btns">
+      <button class="play-again-btn" onclick="retryGame()">🔄 Play Again</button>
+      <button class="play-again-btn gr-btn-secondary" id="grRetryWrong" onclick="retryWrongGame()" style="display:none">🔁 Retry Wrong</button>
+      <button class="play-again-btn gr-btn-secondary" onclick="showGameModes()" style="background:linear-gradient(135deg,#C77DFF,#FF6B9D)">🎮 All Games</button>
+      <button class="play-again-btn" onclick="goToSubjectDash()" style="background:linear-gradient(135deg,#6BCB77,#48CAE4)">📖 Continue Learning</button>
+    </div>
+  </div>
+
   <div class="game-card hidden" id="gameCard">
     <div class="ch-badge" id="chBadge">Chapter</div>
+    <div class="g-stats-bar" id="gStatsBar">
+      <div class="g-palette" id="gPalette"></div>
+      <div class="g-stats-right">
+        <span class="g-streak" id="gStreak">🔥 0</span>
+      </div>
+    </div>
+    <div class="g-hint-box hidden" id="gHintBox">
+      <div class="g-hint-text" id="gHintText"></div>
+    </div>
     <div id="mainQ">
       <div id="questionAnim"></div>
       <div class="q-num" id="qNumLabel"></div>
       <div class="q-text" id="qText">Loading…</div>
       <div id="answerArea"></div>
       <div class="feedback" id="feedback"></div>
+      <div class="motivation-text hidden" id="motivation"></div>
       <button class="speak-btn" id="speakQBtn" onclick="speakEN(currentQ&&currentQ.q)" style="display:none">🔊 Listen</button>
       <button class="speak-btn" id="hindiSpeakBtn" onclick="speakHI(currentQ&&currentQ.q)" style="display:none;border-color:#C77DFF;color:#C77DFF">🔊 Listen in Hindi</button>
       <button class="speak-btn" id="hindiTransBtn" onclick="translateToHindi()" style="display:none">📖 Read in Hindi</button>
       <div id="hindiTranslation" class="hidden" style="margin-top:6px;padding:8px 12px;background:#FFF3E0;border-radius:12px;font-family:'Hind',sans-serif;font-size:1rem;color:#2D2A4A;border-left:4px solid #FF9F43"></div>
       <div class="btns-row">
+        <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Hint <span id="hintCount">3</span></button>
         <button class="next-btn" id="nextBtn" onclick="nextQ()">Next ➜</button>
         <button class="explain-btn" id="explainBtn" onclick="triggerExplain()">💡 Explain</button>
         <button class="explain-btn" id="confusedBtn" onclick="triggerConfused()" style="border-color:#FF6B9D;color:#FF6B9D">😕 Didn't Understand</button>
@@ -494,17 +460,19 @@ img{max-width:100%}
     </div>
   </div>
 
-  <!-- AI PANEL -->
-  <div class="ai-panel hidden" id="aiPanel">
-    <div class="ai-panel-header"><div id="aiAnim"></div><div><div class="ai-label">🤖 Teacher — Explains in Detail</div></div></div>
-    <div class="ai-hindi-box" id="aiHindiBox">
-      <div class="loading-dots" id="aiLoading"><span></span><span></span><span></span></div>
-      <div class="ai-hindi-text hidden" id="aiHindiText"></div>
-      <div class="ai-speak-row hidden" id="aiSpeakRow"><button class="ai-speak-hindi-btn" id="aiSpeakBtn">🔊 Listen</button></div>
-    </div>
-  </div>
+   <div class="ai-panel hidden" id="aiPanel">
+     <div class="ai-panel-header"><div id="aiAnim"></div><div><div class="ai-label">🤖 Teacher — Explains in Detail</div></div></div>
+     <div class="ai-lang-toggle" id="aiLangToggle">
+       <button class="ai-lang-btn active" id="aiLangEn" onclick="event.stopPropagation();setAiLang('en')">English</button>
+       <button class="ai-lang-btn" id="aiLangHi" onclick="event.stopPropagation();setAiLang('hi')">हिंदी</button>
+     </div>
+     <div class="ai-hindi-box" id="aiHindiBox">
+       <div class="loading-dots" id="aiLoading"><span></span><span></span><span></span></div>
+       <div class="ai-hindi-text hidden" id="aiHindiText"></div>
+       <div class="ai-speak-row hidden" id="aiSpeakRow"><button class="ai-speak-hindi-btn" id="aiSpeakBtn">🔊 Listen</button></div>
+     </div>
+   </div>
 
-  <!-- Q BOX -->
   <div class="qbox">
     <div class="qbox-header" onclick="toggleQBox()">
       <div style="flex:1;min-width:0"><div class="qbox-header-title">💬 Ask Any Question!</div><div class="qbox-header-sub">Ask anything — in English or Hindi</div></div>
@@ -516,17 +484,17 @@ img{max-width:100%}
         <div class="bubble ai"><span>Hello! 🌸 I'm your Teacher. Ask me any subject question!</span><div class="bubble-speak" onclick="speakHI(this.parentElement.querySelector('span').textContent)">🔊 Listen</div></div>
       </div>
       <div class="qbox-input-row">
-        <input class="qbox-input" id="qboxInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter')sendQuestion()">
+        <input class="qbox-input" id="qboxInput" placeholder="Type your question..." maxlength="500" onkeydown="if(event.key==='Enter')sendQuestion()">
         <button class="qbox-send" onclick="sendQuestion()">Send ➜</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ UPLOAD MODAL ═══ -->
+<!-- UPLOAD MODAL -->
 <div class="modal-overlay hidden" id="uploadModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeUploadModal()">✕</button>
+    <button class="modal-close" onclick="closeUploadModal()" aria-label="Close upload modal">✕</button>
     <h2>📷 <span class="modal-subject-name" id="modalSubjectName">Subject</span> — Upload Page</h2>
     <p style="font-family:'Nunito',sans-serif;font-size:.9rem;color:#7B7A9A;text-align:center;margin-bottom:14px">
       Take a photo of your textbook page — AI will auto-generate questions!
@@ -536,20 +504,20 @@ img{max-width:100%}
         <div class="upload-icon">📸</div>
         <div class="upload-text">📷 Take Photo</div>
         <div class="upload-sub">Capture a textbook page</div>
-        <input type="file" id="pageCameraInput" accept="image/*" capture="environment" onchange="previewImages(event)" style="display:none">
+        <input type="file" id="pageCameraInput" accept="image/*" capture="environment" onchange="previewImages(event)">
       </div>
       <div class="upload-zone" style="flex:1;cursor:pointer;margin-bottom:0" onclick="document.getElementById('pageGalleryInput').click()">
         <div class="upload-icon">🖼️</div>
         <div class="upload-text">🖼️ Choose from Gallery</div>
         <div class="upload-sub">Select multiple pages at once</div>
-        <input type="file" id="pageGalleryInput" accept="image/*" multiple onchange="previewImages(event)" style="display:none">
+        <input type="file" id="pageGalleryInput" accept="image/*" multiple onchange="previewImages(event)">
       </div>
     </div>
     <div id="uploadPageCount" style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.8rem;color:#7B7A9A;text-align:center;margin-bottom:6px"></div>
     <img id="previewImg" class="img-preview hidden" alt="preview">
     <div style="margin-bottom:12px">
       <label style="font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;color:#7B7A9A">Chapter Name (optional):</label>
-      <input type="text" id="chapterNameInput" placeholder="e.g. Chapter 5: Adjectives" style="font-family:'Nunito',sans-serif;font-size:.9rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;width:100%;margin-top:4px;color:#2D2A4A">
+      <input type="text" id="chapterNameInput" placeholder="e.g. Chapter 5: Adjectives" maxlength="100" style="font-family:'Nunito',sans-serif;font-size:.9rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;width:100%;margin-top:4px;color:#2D2A4A">
     </div>
     <div style="margin-bottom:12px">
       <label style="font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;color:#7B7A9A">Class Level:</label>
@@ -565,7 +533,7 @@ img{max-width:100%}
     <div class="gen-progress hidden" id="genProgress">
       <div class="gen-progress-bar"><div class="gen-progress-fill" id="genProgressFill" style="width:0%"></div></div>
       <div class="gen-status" id="genStatus">Starting...</div>
-      <div class="gen-steps" id="genSteps">
+      <div class="gen-steps">
         <div class="gen-step" id="step1"><div class="step-icon">1</div>📷 Reading textbook page...</div>
         <div class="gen-step" id="step2"><div class="step-icon">2</div>🧠 Understanding content...</div>
         <div class="gen-step" id="step3"><div class="step-icon">3</div>📝 Creating questions...</div>
@@ -575,29 +543,312 @@ img{max-width:100%}
   </div>
 </div>
 
-<!-- ═══ ABOUT MODAL ═══ -->
+<!-- SETTINGS MODAL — Learning Preferences Center -->
 <div class="modal-overlay hidden" id="settingsModal">
-  <div class="modal" style="max-width:400px">
-    <button class="modal-close" onclick="document.getElementById('settingsModal').classList.add('hidden')">✕</button>
-    <h2>ℹ️ About</h2>
-    <div style="text-align:center;padding:10px 0">
-      <div style="font-size:2.5rem;margin-bottom:8px">🌸</div>
-      <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A">Shravani Learning App</div>
-      <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#7B7A9A;margin:4px 0">Version 2.0</div>
-      <div style="font-family:'Hind','Noto Sans Devanagari',sans-serif;font-size:.85rem;color:#C77DFF;margin:8px 0">AI-powered Learning for Kids</div>
-      <div style="font-family:'Nunito',sans-serif;font-size:.75rem;color:#aaa;margin-top:16px;border-top:1px solid #eee;padding-top:12px">
-        &copy; 2026 Shravani Learning App. All rights reserved.<br>
-        Unauthorized copying or distribution is prohibited.
+  <div class="modal" id="settingsModalInner">
+    <button class="modal-close" onclick="closeSettings()" aria-label="Close settings">✕</button>
+    <div class="settings-header">
+      <div class="settings-header-icon">⚙️</div>
+      <div class="settings-header-title">Learning Preferences</div>
+      <div class="settings-header-sub">Customize your learning experience</div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">👤</span>
+        <span class="sett-card-label">Account</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-account-row">
+          <div class="sett-avatar-wrap" id="settAvatarWrap">
+            <div class="sett-avatar" id="settAvatar">🌸</div>
+            <button class="sett-avatar-edit" onclick="document.getElementById('avatarInput').click()">✎</button>
+            <input type="file" id="avatarInput" accept="image/*" onchange="loadAvatar(event)" style="display:none">
+          </div>
+          <div class="sett-account-info">
+            <div class="sett-account-name" id="settAccountName">Student</div>
+            <div class="sett-account-class" id="settAccountClass">Class 1</div>
+          </div>
+          <button class="sett-account-edit-btn" onclick="editAccountName()">✎</button>
+        </div>
+        <div class="sett-stats-row">
+          <div class="sett-stat"><span class="sett-stat-icon">🔥</span><span class="sett-stat-val" id="settStatStreak">0</span><span class="sett-stat-lbl">Day Streak</span></div>
+          <div class="sett-stat"><span class="sett-stat-icon">⭐</span><span class="sett-stat-val" id="settStatXp">0</span><span class="sett-stat-lbl">Total XP</span></div>
+          <div class="sett-stat"><span class="sett-stat-icon">✅</span><span class="sett-stat-val" id="settStatChapters">0</span><span class="sett-stat-lbl">Chapters</span></div>
+        </div>
       </div>
     </div>
-    <button onclick="document.getElementById('settingsModal').classList.add('hidden')" style="display:block;margin:12px auto 0;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;padding:10px 30px;border:none;border-radius:50px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;cursor:pointer">OK</button>
+
+    <!-- LEARNING PREFERENCES -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">📖</span>
+        <span class="sett-card-label">Learning Preferences</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">Language</span>
+          <div class="sett-pill-group">
+            <button class="sett-pill" id="settLangEn" onclick="setPrefLang('en')">English</button>
+            <button class="sett-pill" id="settLangHi" onclick="setPrefLang('hi')">हिंदी</button>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Font Size</span>
+          <div class="sett-font-control">
+            <button class="sett-font-btn" onclick="decTheoryFont()">A−</button>
+            <span class="sett-font-val" id="settFontVal">16</span>
+            <button class="sett-font-btn" onclick="incTheoryFont()">A+</button>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Auto Continue</span>
+          <label class="sett-toggle"><input type="checkbox" id="settAutoContinue" onchange="setPref('autoContinue',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Remember Last Lesson</span>
+          <label class="sett-toggle"><input type="checkbox" id="settRememberLesson" onchange="setPref('rememberLesson',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI SETTINGS -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">🤖</span>
+        <span class="sett-card-label">AI Settings</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">AI Language</span>
+          <div class="sett-pill-group">
+            <button class="sett-pill" id="settAiLangEn" onclick="setPref('aiLang','en')">English</button>
+            <button class="sett-pill" id="settAiLangHi" onclick="setPref('aiLang','hi')">हिंदी</button>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Response Length</span>
+          <div class="sett-pill-group">
+            <button class="sett-pill" id="settRespShort" onclick="setPref('respLength','short')">Short</button>
+            <button class="sett-pill" id="settRespMedium" onclick="setPref('respLength','medium')">Medium</button>
+            <button class="sett-pill" id="settRespLong" onclick="setPref('respLength','long')">Detailed</button>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Explanation Mode</span>
+          <div class="sett-pill-group">
+            <button class="sett-pill" id="settExplSimple" onclick="setPref('explMode','simple')">Simple</button>
+            <button class="sett-pill" id="settExplDetailed" onclick="setPref('explMode','detailed')">Detailed</button>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Auto Generate Quiz</span>
+          <label class="sett-toggle"><input type="checkbox" id="settAutoQuiz" onchange="setPref('autoQuiz',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Auto Generate Exercises</span>
+          <label class="sett-toggle"><input type="checkbox" id="settAutoExercises" onchange="setPref('autoExercises',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row disabled">
+          <span class="sett-row-label">Auto Generate Mind Map</span>
+          <label class="sett-toggle"><input type="checkbox" id="settAutoMindmap" disabled><span class="sett-toggle-slider"></span></label>
+          <span class="sett-row-badge">Soon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOICE -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">🔊</span>
+        <span class="sett-card-label">Voice</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">Voice</span>
+          <select class="sett-select" id="settVoiceSelect" onchange="setPrefVoice(this.value)"></select>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Speed</span>
+          <div class="sett-slider-wrap">
+            <input type="range" class="sett-slider" id="settVoiceSpeed" min="0.5" max="2.0" step="0.1" value="1.0" oninput="setPref('voiceSpeed',this.value)">
+            <span class="sett-slider-val" id="settVoiceSpeedVal">1.0x</span>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Pitch</span>
+          <div class="sett-slider-wrap">
+            <input type="range" class="sett-slider" id="settVoicePitch" min="0.5" max="2.0" step="0.1" value="1.0" oninput="setPref('voicePitch',this.value)">
+            <span class="sett-slider-val" id="settVoicePitchVal">1.0</span>
+          </div>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Volume</span>
+          <div class="sett-slider-wrap">
+            <input type="range" class="sett-slider" id="settVoiceVolume" min="0" max="1.0" step="0.1" value="1.0" oninput="setPref('voiceVolume',this.value)">
+            <span class="sett-slider-val" id="settVoiceVolumeVal">100%</span>
+          </div>
+        </div>
+        <button class="sett-voice-test" onclick="testVoice()">🔊 Test Voice</button>
+      </div>
+    </div>
+
+    <!-- ACCESSIBILITY -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">♿</span>
+        <span class="sett-card-label">Accessibility</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">Large Font</span>
+          <label class="sett-toggle"><input type="checkbox" id="settLargeFont" onchange="setPref('largeFont',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">High Contrast</span>
+          <label class="sett-toggle"><input type="checkbox" id="settHighContrast" onchange="setPref('highContrast',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Reduce Motion</span>
+          <label class="sett-toggle"><input type="checkbox" id="settReduceMotion" onchange="setPref('reduceMotion',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Large Touch Targets</span>
+          <label class="sett-toggle"><input type="checkbox" id="settLargeTargets" onchange="setPref('largeTargets',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- OFFLINE -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">📡</span>
+        <span class="sett-card-label">Offline & Storage</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">Storage Used</span>
+          <span class="sett-row-value" id="settStorageUsed">Calculating...</span>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Cache Size</span>
+          <span class="sett-row-value" id="settCacheSize">—</span>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Offline Books</span>
+          <span class="sett-row-value" id="settOfflineBooks">0</span>
+        </div>
+        <button class="sett-btn sett-btn-danger" onclick="clearAppCache()">🗑️ Clear Cache</button>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">🔔</span>
+        <span class="sett-card-label">Notifications</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">Daily Reminder</span>
+          <label class="sett-toggle"><input type="checkbox" id="settNotifDaily" onchange="setPref('notifDaily',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Revision Reminder</span>
+          <label class="sett-toggle"><input type="checkbox" id="settNotifRevision" onchange="setPref('notifRevision',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Study Goal Reminder</span>
+          <label class="sett-toggle"><input type="checkbox" id="settNotifGoal" onchange="setPref('notifGoal',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">Achievement Alerts</span>
+          <label class="sett-toggle"><input type="checkbox" id="settNotifAchieve" onchange="setPref('notifAchieve',this.checked)"><span class="sett-toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIVACY -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">🔒</span>
+        <span class="sett-card-label">Privacy</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">Local Storage Items</span>
+          <span class="sett-row-value" id="settStorageCount">0</span>
+        </div>
+        <div class="sett-row">
+          <span class="sett-row-label">AI Data Usage</span>
+          <span class="sett-row-value" id="settAiUsage">Local only</span>
+        </div>
+        <div class="sett-privacy-btns">
+          <button class="sett-btn sett-btn-warning" onclick="if(confirm('Delete all learning data? Progress will be lost.')){const keep=['sl_users','sl_current_user','sl_device_id','gemini_key','admin_gemini_key','openrouter_key','nvidia_key','lh_name','lh_avatar','lh_classLevel','lh_theoryLang','lh_theoryFontSize'];Object.keys(localStorage).forEach(k=>{if(!keep.includes(k))localStorage.removeItem(k)});location.reload()}">🗑️ Delete Learning Data</button>
+          <button class="sett-btn" onclick="adminExport()">📤 Export Data</button>
+        </div>
+        <div class="sett-privacy-note">All data is stored locally on your device. Nothing is sent to servers unless you explicitly sync.</div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">ℹ️</span>
+        <span class="sett-card-label">About</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-about-icon">🌸</div>
+        <div class="sett-about-name">Shravani Learning App</div>
+        <div class="sett-about-version">Version 2.0</div>
+        <div class="sett-about-tagline">AI-powered Learning for Kids</div>
+        <div class="sett-about-links">
+          <button class="sett-link-btn" onclick="showToast({message:'Privacy Policy page coming soon!'})">Privacy Policy</button>
+          <button class="sett-link-btn" onclick="showToast({message:'Terms of Service page coming soon!'})">Terms</button>
+          <button class="sett-link-btn" onclick="showToast({message:'Licenses page coming soon!'})">Licenses</button>
+          <button class="sett-link-btn" onclick="showToast({message:'Support page coming soon!'})">Support</button>
+        </div>
+        <div class="sett-about-copy">&copy; 2026 Shravani Learning App. All rights reserved.</div>
+      </div>
+    </div>
+
+    <!-- SHARE -->
+    <div class="sett-card">
+      <div class="sett-card-header" onclick="settToggle(this)">
+        <span class="sett-card-icon">📤</span>
+        <span class="sett-card-label">Share App</span>
+        <span class="sett-card-chev">▾</span>
+      </div>
+      <div class="sett-card-body">
+        <div class="sett-row">
+          <span class="sett-row-label">App Version</span>
+          <span class="sett-row-value" id="settShareVersion">v1.0.7</span>
+        </div>
+        <button class="sett-btn" onclick="shareApp()">📤 Share App (APK)</button>
+      </div>
+    </div>
+
+    <div class="settings-footer">
+      <button class="sett-footer-btn" onclick="showAdminPanel()">🔧 Admin</button>
+      <button class="sett-footer-btn" onclick="closeSettings()">Close</button>
+    </div>
   </div>
 </div>
 
-<!-- ═══ ADMIN PANEL (hidden - triple-tap on title) ═══ -->
+<!-- ADMIN PANEL -->
 <div class="modal-overlay hidden" id="adminModal">
   <div class="modal" style="max-width:400px">
-    <button class="modal-close" onclick="document.getElementById('adminModal').classList.add('hidden')">✕</button>
+    <button class="modal-close" onclick="document.getElementById('adminModal').classList.add('hidden')" aria-label="Close admin panel">✕</button>
     <h2>🔧 Admin Panel</h2>
     <label style="font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;color:#7B7A9A">Gemini API Key:</label>
     <textarea id="adminApiKey" rows="2" style="width:100%;font-family:'Nunito',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A;resize:none;word-break:break-all" placeholder="Key yahan paste karo..."></textarea>
@@ -606,6 +857,40 @@ img{max-width:100%}
       <button onclick="saveAdminKey()" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">💾 Save</button>
     </div>
     <div id="adminStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-bottom:8px"></div>
+    <div style="background:#FFF8E7;border:2px solid #FFE0A3;border-radius:12px;padding:10px 12px;margin-bottom:4px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;color:#B36B00;margin-bottom:6px">🔑 Apni FREE Gemini Key kaise banayein?</div>
+      <ol style="margin:0;padding-left:18px;font-family:'Nunito',sans-serif;font-size:.8rem;color:#5A4A1F;line-height:1.7">
+        <li>"Get Free Key" button dabao — Google AI Studio khulega</li>
+        <li>Google account se sign in karo</li>
+        <li>"Create API key" par click karo</li>
+        <li>Jo key bani (AIza... se shuru) usko <b>Copy</b> karo</li>
+        <li>Upar wale box mein <b>Paste</b> karo, phir <b>Save</b> dabao</li>
+      </ol>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button onclick="openGeminiKeySite()" style="flex:1;font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;padding:8px 12px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">🌐 Get Free Key</button>
+        <button onclick="testAdminKey()" style="flex:1;font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;padding:8px 12px;background:#27AE60;color:white;border:none;border-radius:12px;cursor:pointer">✅ Test Key</button>
+      </div>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:4px">🔌 OpenRouter API Key <span style="font-size:.7rem;color:#7B7A9A;font-family:'Nunito',sans-serif;font-weight:400">(backup for Gemini)</span></div>
+      <textarea id="adminOrKey" rows="2" style="width:100%;font-family:'Nunito',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A;resize:none;word-break:break-all" placeholder="sk-or-v1-... key yahan paste karo"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="adminPasteProvider('adminOrKey','adminOrStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📋 Paste</button>
+        <button onclick="saveProviderKey('openrouter_key','adminOrKey','adminOrStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">💾 Save</button>
+        <button onclick="window.open('https://openrouter.ai/keys','_blank')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;padding:8px 12px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">🌐 Get Free Key</button>
+      </div>
+      <div id="adminOrStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-top:6px"></div>
+    </div>
+    <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
+      <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:4px">🟢 NVIDIA NIM API Key <span style="font-size:.7rem;color:#7B7A9A;font-family:'Nunito',sans-serif;font-weight:400">(backup for Gemini)</span></div>
+      <textarea id="adminNvKey" rows="2" style="width:100%;font-family:'Nunito',sans-serif;font-size:.88rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:12px;outline:none;color:#2D2A4A;resize:none;word-break:break-all" placeholder="nvapi-... key yahan paste karo"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="adminPasteProvider('adminNvKey','adminNvStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:#48CAE4;color:white;border:none;border-radius:12px;cursor:pointer">📋 Paste</button>
+        <button onclick="saveProviderKey('nvidia_key','adminNvKey','adminNvStatus')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.82rem;font-weight:700;padding:8px 16px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">💾 Save</button>
+        <button onclick="window.open('https://build.nvidia.com','_blank')" style="flex:1;font-family:'Baloo 2',cursive;font-size:.8rem;font-weight:700;padding:8px 12px;background:#FF9F43;color:white;border:none;border-radius:12px;cursor:pointer">🌐 Get Free Key</button>
+      </div>
+      <div id="adminNvStatus" style="font-family:'Nunito',sans-serif;font-size:.82rem;color:#7B7A9A;margin-top:6px"></div>
+    </div>
     <div style="border-top:2px solid #E8E8F0;padding-top:14px;margin-top:4px">
       <div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;margin-bottom:8px">📡 Server URL</div>
       <input type="text" id="serverUrlInput" value="" placeholder="https://your-server.com" style="width:100%;font-family:'Nunito',sans-serif;font-size:.85rem;padding:8px 12px;border:2px solid #E8E8F0;border-radius:10px;color:#2D2A4A;margin-bottom:6px">
@@ -642,1866 +927,11 @@ img{max-width:100%}
 
 <div id="globalStopTTS" onclick="stopSpeaking()" style="position:fixed;bottom:24px;right:24px;z-index:99999;background:#FF6B6B;color:white;border:none;border-radius:50px;padding:12px 20px;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(255,0,0,.3);display:none;align-items:center;gap:6px">⏹️ Band Karo</div>
 
-<script>
-// ══════════════════════════════════════
-// LOTTIE
-// ══════════════════════════════════════
-const L={
-  welcome:"https://assets10.lottiefiles.com/packages/lf20_qp1q7mct.json",
-  trophy:"https://assets4.lottiefiles.com/packages/lf20_touohxv0.json",
-  ai:"https://assets5.lottiefiles.com/packages/lf20_fcfjwiyb.json",
-  ch1:"https://assets5.lottiefiles.com/packages/lf20_ysrn2iwp.json",
-  ch2:"https://assets7.lottiefiles.com/packages/lf20_kkflmtur.json",
-  ch3:"https://assets3.lottiefiles.com/packages/lf20_obhph8ry.json",
-  ch4:"https://assets2.lottiefiles.com/packages/lf20_xlmz9xwm.json",
-  ch5:"https://assets6.lottiefiles.com/packages/lf20_qp1q7mct.json",
-};
-const chAnims=[L.ch1,L.ch2,L.ch3,L.ch4,L.ch5];
-function loadLottie(el,url,loop=true){
-  if(!el||typeof lottie==='undefined')return null;
-  el.innerHTML='';
-  try{return lottie.loadAnimation({container:el,renderer:'svg',loop,autoplay:true,path:url})}catch(e){return null}
-}
-
-// ══════════════════════════════════════
-// SPEECH - Web Speech API only (CORS-safe for Capacitor)
-// ══════════════════════════════════════
-let hindiVoice=null,englishVoice=null;
-function initVoices(){
-  if(!window.speechSynthesis)return;
-  const v=window.speechSynthesis.getVoices();
-  hindiVoice=v.find(x=>x.lang==='hi-IN')||v.find(x=>x.lang.startsWith('hi'))||null;
-  englishVoice=v.find(x=>x.lang==='en-IN')||v.find(x=>x.lang.startsWith('en'))||null;
-}
-if(window.speechSynthesis){
-  window.speechSynthesis.onvoiceschanged=initVoices;
-  initVoices();
-}
-
-function isHindiText(t){
-  const deva=(t.match(/[\u0900-\u097F]/g)||[]).length;
-  const eng=(t.match(/[a-zA-Z]/g)||[]).length;
-  if(eng===0)return true;
-  return deva/(deva+eng)>=0.3;
-}
-
-const EDICT={
-"photosynthesis":"प्रकाश संश्लेषण","chlorophyll":"क्लोरोफिल","mitochondria":"माइटोकॉन्ड्रिया","nucleus":"केंद्रक","cytoplasm":"साइटोप्लाज़्म","atom":"परमाणु","molecule":"अणु","electron":"इलेक्ट्रॉन","proton":"प्रोटॉन","neutron":"न्यूट्रॉन","gravity":"गुरुत्व","friction":"घर्षण","energy":"ऊर्जा","force":"बल","mass":"द्रव्यमान","temperature":"तापमान","evaporation":"वाष्पीकरण","condensation":"संघनन","precipitation":"वर्षा","erosion":"अपरदन","volcanic":"ज्वालामुखी","earthquake":"भूकंप","ecosystem":"पारिस्थितिकी तंत्र","organism":"जीव","bacteria":"जीवाणु","virus":"विषाणु","protein":"प्रोटीन","carbon":"कार्बन","oxygen":"ऑक्सीजन","hydrogen":"हाइड्रोजन","nitrogen":"नाइट्रोजन","compound":"यौगिक","solution":"विलयन","acid":"अम्ल","base":"क्षार","reaction":"अभिक्रिया","history":"इतिहास","geography":"भूगोल","science":"विज्ञान","mathematics":"गणित","literature":"साहित्य","democracy":"लोकतंत्र","government":"सरकार","economy":"अर्थव्यवस्था","society":"समाज","culture":"संस्कृति","independence":"स्वतंत्रता","revolution":"क्रांति","constitution":"संविधान","republic":"गणराज्य","population":"जनसंख्या","agriculture":"कृषि","industry":"उद्योग","technology":"प्रौद्योगिकी","education":"शिक्षा","environment":"पर्यावरण","pollution":"प्रदूषण","forest":"वन","mountain":"पर्वत","river":"नदी","ocean":"महासागर","continent":"महाद्वीप","renewable":"नवीकरणीय","fossil":"जीवाश्म","combustion":"दहन","oxidation":"ऑक्सीकरण","frequency":"आवृत्ति","wavelength":"तरंगदैर्घ्य","spectrum":"वर्णक्रम","electricity":"विद्युत","circuit":"सर्किट","voltage":"वोल्टता","current":"धारा","resistance":"प्रतिरोध","algorithm":"एल्गोरिदम","equation":"समीकरण","triangle":"त्रिभुज","rectangle":"आयत","circle":"वृत्त","area":"क्षेत्रफल","perimeter":"परिमाप","volume":"आयतन","fraction":"भिन्न","decimal":"दशमलव","percent":"प्रतिशत","average":"औसत","ratio":"अनुपात","probability":"संभावना","statistics":"सांख्यिकी","tissue":"ऊतक","organ":"अंग","system":"तंत्र","digestion":"पाचन","circulation":"संचरण","cell":"कोशिका","process":"प्रक्रिया","product":"उत्पाद","property":"गुण","matter":"पदार्थ","liquid":"द्रव","solid":"ठोस","gas":"गैस",
-"respiration":"श्वसन","noun":"संज्ञा","verb":"क्रिया","adjective":"विशेषण","adverb":"क्रिया विशेषण","preposition":"संबंधबोधक",
-"chapter":"अध्याय","subject":"विषय","question":"प्रश्न","answer":"उत्तर","exam":"परीक्षा","mark":"अंक","grade":"श्रेणी",
-"earth":"पृथ्वी","sun":"सूर्य","moon":"चंद्रमा","star":"तारा","planet":"ग्रह","satellite":"उपग्रह","orbit":"कक्षा","gravity":"गुरुत्वाकर्षण",
-"number":"संख्या","addition":"जोड़","subtraction":"घटाव","multiplication":"गुणा","division":"भाग",
-"noun":"संज्ञा","verb":"क्रिया","pronoun":"सर्वनाम","conjunction":"संयोजक","interjection":"विस्मयादिबोधक"
-};
-
-function splitSegments(text){
-  const segs=[];let cur='';let curType=null;
-  for(const ch of text){
-    const isD=/[\u0900-\u097F]/.test(ch);
-    const isE=/[a-zA-Z]/.test(ch);
-    const type=isD?'hi':isE?'en':null;
-    if(type===curType||(type===null&&curType)){cur+=ch;}
-    else{
-      if(cur)segs.push({text:cur,lang:curType});
-      cur=ch;curType=type;
-    }
-  }
-  if(cur)segs.push({text:cur,lang:curType});
-  return segs;
-}
-
-function replaceDictInHindi(segs){
-  return segs.map(s=>{
-    if(s.lang!=='hi')return s;
-    const replaced=s.text.replace(/\b([a-zA-Z]{2,})\b/g,(m,w)=>{
-      return EDICT[w.toLowerCase()]||w;
-    });
-    return{text:replaced,lang:'hi'};
-  });
-}
-
-function cleanForTTS(t){
-  if(!t)return'';
-  let s=t.replace(/\n/g,' ');
-  s=s.replace(/_+/g,'blank');
-  s=s.replace(/- - -/g,'blank');
-  s=s.replace(/\bblank\s+blank\b/g,'blank');
-  s=s.replace(/\(.*?\)/g,'');
-  s=s.replace(/\s+/g,' ').trim();
-  s=s.replace(/[^\u0900-\u097Fa-zA-Z0-9\s.,!?।,।]/g,'');
-  return s;
-}
-
-function _capacitorTTS(){
-  try{
-    if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.TextToSpeech)return window.Capacitor.Plugins.TextToSpeech;
-  }catch(e){}
-  return null;
-}
-function speakSmart(text,lang){
-  if(!text||!text.trim())return;
-  const clean=cleanForTTS(text);
-  if(!clean)return;
-  showStopBtn();
-  const tts=_capacitorTTS();
-  if(tts){
-    tts.speak({text:clean,lang:lang==='hi'?'hi-IN':'en-IN',rate:lang==='hi'?0.95:1.0,pitch:1.0}).then(()=>hideStopBtn()).catch(()=>hideStopBtn());
-    return;
-  }
-  if(window.speechSynthesis){
-    try{window.speechSynthesis.cancel();}catch(e){}
-    const u=new SpeechSynthesisUtterance(clean);
-    if(lang==='hi'){u.rate=0.95;u.pitch=1.0;u.lang='hi-IN';}
-    else{u.rate=1.0;u.pitch=1.0;u.lang='en-IN';}
-    u.lang=lang==='hi'?'hi-IN':'en-IN';
-    u.onend=()=>hideStopBtn();
-    u.onerror=()=>hideStopBtn();
-    try{window.speechSynthesis.speak(u);}catch(e){hideStopBtn();}
-    return;
-  }
-  hideStopBtn();
-}
-function speakEN(t){if(!t)return;speakSmart(t,'en');}
-function speakHI(t){if(!t)return;speakSmart(t,'hi');}
-function stopSpeaking(){
-  const tts=_capacitorTTS();
-  if(tts){tts.stop().catch(()=>{});}
-  if(window.speechSynthesis)window.speechSynthesis.cancel();
-  hideStopBtn();
-}
-function showStopBtn(){const b=document.getElementById('globalStopTTS');if(b)b.style.display='flex';}
-function hideStopBtn(){const b=document.getElementById('globalStopTTS');if(b)b.style.display='none';}
-
-// ══════════════════════════════════════
-// AVATAR
-// ══════════════════════════════════════
-function loadAvatar(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){const u=ev.target.result;localStorage.setItem('lh_avatar',u);applyAvatar(u);};r.readAsDataURL(f);}
-function applyAvatar(u){document.querySelectorAll('[id^="avatarImg"]').forEach(i=>{i.src=u;i.style.display='block'});document.querySelectorAll('[id^="avatarPlaceholder"]').forEach(p=>p.style.display='none');}
-function loadSavedAvatar(){const s=localStorage.getItem('lh_avatar');if(s)applyAvatar(s);}
-
-// ══════════════════════════════════════
-// SUBJECTS CONFIG
-// ══════════════════════════════════════
-const SUBJECTS=[
-  {id:'grammar',name:'English Grammar',emoji:'📝',color:'#FF6B9D',light:'#FFE4F3'},
-  {id:'maths',name:'Maths',emoji:'🔢',color:'#48CAE4',light:'#E4F9FF'},
-  {id:'hindi',name:'Hindi',emoji:'📚',color:'#FF9F43',light:'#FFF3E0'},
-  {id:'evs',name:'EVS / Science',emoji:'🔬',color:'#10AC84',light:'#E0FFF6'},
-  {id:'gk',name:'General Knowledge',emoji:'🌍',color:'#5F27CD',light:'#EDE7FF'},
-  {id:'custom1',name:'My Subject 1',emoji:'✨',color:'#E84393',light:'#FFE8F5',custom:true},
-  {id:'custom2',name:'My Subject 2',emoji:'🎯',color:'#6C5CE7',light:'#F0EDFF',custom:true},
-];
-function getSubjectName(sub){
-  const saved=localStorage.getItem('lh_subname_'+sub.id);
-  return saved||sub.name;
-}
-function renameSubject(subId){
-  const sub=SUBJECTS.find(s=>s.id===subId);
-  const cur=getSubjectName(sub);
-  const newName=prompt('Enter new name:',cur);
-  if(newName&&newName.trim()){
-    localStorage.setItem('lh_subname_'+subId,newName.trim());
-    buildSubjectGrid();
-  }
-}
-function deleteSubject(subId){
-  const sub=SUBJECTS.find(s=>s.id===subId);
-  if(!sub)return;
-  const name=getSubjectName(sub);
-  const msg=sub.custom?`Delete "${name}" and all its chapters?`:`Clear all data for "${name}"?`;
-  if(!confirm(msg))return;
-  if(sub.custom){
-    const idx=SUBJECTS.indexOf(sub);
-    if(idx>-1)SUBJECTS.splice(idx,1);
-    localStorage.setItem('lh_subjects_extra',JSON.stringify(SUBJECTS.filter(s=>s.id.startsWith('custom_'))));
-  }
-  localStorage.removeItem('lh_sub_'+subId);
-  localStorage.removeItem('lh_subname_'+subId);
-  buildSubjectGrid();
-  updateGlobalStats();
-}
-
-
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let curSubjectId=null,curChIdx=0,curSection='theory',shuffledQs=[],curQ=0,score=0,answered=false;
-let qAnimObj=null,endAnimObj=null,currentQ=null,qboxOpen=true;
-let chatHistory=[],timerInterval=null,timerSeconds=30,wrongAnswers=[];
-let uploadedImages=[];
-let theoryLang=localStorage.getItem('lh_theoryLang')||'en';
-
-// ══════════════════════════════════════
-// PERSISTENCE
-// ══════════════════════════════════════
-function getSubjectData(subId){return JSON.parse(localStorage.getItem('lh_sub_'+subId)||'null');}
-function saveSubjectData(subId,data){localStorage.setItem('lh_sub_'+subId,JSON.stringify(data));}
-function getSubjectChapters(subId){const d=getSubjectData(subId);return d?d.chapters:[];}
-function saveSubjectChapters(subId,chapters){const d=getSubjectData(subId)||{scores:{},wrong:[],totalC:0,totalA:0};d.chapters=chapters;saveSubjectData(subId,d);}
-function getProgress(){return{streak:parseInt(localStorage.getItem('lh_streak')||'0'),lastPlay:localStorage.getItem('lh_lastPlay')||'',totalC:parseInt(localStorage.getItem('lh_totalC')||'0'),totalA:parseInt(localStorage.getItem('lh_totalA')||'0'),name:localStorage.getItem('lh_name')||'Student'};}
-function saveProgressUpdate(){
-  let p={streak:parseInt(localStorage.getItem('lh_streak')||'0'),lastPlay:localStorage.getItem('lh_lastPlay')||'',totalC:parseInt(localStorage.getItem('lh_totalC')||'0'),totalA:parseInt(localStorage.getItem('lh_totalA')||'0')};
-  const today=new Date().toDateString();
-  if(p.lastPlay!==today){const last=new Date(p.lastPlay);const diff=Math.floor((new Date(today)-last)/(1000*60*60*24));if(diff===1)p.streak++;else if(diff>1)p.streak=1;}
-  p.lastPlay=today;
-  localStorage.setItem('lh_streak',p.streak);localStorage.setItem('lh_lastPlay',p.lastPlay);
-}
-function recordScore(chId,score,total,wrong){
-  const subId=curSubjectId;const d=getSubjectData(subId)||{chapters:[],scores:{},wrong:[],totalC:0,totalA:0};
-  d.scores=d.scores||{};d.scores[chId]={score,total,date:new Date().toDateString()};
-  d.totalC=(d.totalC||0)+score;d.totalA=(d.totalA||0)+total;
-  d.wrong=d.wrong||[];wrong.forEach(w=>d.wrong.push({...w,chId,date:new Date().toDateString()}));
-  if(d.wrong.length>100)d.wrong=d.wrong.slice(-100);
-  saveSubjectData(subId,d);
-  let gt=parseInt(localStorage.getItem('lh_totalC')||'0')+score;
-  let ga=parseInt(localStorage.getItem('lh_totalA')||'0')+total;
-  localStorage.setItem('lh_totalC',gt);localStorage.setItem('lh_totalA',ga);
-  saveProgressUpdate();
-}
-
-// ══════════════════════════════════════
-// SERVER TRACKING + REMOTE CONTROL
-// ══════════════════════════════════════
-var SL_SERVER=localStorage.getItem('sl_server_url')||'https://shravani-app.onrender.com';
-var DEVICE_ID=localStorage.getItem('sl_device_id');
-if(!DEVICE_ID){DEVICE_ID='dev_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);localStorage.setItem('sl_device_id',DEVICE_ID);}
-var _sessionStart=Date.now();
-
-function getUsers(){try{return JSON.parse(localStorage.getItem('sl_users')||'[]');}catch(e){return[];}}
-function saveUsers(u){localStorage.setItem('sl_users',JSON.stringify(u));}
-
-function reportUsage(){
-  var users=getUsers();
-  var report={deviceId:DEVICE_ID,device:navigator.userAgent,users:[]};
-  users.forEach(function(u){
-    var key='sl_usage_'+u.name;
-    var usage=JSON.parse(localStorage.getItem(key)||'{}');
-    report.users.push({name:u.name,usage:usage});
-  });
-  fetch(SL_SERVER+'/api/usage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)}).then(function(r){}).catch(function(e){});
-}
-
-var _lastSync=localStorage.getItem('sl_last_sync')||'0';
-function checkRemoteLock(){
-  fetch(SL_SERVER+'/api/config?deviceId='+DEVICE_ID+'&lastSync='+_lastSync).then(function(r){return r.json();}).then(function(cfg){
-    if(cfg.locked){
-      document.getElementById('welcomeScreen').style.display='none';
-      document.getElementById('subjectScreen').classList.add('hidden');
-      document.getElementById('loginScreen').style.display='flex';
-      document.getElementById('lockScreen').style.display='block';
-      document.getElementById('lockMsg').textContent=cfg.lockMsg||'Admin has locked the app';
-    }
-    if(cfg.broadcast){
-      var lastBroadcast=localStorage.getItem('sl_last_broadcast');
-      if(cfg.broadcast!==lastBroadcast){
-        alert('📢 '+cfg.broadcast);
-        localStorage.setItem('sl_last_broadcast',cfg.broadcast);
-      }
-    }
-    if(cfg.apiKey){
-      localStorage.setItem('admin_gemini_key',cfg.apiKey);
-    }
-    if(cfg.subjects){
-      localStorage.setItem('sl_subjects',JSON.stringify(cfg.subjects));
-    }
-    if(cfg.contentUpdates){
-      cfg.contentUpdates.forEach(function(upd){
-        if(upd.type==='add_chapter'&&upd.data){
-          var subId=upd.data.subjectId;
-          var chapters=JSON.parse(localStorage.getItem('sl_chapters_'+subId)||'[]');
-          chapters.push(upd.data.chapter);
-          localStorage.setItem('sl_chapters_'+subId,JSON.stringify(chapters));
-        }
-        if(upd.type==='remove_chapter'&&upd.data){
-          var subId2=upd.data.subjectId;
-          var chId=upd.data.chapterId;
-          if(subId2&&chId){
-            var chapters2=JSON.parse(localStorage.getItem('sl_chapters_'+subId2)||'[]');
-            chapters2=chapters2.filter(function(c){return c.id!==chId;});
-            localStorage.setItem('sl_chapters_'+subId2,JSON.stringify(chapters2));
-          }
-        }
-      });
-    }
-    _lastSync=Date.now().toString();
-    localStorage.setItem('sl_last_sync',_lastSync);
-  }).catch(function(e){});
-}
-
-function saveSession(){
-  var now=Date.now();
-  var mins=Math.round((now-_sessionStart)/60000);
-  if(mins<1)return;
-  var today=new Date().toISOString().slice(0,10);
-  if(_loginUser){
-    var key='sl_usage_'+_loginUser.name;
-    var usage=JSON.parse(localStorage.getItem(key)||'{}');
-    if(!usage[today])usage[today]={minutes:0,sessions:0};
-    usage[today].minutes+=mins;
-    usage[today].sessions+=1;
-    localStorage.setItem(key,JSON.stringify(usage));
-  }else{
-    var users=getUsers();
-    users.forEach(function(u){
-      var key='sl_usage_'+u.name;
-      var usage=JSON.parse(localStorage.getItem(key)||'{}');
-      if(!usage[today])usage[today]={minutes:0,sessions:0};
-      usage[today].minutes+=mins;
-      usage[today].sessions+=1;
-      localStorage.setItem(key,JSON.stringify(usage));
-    });
-  }
-  _sessionStart=Date.now();
-}
-
-function startScreenTimer(){
-  setInterval(function(){saveSession();reportUsage();},60000);
-  setInterval(function(){checkRemoteLock();},300000);
-  document.addEventListener('visibilitychange',function(){
-    if(document.hidden){saveSession();}
-    else{_sessionStart=Date.now();reportUsage();checkRemoteLock();}
-  });
-  window.addEventListener('beforeunload',function(){saveSession();reportUsage();});
-}
-setTimeout(startScreenTimer,2000);
-
-// ══════════════════════════════════════
-// LOGIN SYSTEM (Multi-user + PIN)
-// ══════════════════════════════════════
-var _loginUser=null;
-
-function renderLoginScreen(){
-  // Remove test accounts
-  try{var _u=JSON.parse(localStorage.getItem('sl_users')||'[]');_u=_u.filter(function(x){return x.name.toLowerCase()!=='tani';});localStorage.setItem('sl_users',JSON.stringify(_u));}catch(e){}
-  var newUserForm=document.getElementById('loginNewUser');
-  var isAdding=newUserForm&&newUserForm.style.display==='block';
-  var users=getUsers();
-  var seen={};
-  users=users.filter(function(u){
-    var key=u.name.toLowerCase();
-    if(seen[key])return false;
-    seen[key]=true;return true;
-  });
-  saveUsers(users);
-  var list=document.getElementById('loginUserList');
-  list.innerHTML='';
-  if(users.length===0&&!isAdding){
-    list.innerHTML='<p style="font-family:\'Nunito\',sans-serif;font-size:.85rem;color:#7B7A9A">Create your first account 👇</p>';
-    return;
-  }
-  users.forEach(function(u){
-    var initials=u.name.charAt(0).toUpperCase();
-    var card=document.createElement('div');
-    card.className='user-card';
-    card.innerHTML='<div class="user-avatar">'+initials+'</div><div class="user-name">'+u.name+'</div><div class="user-lock">'+(u.pin?'🔒':'🔓')+'</div>';
-    card.onclick=function(){
-      if(u.pin){
-        document.getElementById('loginPinModal').style.display='block';
-        document.getElementById('loginPinName').textContent=u.name+"'s PIN:";
-        document.getElementById('loginPinInput').value='';
-        document.getElementById('loginPinInput').focus();
-        window._loginPinUser=u;
-      }else{
-        doLogin(u);
-      }
-    };
-    list.appendChild(card);
-  });
-}
-
-function createUser(){
-  var name=document.getElementById('loginNewName').value.trim();
-  var pin=document.getElementById('loginNewPin').value.trim();
-  if(!name){alert('Please enter a name!');return;}
-  if(pin&&pin.length!==4){alert('PIN must be 4 digits!');return;}
-  var users=getUsers();
-  var exists=users.find(function(u){return u.name.toLowerCase()===name.toLowerCase();});
-  if(exists){alert('Account already exists! Tap on "'+name+'" to login.');return;}
-  users.push({name:name,pin:pin||'',createdAt:Date.now()});
-  saveUsers(users);
-  renderLoginScreen();
-  document.getElementById('loginNewUser').style.display='none';
-  document.getElementById('loginUserList').style.display='';
-  document.getElementById('loginAddBtn').style.display='';
-}
-
-function verifyPin(){
-  var pin=document.getElementById('loginPinInput').value.trim();
-  var u=window._loginPinUser;
-  if(!u)return;
-  if(pin===u.pin){doLogin(u);}
-  else{alert('Wrong PIN!');}
-}
-
-function doLogin(u){
-  _loginUser=u;
-  _sessionStart=Date.now();
-  localStorage.setItem('sl_current_user',u.name);
-  localStorage.setItem('lh_name',u.name);
-  document.getElementById('loginScreen').style.display='none';
-  document.getElementById('studentNameInput').value=u.name;
-  document.getElementById('welcomeName').textContent=u.name+'!';
-  loadSavedAvatar();
-  buildSubjectGrid();
-  updateGlobalStats();
-  document.getElementById('welcomeScreen').style.display='none';
-  document.getElementById('subjectScreen').classList.remove('hidden');
-  document.getElementById('subGreeting').textContent='Hello, '+u.name+'!';
-  checkRemoteLock();
-  startScreenTimer();
-  setTimeout(reportUsage,2000);
-}
-
-function logoutUser(){
-  if(!_loginUser)return;
-  saveSession();
-  reportUsage();
-  _loginUser=null;
-  localStorage.removeItem('sl_current_user');
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('welcomeScreen').style.display='none';
-  document.getElementById('subjectScreen').classList.add('hidden');
-  document.getElementById('dashboard').classList.add('hidden');
-  document.getElementById('gameScreen').classList.add('hidden');
-  renderLoginScreen();
-}
-
-function showUsageStats(){
-  var users=getUsers();
-  var html='<div style="max-height:300px;overflow-y:auto">';
-  if(users.length===0){html+='<div style="font-family:\'Nunito\',sans-serif;font-size:.82rem;color:#7B7A9A">No users yet</div>';}
-  users.forEach(function(u){
-    var key='sl_usage_'+u.name;
-    var usage=JSON.parse(localStorage.getItem(key)||'{}');
-    html+='<div style="background:white;border-radius:14px;padding:12px;margin-bottom:8px;border:2px solid #E8E8F0">';
-    html+='<div style="font-family:\'Baloo 2\',cursive;font-size:1rem;font-weight:700;color:#2D2A4A;margin-bottom:6px">'+u.name+'</div>';
-    var days=Object.keys(usage).sort().slice(-7);
-    if(days.length===0){
-      html+='<div style="font-family:\'Nunito\',sans-serif;font-size:.82rem;color:#7B7A9A">No data yet</div>';
-    }else{
-      days.forEach(function(d){
-        var ud=usage[d];
-        html+='<div style="display:flex;justify-content:space-between;font-family:\'Nunito\',sans-serif;font-size:.8rem;padding:3px 0;border-bottom:1px solid #f0f0f0">';
-        html+='<span style="color:#7B7A9A">'+d+'</span>';
-        html+='<span style="font-weight:700;color:#2D2A4A">⏱ '+ud.minutes+'min | 📝 '+ud.sessions+' sessions</span>';
-        html+='</div>';
-      });
-    }
-    html+='</div>';
-  });
-  html+='</div>';
-  return html;
-}
-
-// ═══ ADMIN HELPER FUNCTIONS ═══
-function saveAdminKey(){
-  var v=document.getElementById('adminApiKey').value.trim();
-  if(v){localStorage.setItem('admin_gemini_key',v);document.getElementById('adminStatus').textContent='✅ API Key saved! Restart app to use.';document.getElementById('adminStatus').style.color='#27AE60';}
-  else{document.getElementById('adminStatus').textContent='❌ Enter a valid key';document.getElementById('adminStatus').style.color='#E74C3C';}
-}
-function adminPasteKey(){
-  if(navigator.clipboard&&navigator.clipboard.readText){
-    navigator.clipboard.readText().then(function(t){
-      document.getElementById('adminApiKey').value=t.trim();
-      document.getElementById('adminStatus').textContent='✅ Pasted!';
-      document.getElementById('adminStatus').style.color='#27AE60';
-    }).catch(function(){
-      document.getElementById('adminStatus').textContent='❌ Clipboard access denied — paste manually';
-      document.getElementById('adminStatus').style.color='#E74C3C';
-      document.getElementById('adminApiKey').focus();
-    });
-  }else{
-    document.getElementById('adminStatus').textContent='❌ Tap textarea and paste manually';
-    document.getElementById('adminStatus').style.color='#7B7A9A';
-    document.getElementById('adminApiKey').focus();
-  }
-}
-function adminExport(){
-  var data={};
-  for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);try{data[key]=JSON.parse(localStorage.getItem(key));}catch(e){data[key]=localStorage.getItem(key);}}
-  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shravani_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);
-}
-function adminImport(e){
-  var file=e.target.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    try{
-      var data=JSON.parse(ev.target.result);var count=0;
-      for(var key of Object.keys(data)){localStorage.setItem(key,JSON.stringify(data[key]));count++;}
-      alert('✅ '+count+' items imported! Reloading...');location.reload();
-    }catch(err){alert('❌ Invalid JSON!');}
-  };
-  reader.readAsText(file);
-}
-function adminSyncUp(){
-  try{
-    var data={};
-    for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);try{data[key]=JSON.parse(localStorage.getItem(key));}catch(e){data[key]=localStorage.getItem(key);}}
-    fetch(SL_SERVER+'/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(o){alert('✅ Synced! '+Object.keys(o).length+' items saved');}).catch(function(e){alert('❌ Sync failed: '+e.message);});
-  }catch(e){alert('❌ '+e.message);}
-}
-function adminSyncDown(){
-  try{
-    fetch(SL_SERVER+'/api/data').then(function(r){return r.json();}).then(function(data){
-      var count=0;
-      for(var key of Object.keys(data)){
-        var existing=localStorage.getItem(key);
-        var incoming=JSON.stringify(data[key]);
-        if(!existing||incoming.length>existing.length){localStorage.setItem(key,incoming);count++;}
-      }
-      alert('✅ Loaded! '+count+' items restored');
-      if(count>0)setTimeout(function(){location.reload();},500);
-    }).catch(function(e){alert('❌ Load failed: '+e.message);});
-  }catch(e){alert('❌ '+e.message);}
-}
-
-// ══════════════════════════════════════
-// GEMINI API — Server proxy first, fallback to client key
-// ══════════════════════════════════════
-
-// Try calling Gemini through the server proxy (API key stays on server)
-async function tryServerGemini(body){
-  if(!window.__syncConnected)return null;
-  try{
-    const res=await fetch((SYNC_URL||'')+'/api/gemini',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({body,model:'gemini-3-flash-preview'})
-    });
-    if(!res.ok)return null;
-    const data=await res.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
-  }catch(e){return null;}
-}
-
-function getGeminiKey(){
-  var k=localStorage.getItem('admin_gemini_key');if(k)return k;
-  const i=document.getElementById('apiKeyInput');if(i&&i.value.trim())return i.value.trim().replace(/^["']+|["']+$/g,'');
-  const s=localStorage.getItem('gemini_key');if(s){const clean=s.replace(/^["']+|["']+$/g,'');if(i)i.value=clean;return clean;}
-  return '';
-}
-function saveApiKey(){const i=document.getElementById('apiKeyInput');if(!i)return;const v=i.value.trim().replace(/^["']+|["']+$/g,'');if(v){localStorage.setItem('gemini_key',v);}}
-async function callGemini(prompt,systemPrompt='',maxTokens=250){
-  const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}});
-  const serverResult=await tryServerGemini(body);
-  if(serverResult)return serverResult;
-  const key=getGeminiKey();if(!key){showAdminPanel();return null;}
-  try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body});
-    const data=await res.json();if(!res.ok){console.error('Gemini error:',data);return null;}
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
-  }catch(e){console.error('Gemini fetch error:',e);return null;}
-}
-async function callGeminiVision(base64Image,mimeType,prompt,systemPrompt='',maxTokens=4000){
-  const body=JSON.stringify({contents:[{role:'user',parts:[{text:prompt},{inlineData:{mimeType,data:base64Image}}]}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}});
-  const serverResult=await tryServerGemini(body);
-  if(serverResult)return serverResult;
-  const key=getGeminiKey();if(!key){showAdminPanel();return null;}
-  try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body});
-    const data=await res.json();if(!res.ok){console.error('Gemini Vision error:',data);return null;}
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
-  }catch(e){console.error('Gemini Vision fetch error:',e);return null;}
-}
-async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=4000){
-  const parts=[{text:prompt}];
-  images.forEach(img=>{
-    const b64=img.split(',')[1];
-    const mt=img.split(';')[0].split(':')[1]||'image/jpeg';
-    parts.push({inlineData:{mimeType:mt,data:b64}});
-  });
-  const body=JSON.stringify({contents:[{role:'user',parts}],...(systemPrompt?{systemInstruction:{parts:[{text:systemPrompt}]}}:{}),generationConfig:{maxOutputTokens:maxTokens,temperature:.7,topP:.95}});
-  const serverResult=await tryServerGemini(body);
-  if(serverResult)return serverResult;
-  const key=getGeminiKey();if(!key){showAdminPanel();return null;}
-  try{
-    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body});
-    const data=await res.json();if(!res.ok){console.error('Gemini Vision Multi error:',data);return null;}
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text||null;
-  }catch(e){console.error('Gemini Vision Multi fetch error:',e);return null;}
-}
-
-// ══════════════════════════════════════
-// AUTO UPDATE CHECKER
-// ══════════════════════════════════════
-const APP_VERSION='1.0.8';
-const GITHUB_REPO='kshvchvr-gif/Shravani-app';
-async function checkForUpdate(){
-  try{
-    if(!window.navigator.onLine)return;
-    const res=await fetch('https://api.github.com/repos/'+GITHUB_REPO+'/releases/latest');
-    if(!res.ok)return;
-    const release=await res.json();
-    const latestVersion=release.tag_name.replace('v','');
-    if(latestVersion===APP_VERSION)return;
-    const apkAsset=release.assets.find(a=>a.name.endsWith('.apk'));
-    if(!apkAsset)return;
-    showUpdatePopup(latestVersion,apkAsset.browser_download_url);
-  }catch(e){console.log('Update check failed:',e);}
-}
-function showUpdatePopup(version,url){
-  const overlay=document.createElement('div');
-  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999999;display:flex;align-items:center;justify-content:center';
-  overlay.innerHTML=`<div style="background:white;border-radius:20px;padding:28px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3)">
-    <div style="font-size:2.5rem;margin-bottom:8px">🔄</div>
-    <div style="font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:#2D2A4A;margin-bottom:6px">Update Available!</div>
-    <div style="font-family:'Nunito',sans-serif;font-size:.9rem;color:#7B7A9A;margin-bottom:16px">Version ${version} is now available.</div>
-    <div id="updateProgress" style="display:none;margin-bottom:12px">
-      <div style="background:#E8E8F0;border-radius:10px;height:8px;overflow:hidden">
-        <div id="updateProgressBar" style="background:linear-gradient(135deg,#FF6B9D,#C77DFF);height:100%;width:0%;transition:width .3s;border-radius:10px"></div>
-      </div>
-      <div id="updateStatus" style="font-family:'Nunito',sans-serif;font-size:.8rem;color:#7B7A9A;margin-top:6px">Downloading...</div>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:center">
-      <button onclick="this.closest('div[style*=fixed]').remove()" style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:10px 20px;background:#E8E8F0;color:#7B7A9A;border:none;border-radius:12px;cursor:pointer">Later</button>
-      <button id="updateBtn" onclick="downloadUpdate('${url}',this)" style="font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:10px 24px;background:linear-gradient(135deg,#FF6B9D,#C77DFF);color:white;border:none;border-radius:12px;cursor:pointer">Update</button>
-    </div>
-  </div>`;
-  document.body.appendChild(overlay);
-}
-async function downloadUpdate(url){
-  const progress=document.getElementById('updateProgress');
-  const bar=document.getElementById('updateProgressBar');
-  const status=document.getElementById('updateStatus');
-  const btn=document.getElementById('updateBtn');
-  progress.style.display='block';btn.style.display='none';
-  try{
-    bar.style.width='50%';
-    status.textContent='Copy link and paste in browser to download';
-    bar.style.width='100%';
-    var copyDiv=document.createElement('div');copyDiv.style.cssText='margin-top:10px;padding:10px;background:#f0f0f5;border-radius:8px;word-break:break-all;font-size:.75rem;color:#555;cursor:pointer;border:1px dashed #C77DFF';
-    copyDiv.textContent=url;
-    copyDiv.onclick=function(){navigator.clipboard.writeText(url).then(function(){copyDiv.textContent='✅ Copied! Open Chrome & paste';copyDiv.style.background='#e8ffe8';setTimeout(function(){copyDiv.textContent=url;copyDiv.style.background='#f0f0f5';},3000);}).catch(function(){var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);copyDiv.textContent='✅ Copied! Open Chrome & paste';});};
-    status.parentElement.appendChild(copyDiv);
-    if(window.Capacitor&&window.Capacitor.isNativePlatform){
-      window.open(url,'_system');
-    }
-  }catch(e){
-    status.textContent='Copy this link and open in browser:';
-    var link=document.createElement('a');link.href=url;link.textContent='Download APK';link.style.cssText='display:block;margin-top:8px;color:#C77DFF;font-weight:700;word-break:break-all';
-    status.parentElement.appendChild(link);
-  }
-}
-setTimeout(checkForUpdate,5000);
-
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-
-window.addEventListener('DOMContentLoaded',()=>{
-  loadLottie(document.getElementById('welcomeAnim'),L.welcome);
-  if(window.speechSynthesis)window.speechSynthesis.getVoices();
-
-  loadExtraSubjects();
-  const savedKey=localStorage.getItem('gemini_key');if(savedKey){const i=document.getElementById('apiKeyInput');if(i)i.value=savedKey;}
-
-  // Always show login screen — user picks account
-  localStorage.removeItem('sl_current_user');
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('welcomeScreen').style.display='none';
-  renderLoginScreen();
-  checkRemoteLock();
-});
-
-function startApp(){
-  var name=document.getElementById('studentNameInput').value.trim();
-  if(!name){
-    document.getElementById('studentNameInput').style.borderColor='#E74C3C';
-    document.getElementById('studentNameInput').placeholder='Please enter your name!';
-    document.getElementById('studentNameInput').focus();
-    return;
-  }
-  localStorage.setItem('lh_name',name);
-  if(!_loginUser){
-    _loginUser={name:name};
-    localStorage.setItem('sl_current_user',name);
-  }
-  var users=getUsers();
-  if(!users.find(function(u){return u.name===name;})){
-    users.push({name:name});
-    saveUsers(users);
-  }
-  document.getElementById('welcomeScreen').classList.add('hidden');
-  document.getElementById('subjectScreen').classList.remove('hidden');
-  document.getElementById('subGreeting').textContent='Hello, '+name+'!';
-  loadSavedAvatar();
-  buildSubjectGrid();
-  updateGlobalStats();
-  setTimeout(function(){setQBoxLang(theoryLang);},100);
-}
-function goToWelcome(){
-  document.getElementById('subjectScreen').classList.add('hidden');
-  document.getElementById('loginScreen').style.display='flex';
-  renderLoginScreen();
-}
-function addNewBook(){
-  const name=prompt('Enter Book/Subject name:');
-  if(!name||!name.trim())return;
-  const id='custom_'+Date.now();
-  const colors=['#E84393','#6C5CE7','#00B894','#FDCB6E','#E17055','#0984E3','#D63031','#A29BFE'];
-  const emojis=['📖','📕','📗','📘','📙','📓','📔','📒'];
-  const color=colors[Math.floor(Math.random()*colors.length)];
-  const emoji=emojis[Math.floor(Math.random()*emojis.length)];
-  const light=color+'20';
-  SUBJECTS.push({id:id,name:name.trim(),emoji:emoji,color:color,light:light,custom:true});
-  localStorage.setItem('lh_subjects_extra',JSON.stringify(SUBJECTS.filter(s=>s.id.startsWith('custom_'))));
-  buildSubjectGrid();
-}
-function loadExtraSubjects(){
-  const extra=JSON.parse(localStorage.getItem('lh_subjects_extra')||'[]');
-  extra.forEach(s=>{
-    if(!SUBJECTS.find(x=>x.id===s.id)){
-      SUBJECTS.push(s);
-    }
-  });
-}
-
-// ══════════════════════════════════════
-// SUBJECT GRID
-// ══════════════════════════════════════
-function buildSubjectGrid(){
-  const grid=document.getElementById('subGrid');grid.innerHTML='';
-  SUBJECTS.forEach(sub=>{
-    const chapters=getSubjectChapters(sub.id);
-    const hasData=chapters&&chapters.length>0;
-    const displayName=getSubjectName(sub);
-    const div=document.createElement('div');
-    div.className='sub-card'+(hasData?'':' add-subject-card');
-    div.style.background=hasData?sub.color:sub.light;
-    div.style.color=hasData?'white':sub.color;
-    const editBtn=sub.custom?`<span onclick="event.stopPropagation();renameSubject('${sub.id}')" style="position:absolute;top:6px;right:26px;font-size:.75rem;cursor:pointer;opacity:.7" title="Rename">✏️</span>`:'';
-    const delBtn=`<span onclick="event.stopPropagation();deleteSubject('${sub.id}')" style="position:absolute;top:6px;right:8px;font-size:.75rem;cursor:pointer;opacity:.6" title="${sub.custom?'Delete subject':'Clear chapters'}">🗑️</span>`;
-    div.style.position='relative';
-    div.innerHTML=`${editBtn}${delBtn}<div class="sub-emoji">${sub.emoji}</div><div class="sub-name">${displayName}</div><div class="sub-chapters">${hasData?chapters.length+' chapters':'Tap to create content'}</div>`;
-    div.onclick=()=>openSubject(sub.id);
-    grid.appendChild(div);
-  });
-}
-function updateGlobalStats(){
-  const p=getProgress();
-  document.getElementById('globalStreak').textContent=p.streak;
-  document.getElementById('globalScore').textContent=p.totalC+'/'+p.totalA;
-}
-
-// ══════════════════════════════════════
-// OPEN SUBJECT
-// ══════════════════════════════════════
-function openSubject(subId){
-  curSubjectId=subId;
-  const sub=SUBJECTS.find(s=>s.id===subId);
-  document.getElementById('subjectScreen').classList.add('hidden');
-  document.getElementById('dashboard').classList.remove('hidden');
-  document.getElementById('dashSubjectTitle').textContent=sub.emoji+' '+getSubjectName(sub);
-  buildSubjectDash();
-}
-function goToSubjects(){
-  stopTimer();
-  document.getElementById('dashboard').classList.add('hidden');
-  document.getElementById('gameScreen').classList.add('hidden');
-  document.getElementById('subjectScreen').classList.remove('hidden');
-  buildSubjectGrid();updateGlobalStats();
-}
-function goToSubjectDash(){
-  stopTimer();
-  document.getElementById('gameScreen').classList.add('hidden');
-  document.getElementById('dashboard').classList.remove('hidden');
-  buildSubjectDash();
-}
-
-// ══════════════════════════════════════
-// SUBJECT DASHBOARD
-// ══════════════════════════════════════
-function buildSubjectDash(){
-  const sub=SUBJECTS.find(s=>s.id===curSubjectId);
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const d=getSubjectData(curSubjectId)||{scores:{},wrong:[],totalC:0,totalA:0};
-  const grid=document.getElementById('dashGrid');grid.innerHTML='';
-  if(chapters.length===0){
-    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:30px;font-family:'Baloo 2',cursive;color:${sub.color}">
-      <div style="font-size:2.5rem;margin-bottom:8px">📷</div>
-      <div style="font-size:1.1rem;font-weight:700">No chapters yet!</div>
-      <div style="font-size:.85rem;color:#7B7A9A;margin:6px 0">Upload a photo of your textbook page</div>
-      <button onclick="showUploadModal()" style="margin-top:10px;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;padding:10px 24px;background:${sub.color};color:white;border:none;border-radius:50px;cursor:pointer">📷 Upload First Page</button>
-    </div>`;
-  } else {
-    chapters.forEach((ch,i)=>{
-      const sc=d.scores?d.scores[ch.id]:null;
-      const pct=sc?Math.round(sc.score/sc.total*100):0;
-      const done=sc!==undefined;
-      const div=document.createElement('div');
-      div.className='dash-ch';div.style.background=done?ch.color:sub.light;
-      div.style.color=done?'white':sub.color;
-      div.innerHTML=`<span onclick="event.stopPropagation();deleteChapter(${i})" style="position:absolute;top:6px;left:8px;font-size:.75rem;cursor:pointer;opacity:.6" title="Delete chapter">🗑️</span><div class="dash-ch-name">${ch.label}</div><div class="dash-ch-score">${done?pct+'% ('+sc.score+'/'+sc.total+')':'Not started'}</div><div class="dash-ch-bar"><div class="dash-ch-bar-fill" style="width:${pct}%"></div></div>${done?'<div style="position:absolute;top:8px;right:8px;font-size:.7rem">✅</div>':''}`;
-      div.onclick=()=>startChapter(i);grid.appendChild(div);
-    });
-    const addBtn=document.createElement('div');
-    addBtn.className='add-ch-btn';    addBtn.innerHTML='📷 + Upload New Chapter';
-    addBtn.onclick=()=>showUploadModal();
-    grid.appendChild(addBtn);
-  }
-  // Stats
-  document.getElementById('dashStatsGrid').innerHTML=`
-    <div class="summary-stat" style="background:${sub.light}"><div class="num">${d.totalC||0}</div><div class="lbl">Correct</div></div>
-    <div class="summary-stat" style="background:${sub.light}"><div class="num">${d.totalA||0}</div><div class="lbl">Attempts</div></div>
-    <div class="summary-stat" style="background:${sub.light}"><div class="num">${chapters.length}</div><div class="lbl">Chapters</div></div>
-    <div class="summary-stat" style="background:${sub.light}"><div class="num">${d.totalA?Math.round((d.totalC||0)/d.totalA*100):0}%</div><div class="lbl">Accuracy</div></div>`;
-  // Revision
-  const rl=document.getElementById('revisionList');
-  const wrong=(d.wrong||[]).slice(-20).reverse();
-  if(wrong.length===0)rl.innerHTML='<p style="font-family:\'Nunito\',sans-serif;color:#7B7A9A;text-align:center;padding:14px">No wrong answers! Great job! 🎉</p>';
-  else rl.innerHTML=wrong.map(w=>`<div class="wrong-item"><strong>${(w.chId||'').toUpperCase()}</strong> ${(w.q||'').split('\n')[0]} → <strong>${w.correct||'?'}</strong></div>`).join('');
-}
-function showDashView(view,btn){
-  ['chapters','stats','revision'].forEach(v=>{
-    const el=document.getElementById('dash'+v.charAt(0).toUpperCase()+v.slice(1));
-    if(el){el.classList.add('hidden');el.style.display='none';}
-  });
-  const target=document.getElementById('dash'+view.charAt(0).toUpperCase()+view.slice(1));
-  if(target){target.classList.remove('hidden');target.style.display='';}
-  if(btn){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-}
-
-// ══════════════════════════════════════
-// IMAGE UPLOAD & AI GENERATION
-// ══════════════════════════════════════
-function showUploadModal(){
-  const sub=SUBJECTS.find(s=>s.id===curSubjectId);
-  document.getElementById('modalSubjectName').textContent=getSubjectName(sub);
-  document.getElementById('uploadModal').classList.remove('hidden');
-  uploadedImages=[];
-  document.getElementById('previewImg').classList.add('hidden');
-  document.getElementById('genBtn').disabled=true;
-  document.getElementById('genProgress').classList.add('hidden');
-  document.getElementById('chapterNameInput').value='';
-  document.getElementById('pageCameraInput').value='';
-  document.getElementById('pageGalleryInput').value='';
-  document.getElementById('uploadPageCount').textContent='';
-  resetGenSteps();
-}
-function closeUploadModal(){document.getElementById('uploadModal').classList.add('hidden');uploadedImages=[];}
-function previewImages(e){
-  const files=Array.from(e.target.files);
-  if(!files.length)return;
-  files.forEach(f=>{
-    const reader=new FileReader();
-    reader.onload=function(ev){
-      uploadedImages.push(ev.target.result);
-      const cnt=uploadedImages.length;
-      document.getElementById('uploadPageCount').textContent='📷 '+cnt+' pages selected';
-      document.getElementById('previewImg').src=uploadedImages[cnt-1];
-      document.getElementById('previewImg').classList.remove('hidden');
-      document.getElementById('genBtn').disabled=false;
-    };reader.readAsDataURL(f);
-  });
-}
-function resetGenSteps(){
-  ['step1','step2','step3','step4'].forEach((id,i)=>{
-    const el=document.getElementById(id);el.className='gen-step';
-    el.querySelector('.step-icon').textContent=i+1;
-  });
-}
-function setGenStep(stepIdx,status){
-  for(let i=0;i<4;i++){
-    const el=document.getElementById('step'+(i+1));
-    if(i<stepIdx)el.className='gen-step done';
-    else if(i===stepIdx)el.className='gen-step active';
-    else el.className='gen-step';
-    if(i<stepIdx)el.querySelector('.step-icon').textContent='✓';
-  }
-}
-async function generateFromImage(){
-  if(!uploadedImages.length)return;
-  const sub=SUBJECTS.find(s=>s.id===curSubjectId);
-  const customName=document.getElementById('chapterNameInput').value.trim();
-  const classLevel=document.getElementById('classLevelSelect').value;
-
-  document.getElementById('genBtn').disabled=true;
-  document.getElementById('genProgress').classList.remove('hidden');
-  const pgText=uploadedImages.length>1?uploadedImages.length+' pages':'1 page';
-  document.getElementById('genStatus').textContent=pgText+' pages reading...';
-  setGenStep(0);document.getElementById('genProgressFill').style.width='15%';
-
-  // STEP 1: Vision - extract text from all pages
-  const visionPrompt=`These are ${uploadedImages.length} textbook page(s) for Class ${classLevel} ${getSubjectName(sub)}. Extract ALL the text content from ALL pages. Include:
-1. Chapter title/name
-2. All headings and subheadings
-3. All content/text/rules/formulas/examples
-4. All questions and exercises
-5. Any important points or notes
-
-Format the extracted text clearly with sections. Preserve the structure. Combine content from all pages into one complete chapter.`;
-
-  let extractedText;
-  if(uploadedImages.length===1){
-    extractedText=await callGeminiVisionMulti(uploadedImages,visionPrompt,'',4000);
-  }else{
-    extractedText=await callGeminiVisionMulti(uploadedImages,visionPrompt,'',6000);
-  }
-  if(!extractedText){
-    document.getElementById('genStatus').textContent='❌ Could not read photo. Please upload a clear photo.';
-    document.getElementById('genBtn').disabled=false;return;
-  }
-  setGenStep(1);document.getElementById('genProgressFill').style.width='40%';
-  document.getElementById('genStatus').textContent='Content read! Creating questions...';
-
-  // STEP 2 & 3: Generate chapter data
-  const genPrompt=`You are generating a study chapter for Class ${classLevel} ${getSubjectName(sub)}.
-
-Here is the extracted textbook content:
----
-${extractedText}
----
-
-Generate a JSON chapter object. Return ONLY valid JSON (no markdown, no backticks), exactly like this structure:
-
-{
-  "id": "auto_${Date.now()}",
-  "label": "${customName||'Chapter'}",
-  "name": "${customName||extractedText.split('\\n')[0]||'Chapter'}",
-  "color": "${sub.color}",
-  "anim": "ch1",
-  "theory": {
-    "title": "Chapter Title in English",
-    "sections": [
-      {"heading": "Section heading in English", "content": "Explanation in simple English words", "examples": ["example 1", "example 2"]},
-      {"heading": "Another section in English", "content": "More content in English", "list": ["point 1", "point 2"]}
-    ]
-  },
-  "theory_hi": {
-    "title": "अध्याय शीर्षक हिंदी में",
-    "sections": [
-      {"heading": "धारा शीर्षक हिंदी में", "content": "सरल हिंदी में व्याख्या", "examples": ["उदाहरण 1", "उदाहरण 2"]},
-      {"heading": "अन्य धारा हिंदी में", "content": "अधिक सामग्री हिंदी में", "list": ["बिंदु 1", "बिंदु 2"]}
-    ]
-  },
-  "learn": [
-    {"type": "mcq", "q": "Question text in English?", "o": ["Option1","Option2","Option3","Option4"], "a": "Correct option"},
-    {"type": "fill", "q": "Fill in: ___ is the answer", "display": "___ is the answer", "answer": "word"}
-  ],
-  "exercise": [
-    {"type": "mcq", "q": "Exercise question in English?", "o": ["A","B","C","D"], "a": "A"},
-    {"type": "fill", "q": "Exercise fill: The answer is ___", "display": "The answer is ___", "answer": "answer"}
-  ]
-}
-
-RULES:
-- theory: Generate 5-8 theory sections in ENGLISH explaining key concepts simply.
-- theory_hi: Generate the SAME theory sections in pure Hindi (Devanagari script only). Use proper Hindi terms.
-- Generate 10-15 learn questions (mix of MCQ and fill-in-blank) in English
-- Generate 10-15 exercise questions (mix of MCQ and fill-in-blank) in English
-- Questions should be age-appropriate for Class ${classLevel}
-- Make theory sections educational with examples
-- ALL text must be based on the extracted textbook content`;
-
-  const systemPrompt='You are an expert Class '+classLevel+' '+getSubjectName(sub)+' teacher. You create study materials from textbook content. theory in English, theory_hi in pure Hindi (Devanagari). Questions in English. Always respond with valid JSON only.';
-
-  const genResult=await callGemini(genPrompt,systemPrompt,6000);
-  if(!genResult){
-    document.getElementById('genStatus').textContent='❌ Could not generate questions. Please try again.';
-    document.getElementById('genBtn').disabled=false;return;
-  }
-
-  setGenStep(2);document.getElementById('genProgressFill').style.width='75%';
-  document.getElementById('genStatus').textContent='Processing chapter data...';
-
-  try{
-    // Parse JSON (strip markdown if present)
-    let jsonStr=genResult.trim();
-    if(jsonStr.startsWith('```'))jsonStr=jsonStr.replace(/^```json?\n?/,'').replace(/\n?```$/,'');
-    const chapterData=JSON.parse(jsonStr);
-
-    // Ensure required fields
-    if(!chapterData.id)chapterData.id='auto_'+Date.now();
-    if(!chapterData.learn)chapterData.learn=[];
-    if(!chapterData.exercise)chapterData.exercise=[];
-    if(!chapterData.theory)chapterData.theory={title:chapterData.name,sections:[]};
-    if(!chapterData.theory_hi)chapterData.theory_hi={title:chapterData.theory.title,sections:chapterData.theory.sections.map(s=>({...s}))};
-
-    // Save
-    const chapters=getSubjectChapters(curSubjectId)||[];
-    chapters.push(chapterData);
-    saveSubjectChapters(curSubjectId,chapters);
-
-    setGenStep(3);document.getElementById('genProgressFill').style.width='100%';
-    document.getElementById('genStatus').textContent='✅ Chapter ready!';
-
-    setTimeout(()=>{
-      closeUploadModal();
-      buildSubjectDash();
-      // Auto open the new chapter
-      startChapter(chapters.length-1);
-    },1000);
-
-  }catch(err){
-    console.error('JSON parse error:',err,'Raw:',genResult);
-    document.getElementById('genStatus').textContent='❌ Error processing. AI response was invalid. Try again.';
-    document.getElementById('genBtn').disabled=false;
-  }
-}
-
-// ══════════════════════════════════════
-// TABS
-// ══════════════════════════════════════
-function buildTabs(){
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const sub=SUBJECTS.find(s=>s.id===curSubjectId);
-  const wrap=document.getElementById('chTabs');wrap.innerHTML='';
-  const d=getSubjectData(curSubjectId)||{scores:{}};
-  chapters.forEach((ch,i)=>{
-    const btn=document.createElement('button');
-    btn.className='ch-tab'+(i===curChIdx?' active':'');
-    btn.textContent=ch.label;btn.style.borderColor=ch.color;
-    btn.style.color=i===curChIdx?'white':ch.color;btn.style.background=i===curChIdx?ch.color:'white';
-    btn.onclick=()=>selectChapter(i);btn.id='tab_'+i;
-    if(d.scores&&d.scores[ch.id]){const dot=document.createElement('span');dot.className='ch-done';dot.textContent='✓';btn.appendChild(dot);}
-    wrap.appendChild(btn);
-  });
-}
-
-// ══════════════════════════════════════
-// CHAPTER / SECTION NAVIGATION
-// ══════════════════════════════════════
-function startChapter(idx){
-  curChIdx=idx;
-  document.getElementById('dashboard').classList.add('hidden');
-  document.getElementById('gameScreen').classList.remove('hidden');
-  buildTabs();
-  loadLottie(document.getElementById('aiAnim'),L.ai);
-  curSection='theory';updateSectionBtns();showTheory();
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const sub=SUBJECTS.find(s=>s.id===curSubjectId);
-  document.getElementById('gameSubjectName').textContent=sub.emoji+' '+getSubjectName(sub);
-  speakEN(chapters[idx].name);
-}
-function selectChapter(idx){
-  curChIdx=idx;
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  chapters.forEach((_,i)=>{const t=document.getElementById('tab_'+i);if(!t)return;const c=chapters[i].color;if(i===idx){t.classList.add('active');t.style.background=c;t.style.color='white';}else{t.classList.remove('active');t.style.background='white';t.style.color=c;}});
-  curSection='theory';updateSectionBtns();showTheory();
-  speakEN(chapters[idx].name);
-}
-function deleteChapter(idx){
-  if(!confirm('Delete this chapter?'))return;
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  if(idx<0||idx>=chapters.length)return;
-  const ch=chapters[idx];
-  chapters.splice(idx,1);
-  saveSubjectChapters(curSubjectId,chapters);
-  const d=getSubjectData(curSubjectId)||{scores:{},wrong:[],totalC:0,totalA:0};
-  if(ch&&d.scores)delete d.scores[ch.id];
-  saveSubjectData(curSubjectId,d);
-  buildSubjectDash();
-}
-function switchSection(sec){
-  curSection=sec;updateSectionBtns();
-  if(sec==='theory')showTheory();
-  else if(sec==='game')showGameModes();
-  else{showQuestions();restartGame();}
-}
-function updateSectionBtns(){
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const ch=chapters[curChIdx];
-  ['Theory','Learn','Exercise','Game'].forEach(s=>{
-    const btn=document.getElementById('btn'+s);if(!btn)return;
-    const active=curSection===s.toLowerCase();
-    btn.classList.toggle('active',active);
-    if(ch){btn.style.background=active?ch.color:'transparent';btn.style.color=active?'white':'#7B7A9A';}
-  });
-}
-function showTheory(){
-  document.getElementById('theoryView').style.display='block';
-  document.getElementById('gameCard').classList.add('hidden');
-  document.getElementById('gameView').classList.add('hidden');
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const ch=chapters[curChIdx];if(!ch)return;
-
-  if(theoryLang==='en'&&!ch.theory_en){
-    const src=ch.theory||{title:ch.name,sections:[]};
-    document.getElementById('theoryContent').innerHTML=`<div class="lang-toggle"><button class="lang-btn active" onclick="theoryLang='en';showTheory()">English</button><button class="lang-btn" onclick="theoryLang='hi';showTheory()">हिंदी</button></div><div style="text-align:center;padding:30px"><div class="loading-dots"><span></span><span></span><span></span></div><div style="font-family:'Nunito',sans-serif;color:#7B7A9A;margin-top:8px">📖 Translating to complete English...</div></div>`;
-    const prompt='Translate this Hinglish theory to complete proper English. Keep the same JSON structure with title and sections. Return ONLY JSON:\n\n'+JSON.stringify(src);
-    callGemini(prompt,'Return ONLY valid JSON. Translate title and all section headings/content to complete proper English.',3000).then(r=>{
-      if(r){
-        try{
-          let j=r.trim();if(j.startsWith('```'))j=j.replace(/^```json?\n?/,'').replace(/\n?```$/,'');
-          ch.theory_en=JSON.parse(j);
-          saveSubjectChapters(curSubjectId,chapters);
-        }catch(e){
-          ch.theory_en={title:'English Translation Failed',sections:[]};
-          saveSubjectChapters(curSubjectId,chapters);
-        }
-      }else{
-        ch.theory_en={title:'English Translation Failed',sections:[]};
-        saveSubjectChapters(curSubjectId,chapters);
-      }
-      showTheory();
-    });
-    return;
-  }
-
-  const t=theoryLang==='en'?((ch.theory_en)||(ch.theory||{title:ch.name,sections:[]})):((ch.theory)||{title:ch.name,sections:[]});
-  const badge=document.getElementById('theoryBadge');badge.textContent=ch.name;badge.style.background=ch.color;
-  let fullText='';
-  let html=`<div class="lang-toggle"><button class="lang-btn ${theoryLang==='en'?'active':''}" onclick="theoryLang='en';showTheory()">English</button><button class="lang-btn ${theoryLang==='hi'?'active':''}" onclick="theoryLang='hi';showTheory()">हिंदी</button></div>`;
-  html+=`<div class="theory-title">${t.title}</div>`;
-  html+=`<div class="theory-speak"><button class="speak-en" onclick="speakTheoryAll()">🔊 Listen</button><button class="speak-hi" onclick="speakTheoryAllHindi()">🔊 Listen in Hindi</button></div>`;
-  (t.sections||[]).forEach((sec,si)=>{
-    let secText=(sec.heading+' '+(sec.content||'')+' '+(sec.examples||[]).join(' ')+' '+(sec.list||[]).join(' ')).trim();
-    fullText+=secText+' ';
-    html+=`<div class="theory-section">`;
-    html+=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><h4 style="margin:0;flex:1">${sec.heading}</h4>`;
-    html+=`<span style="font-size:.75rem;padding:3px 8px;border-radius:50px;cursor:pointer;border:2px solid #48CAE4;color:#48CAE4;background:white" onclick="speakEN(this.dataset.t)" data-t="${secText.replace(/"/g,'&quot;')}">🔊</span>`;
-    html+=`<span style="font-size:.75rem;padding:3px 8px;border-radius:50px;cursor:pointer;border:2px solid #C77DFF;color:#C77DFF;background:white" onclick="speakHI(this.dataset.t)" data-t="${secText.replace(/"/g,'&quot;')}">🔊 Hindi</span>`;
-    html+=`</div>`;
-    if(sec.content)html+=`<p>${sec.content}</p>`;
-    if(sec.examples)sec.examples.forEach(ex=>{html+=`<div class="theory-example">${ex}</div>`;});
-    if(sec.list)html+='<ul>'+sec.list.map(l=>`<li>${l}</li>`).join('')+'</ul>';
-    html+=`</div>`;
-  });
-  html+=`<button class="theory-start-btn" style="background:linear-gradient(135deg,${ch.color},${ch.color}dd)" onclick="switchSection('learn')">📝 Start Quiz ➜</button>`;
-  document.getElementById('theoryContent').innerHTML=html;
-  window._theoryFullText=fullText.trim();
-  window._theoryHindiText='';
-}
-function speakTheoryAll(){
-  const t=window._theoryFullText;if(!t)return;
-  speakSmart(t,'en');
-}
-function speakTheoryAllHindi(){
-  let t=window._theoryHindiText;
-  if(t){speakSmart(t,'hi');return;}
-  const full=window._theoryFullText;if(!full)return;
-  callGemini('Translate to simple Hindi for a young student. Keep it natural and short. Only give the Hindi text: '+full,'',1000).then(r=>{
-    if(r){window._theoryHindiText=r;speakSmart(r,'hi');}
-  });
-}
-function showQuestions(){
-  document.getElementById('theoryView').style.display='none';
-  document.getElementById('gameCard').classList.remove('hidden');
-  document.getElementById('gameView').classList.add('hidden');
-}
-
-// ══════════════════════════════════════
-// INTERACTIVE GAME
-// ══════════════════════════════════════
-let gameScore=0,gameLevel=1,gameStreak=0,gameTimer=null,gameMode='';
-function showGameModes(){
-  document.getElementById('theoryView').style.display='none';
-  document.getElementById('gameCard').classList.add('hidden');
-  document.getElementById('gameView').classList.remove('hidden');
-  document.getElementById('activeGameArea').classList.add('hidden');
-  document.getElementById('gameFeedback').classList.add('hidden');
-  gameScore=0;gameLevel=1;gameStreak=0;gameMode='';
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const ch=chapters[curChIdx];if(!ch)return;
-  const pool=[...(ch.learn||[]),...(ch.exercise||[])];
-  if(pool.length<2){document.getElementById('gameModeGrid').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#7B7A9A;padding:20px;font-family:Nunito,sans-serif">Need at least 2 questions to play! Add more content first.</div>';return;}
-  const grid=document.getElementById('gameModeGrid');
-  grid.innerHTML=`
-    <div class="game-mode-btn" style="border-color:#27AE60" onclick="startGame('match')">
-      <div class="gm-icon">🔗</div><div class="gm-name">Word Match</div>
-      <div class="gm-desc">Match questions to answers</div><div class="gm-diff easy">Easy</div>
-    </div>
-    <div class="game-mode-btn" style="border-color:#48CAE4" onclick="startGame('scramble')">
-      <div class="gm-icon">🔤</div><div class="gm-name">Word Scramble</div>
-      <div class="gm-desc">Unscramble the answer</div><div class="gm-diff easy">Easy</div>
-    </div>
-    <div class="game-mode-btn" style="border-color:#FF9F43" onclick="startGame('speed')">
-      <div class="gm-icon">⚡</div><div class="gm-name">Speed Round</div>
-      <div class="gm-desc">Answer fast for bonus!</div><div class="gm-diff medium">Medium</div>
-    </div>
-    <div class="game-mode-btn" style="border-color:#E74C3C" onclick="startGame('memory')">
-      <div class="gm-icon">🧠</div><div class="gm-name">Memory Match</div>
-      <div class="gm-desc">Find matching pairs</div><div class="gm-diff hard">Hard</div>
-    </div>`;
-  document.getElementById('gameModeTitle').textContent='🎮 Choose Your Game!';
-}
-function getGamePool(){
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const ch=chapters[curChIdx];if(!ch)return[];
-  return shuffle([...(ch.learn||[]),...(ch.exercise||[])]);
-}
-function startGame(mode){
-  gameMode=mode;gameScore=0;gameLevel=1;gameStreak=0;
-  document.getElementById('activeGameArea').classList.remove('hidden');
-  document.getElementById('gameFeedback').classList.add('hidden');
-  updateGameHud();
-  if(mode==='match')startMatchGame();
-  else if(mode==='scramble')startScrambleGame();
-  else if(mode==='speed')startSpeedGame();
-  else if(mode==='memory')startMemoryGame();
-}
-function updateGameHud(){
-  document.getElementById('gameHudScore').textContent='⭐ '+gameScore;
-  document.getElementById('gameHudLevel').textContent='Level '+gameLevel;
-  document.getElementById('gameHudTimer').textContent=gameTimer?'⏱️ '+gameTimer+'s':'⏱️ --';
-}
-function gameFeedback(ok,text){
-  const fb=document.getElementById('gameFeedback');
-  fb.classList.remove('hidden','correct','wrong');
-  fb.classList.add(ok?'correct':'wrong');
-  fb.textContent=text;
-  if(ok){gameScore+=10+gameLevel*5;gameStreak++;if(gameStreak%5===0)gameLevel++;launchConfetti();}
-  else{gameStreak=0;}
-  updateGameHud();
-}
-function gameNext(){
-  setTimeout(()=>{
-    document.getElementById('gameFeedback').classList.add('hidden');
-    if(gameMode==='match')startMatchGame();
-    else if(gameMode==='scramble')startScrambleGame();
-    else if(gameMode==='speed')startSpeedGame();
-    else if(gameMode==='memory')startMemoryGame();
-  },800);
-}
-function endGame(){
-  const area=document.getElementById('gamePlayArea');
-  area.innerHTML=`<div style="text-align:center;padding:20px">
-    <div style="font-size:3rem;margin-bottom:8px">🏆</div>
-    <div style="font-family:'Baloo 2',cursive;font-size:1.6rem;font-weight:800;color:#2D2A4A">Game Over!</div>
-    <div style="font-family:'Nunito',sans-serif;font-size:1.1rem;color:#7B7A9A;margin:8px 0">Score: <strong>${gameScore}</strong> | Level: <strong>${gameLevel}</strong></div>
-    <div style="display:flex;gap:10px;justify-content:center;margin-top:16px">
-      <button class="play-again-btn" onclick="startGame(gameMode)">🔄 Play Again</button>
-      <button class="play-again-btn" onclick="showGameModes()" style="background:linear-gradient(135deg,#C77DFF,#FF6B9D)">🎮 Back</button>
-    </div></div>`;
-  document.getElementById('gameFeedback').classList.add('hidden');
-}
-
-// WORD MATCH
-let matchSelected=null,matchPairs=[],matchDone=0;
-function startMatchGame(){
-  const pool=getGamePool().slice(0,4+gameLevel);
-  matchPairs=pool.map(q=>({id:Math.random(),q:(q.q||'').substring(0,50),a:(q.a||q.answer||'').substring(0,30)}));
-  matchSelected=null;matchDone=0;
-  const shuffledQs=shuffle([...matchPairs]);
-  const shuffledAs=shuffle([...matchPairs]);
-  const area=document.getElementById('gamePlayArea');
-  let html=`<div class="game-mode-card" style="margin-bottom:0;padding:16px"><div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;text-align:center;margin-bottom:12px">🔗 Match the question to its answer!</div><div class="match-grid"><div class="match-col" id="matchLeft">`;
-  shuffledQs.forEach(p=>{html+=`<div class="match-item" data-type="q" data-id="${p.id}" onclick="matchClick(this)">${p.q}</div>`;});
-  html+=`</div><div class="match-col" id="matchRight">`;
-  shuffledAs.forEach(p=>{html+=`<div class="match-item" data-type="a" data-id="${p.id}" onclick="matchClick(this)">${p.a}</div>`;});
-  html+=`</div></div></div>`;
-  area.innerHTML=html;
-}
-function matchClick(el){
-  if(el.classList.contains('matched'))return;
-  if(!matchSelected){matchSelected=el;el.classList.add('selected');return;}
-  if(matchSelected===el){matchSelected.classList.remove('selected');matchSelected=null;return;}
-  if(matchSelected.dataset.type===el.dataset.type){matchSelected.classList.remove('selected');matchSelected=el;el.classList.add('selected');return;}
-  const correct=matchSelected.dataset.id===el.dataset.id;
-  if(correct){
-    matchSelected.classList.remove('selected');
-    matchSelected.classList.add('matched');
-    el.classList.add('matched');
-    matchDone++;
-    gameFeedback(true,'✅ Matched!');
-    if(matchDone>=matchPairs.length){setTimeout(endGame,1200);}
-    else gameNext();
-  }else{
-    matchSelected.classList.add('wrong-flash');
-    el.classList.add('wrong-flash');
-    const prev=matchSelected;
-    setTimeout(()=>{prev.classList.remove('wrong-flash','selected');el.classList.remove('wrong-flash');},500);
-    gameFeedback(false,'❌ Try again!');
-    gameNext();
-  }
-  matchSelected=null;
-}
-
-// WORD SCRAMBLE
-let scrambleAnswer='',scrambleSlots=[];
-function startScrambleGame(){
-  const pool=getGamePool();
-  const q=pool[gameLevel%pool.length]||pool[0];
-  const answer=(q.a||q.answer||'').toLowerCase();
-  scrambleAnswer=answer;
-  const letters=shuffle(answer.split(''));
-  scrambleSlots=[];
-  const area=document.getElementById('gamePlayArea');
-  let html=`<div class="game-mode-card" style="margin-bottom:0;padding:16px">
-    <div style="font-family:'Nunito',sans-serif;font-size:.85rem;color:#7B7A9A;text-align:center;margin-bottom:6px">${(q.q||'').substring(0,80)}</div>
-    <div class="scramble-word">${shuffle(answer.split('')).map(l=>l===' '?'&nbsp;&nbsp;':l).join(' ')}</div>
-    <div class="scramble-answer" id="scrambleAnswerSlots">`;
-  for(let i=0;i<answer.length;i++){html+=`<div class="scramble-slot" data-idx="${i}"></div>`;}
-  html+=`</div><div class="scramble-letters" id="scrambleLetters">`;
-  letters.forEach((l,i)=>{html+=`<div class="scramble-letter" data-letter="${l}" data-idx="${i}" onclick="scramblePick(this)">${l===' '?'&nbsp;':l}</div>`;});
-  html+=`</div><button class="submit-btn" style="margin:10px auto 0;display:block;background:linear-gradient(135deg,#48CAE4,#C77DFF)" onclick="checkScramble()">Check ✓</button></div>`;
-  area.innerHTML=html;
-}
-function scramblePick(el){
-  if(el.classList.contains('used'))return;
-  el.classList.add('used');
-  const slots=document.getElementById('scrambleAnswerSlots');
-  const empty=slots.querySelector('.scramble-slot:not(.filled)');
-  if(!empty)return;
-  empty.textContent=el.dataset.letter===' '?' ':el.dataset.letter;
-  empty.classList.add('filled');
-  empty.dataset.letter=el.dataset.letter;
-  scrambleSlots.push(el);
-}
-function checkScramble(){
-  const slots=document.getElementById('scrambleAnswerSlots').querySelectorAll('.scramble-slot');
-  let userAnswer='';
-  slots.forEach(s=>{userAnswer+=s.dataset.letter||'';});
-  if(userAnswer.trim()===scrambleAnswer.trim()){gameFeedback(true,'🎉 Correct!');}
-  else{gameFeedback(false,'❌ Answer: '+scrambleAnswer);}
-  gameNext();
-}
-
-// SPEED ROUND
-let speedIdx=0,speedPool=[],speedTimeLeft=0,speedInterval=null;
-function startSpeedGame(){
-  speedPool=getGamePool();
-  speedIdx=0;
-  document.getElementById('gameHudTimer').textContent='⏱️ 15s';
-  loadSpeedQ();
-}
-function loadSpeedQ(){
-  if(speedIdx>=speedPool.length){endGame();return;}
-  const q=speedPool[speedIdx];
-  speedTimeLeft=15-Math.min(gameLevel*2,8);
-  const area=document.getElementById('gamePlayArea');
-  const opts=shuffle((q.o||[q.a||q.answer||'Correct']).slice(0,4));
-  if(!opts.includes(q.a||q.answer))opts[opts.length-1]=q.a||q.answer;
-  let html=`<div class="speed-card">
-    <div style="font-family:'Baloo 2',cursive;font-size:.8rem;color:#7B7A9A;margin-bottom:8px">⚡ Speed Round — Level ${gameLevel}</div>
-    <div class="speed-timer-bar"><div class="speed-timer-fill" id="speedTimerFill" style="width:100%"></div></div>
-    <div class="speed-question">${q.q||''}</div>
-    <div class="speed-options">`;
-  shuffle(opts).forEach(o=>{html+=`<div class="speed-opt" onclick="speedAnswer(this,'${(o||'').replace(/'/g,"\\'")}','${(q.a||q.answer||'').replace(/'/g,"\\'")}')">${o}</div>`;});
-  html+=`</div></div>`;
-  area.innerHTML=html;
-  clearInterval(speedInterval);
-  speedInterval=setInterval(()=>{
-    speedTimeLeft--;
-    const fill=document.getElementById('speedTimerFill');
-    if(fill)fill.style.width=(speedTimeLeft/15*100)+'%';
-    if(speedTimeLeft<=0){clearInterval(speedInterval);gameFeedback(false,"⏱️ Time's up!");speedIdx++;gameNext();}
-  },1000);
-}
-function speedAnswer(el,chosen,correct){
-  clearInterval(speedInterval);
-  document.querySelectorAll('.speed-opt').forEach(b=>{b.style.pointerEvents='none';});
-  if(chosen===correct){el.classList.add('correct');gameFeedback(true,'⚡ Speed bonus! +'+(15+speedTimeLeft*2)+' pts');}
-  else{el.classList.add('wrong');document.querySelectorAll('.speed-opt').forEach(b=>{if(b.textContent.trim()===correct.trim())b.classList.add('correct');});gameFeedback(false,'❌ Correct: '+correct);}
-  speedIdx++;gameNext();
-}
-
-// MEMORY MATCH
-let memoryCards=[],memoryFlipped=[],memoryMatched=0;
-function startMemoryGame(){
-  const pool=getGamePool().slice(0,3+Math.min(gameLevel,4));
-  const pairs=pool.map(q=>({q:(q.q||'').substring(0,25),a:(q.a||q.answer||'').substring(0,25)}));
-  memoryCards=[];memoryFlipped=[];memoryMatched=0;
-  pairs.forEach((p,i)=>{
-    memoryCards.push({id:i,text:p.q,pairId:i});
-    memoryCards.push({id:i+100,text:p.a,pairId:i});
-  });
-  memoryCards=shuffle(memoryCards);
-  const area=document.getElementById('gamePlayArea');
-  const cols=memoryCards.length<=6?3:memoryCards.length<=12?3:4;
-  let html=`<div class="game-mode-card" style="margin-bottom:0;padding:16px"><div style="font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;color:#2D2A4A;text-align:center;margin-bottom:12px">🧠 Find matching pairs!</div><div class="memory-grid" style="grid-template-columns:repeat(${cols},1fr)" id="memoryGrid">`;
-  memoryCards.forEach((c,i)=>{html+=`<div class="memory-card" data-idx="${i}" onclick="memoryFlip(this)"><span class="card-front">❓</span><span class="card-back hidden-text">${c.text}</span></div>`;});
-  html+=`</div></div>`;
-  area.innerHTML=html;
-}
-function memoryFlip(el){
-  if(el.classList.contains('flipped')||el.classList.contains('matched'))return;
-  if(memoryFlipped.length>=2)return;
-  el.classList.add('flipped');
-  el.querySelector('.card-front').textContent='';
-  el.querySelector('.card-back').classList.remove('hidden-text');
-  memoryFlipped.push(el);
-  if(memoryFlipped.length===2){
-    const a=memoryCards[memoryFlipped[0].dataset.idx];
-    const b=memoryCards[memoryFlipped[1].dataset.idx];
-    if(a.pairId===b.pairId){
-      memoryFlipped[0].classList.add('matched');
-      memoryFlipped[1].classList.add('matched');
-      memoryMatched++;
-      gameFeedback(true,'✅ Matched!');
-      if(memoryMatched>=new Set(memoryCards.map(c=>c.pairId)).size){setTimeout(endGame,1200);}
-      else gameNext();
-      memoryFlipped=[];
-    }else{
-      setTimeout(()=>{
-        memoryFlipped.forEach(el=>{el.classList.remove('flipped');el.querySelector('.card-front').textContent='❓';el.querySelector('.card-back').classList.add('hidden-text');});
-        memoryFlipped=[];
-      },600);
-      gameFeedback(false,'❌ Not a match!');
-    }
-  }
-}
-
-// ══════════════════════════════════════
-// GAME LOGIC
-// ══════════════════════════════════════
-function shuffle(a){return[...a].sort(()=>Math.random()-.5)}
-function restartGame(){
-  showQuestions();
-  const chapters=getSubjectChapters(curSubjectId)||[];
-  const ch=chapters[curChIdx];if(!ch)return;
-  const pool=curSection==='learn'?(ch.learn||[]):(ch.exercise||[]);
-  shuffledQs=shuffle(pool);curQ=0;score=0;answered=false;wrongAnswers=[];
-  document.getElementById('score').textContent=0;
-  document.getElementById('qtotal').textContent=shuffledQs.length;
-  document.getElementById('endScreen').style.display='none';
-  document.getElementById('mainQ').style.display='';
-  document.getElementById('aiPanel').classList.add('hidden');
-  document.getElementById('progFill').style.width='0%';
-  document.getElementById('progFill').style.background=ch.color;
-  const badge=document.getElementById('chBadge');badge.textContent=ch.name+' — '+(curSection==='learn'?'📝 Learn':'✏️ Practice');badge.style.background=ch.color;
-  document.getElementById('nextBtn').style.background=ch.color;
-  if(qAnimObj){try{qAnimObj.destroy()}catch(e){}}
-  qAnimObj=loadLottie(document.getElementById('questionAnim'),chAnims[curChIdx%chAnims.length]);
-  stopTimer();loadQ();
-}
-function loadQ(){
-  if(curQ>=shuffledQs.length){showEnd();return;}
-  answered=false;currentQ=shuffledQs[curQ];
-  const q=currentQ;
-  document.getElementById('qnum').textContent=curQ+1;
-  document.getElementById('qNumLabel').textContent='Question '+(curQ+1)+' / '+shuffledQs.length;
-  document.getElementById('qText').textContent=q.q;
-  document.getElementById('feedback').textContent='';document.getElementById('feedback').className='feedback';
-  document.getElementById('nextBtn').classList.remove('show');
-  document.getElementById('explainBtn').classList.remove('show');
-  document.getElementById('confusedBtn').classList.remove('show');
-  document.getElementById('aiPanel').classList.add('hidden');
-  document.getElementById('speakQBtn').style.display='inline-block';
-  document.getElementById('hindiSpeakBtn').style.display='inline-block';
-  document.getElementById('hindiTransBtn').style.display='inline-block';
-  document.getElementById('hindiTranslation').classList.add('hidden');
-  document.getElementById('hindiTransBtn').textContent='📖 Read in Hindi';
-  const area=document.getElementById('answerArea');area.innerHTML='';
-  if(q.type==='fill'){
-    const inp=document.createElement('input');inp.type='text';inp.className='fill-input';inp.placeholder='Type your answer...';inp.id='fillInput';
-    inp.onkeydown=e=>{if(e.key==='Enter')checkFill()};
-    area.appendChild(inp);area.appendChild(document.createElement('br'));
-    const sub=document.createElement('button');sub.className='submit-btn';sub.textContent='Check ✓';
-    const ch=getSubjectChapters(curSubjectId)[curChIdx];if(ch)sub.style.background=ch.color;sub.onclick=checkFill;
-    area.appendChild(sub);
-  }else{
-    const grid=document.createElement('div');grid.className='options-grid';
-    shuffle(q.o||[]).forEach(opt=>{
-      const btn=document.createElement('button');btn.className='opt-btn pop-in';btn.textContent=opt;
-      btn.onclick=()=>checkMCQ(opt,btn,q.a);grid.appendChild(btn);
-    });
-    area.appendChild(grid);
-  }
-  document.getElementById('progFill').style.width=(curQ/shuffledQs.length*100)+'%';
-  setTimeout(()=>speakEN(q.q),400);
-}
-function checkMCQ(chosen,btn,correct){
-  if(answered)return;answered=true;
-  document.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
-  if(chosen===correct){score++;document.getElementById('score').textContent=score;showFeedback(true,correct);}
-  else{btn.classList.add('wrong');showFeedback(false,correct);wrongAnswers.push({q:currentQ.q,correct,a:chosen});}
-}
-function checkFill(){
-  if(answered)return;const inp=document.getElementById('fillInput');if(!inp)return;
-  const val=inp.value.trim().toLowerCase();const correct=(currentQ.answer||'').toLowerCase();
-  inp.disabled=true;const sub=inp.parentElement.querySelector('.submit-btn');if(sub)sub.disabled=true;answered=true;
-  if(val===correct){inp.classList.add('correct');score++;document.getElementById('score').textContent=score;showFeedback(true,currentQ.answer);}
-  else{inp.classList.add('wrong');showFeedback(false,currentQ.answer);wrongAnswers.push({q:currentQ.q,correct:currentQ.answer,a:val});}
-}
-function showFeedback(ok,ans){
-  const fb=document.getElementById('feedback');
-  const ok_m=['⭐ Correct!','🌟 Fantastic!','🎉 Great job!','✅ Absolutely right!'];
-  const no_m=['💪 Answer: ','🙂 Correct answer: ','📖 Answer: '];
-  if(ok){const m=ok_m[Math.floor(Math.random()*ok_m.length)];fb.textContent=m;fb.className='feedback ok';speakHI(m);launchConfetti();}
-  else{const m=no_m[Math.floor(Math.random()*no_m.length)]+ans;fb.textContent=m;fb.className='feedback no';speakHI('Good try! The correct answer is '+ans);}
-  document.getElementById('nextBtn').classList.add('show');
-  document.getElementById('explainBtn').classList.add('show');
-  document.getElementById('confusedBtn').classList.add('show');
-  document.getElementById('speakQBtn').style.display='none';
-  document.getElementById('hindiSpeakBtn').style.display='none';
-  document.getElementById('hindiTransBtn').style.display='none';
-  document.getElementById('hindiTranslation').classList.add('hidden');
-}
-function nextQ(){curQ++;loadQ();}
-
-// ══════════════════════════════════════
-// TRANSLATE
-// ══════════════════════════════════════
-async function translateToHindi(){
-  if(!currentQ)return;const div=document.getElementById('hindiTranslation');const btn=document.getElementById('hindiTransBtn');
-  if(!div.classList.contains('hidden')&&div.textContent){btn.textContent='📖 Read in Hindi';div.classList.add('hidden');return;}
-  btn.textContent='⏳ Translating...';
-  const reply=await callGemini('Translate to Hindi (Devanagari). Only translation:\n\n'+currentQ.q,'',500);
-  if(reply){div.textContent='📖 '+reply;div.classList.remove('hidden');btn.textContent='✖️ Close';speakHI(reply);}
-  else{    div.textContent='❌ Translation failed.';div.classList.remove('hidden');btn.textContent='📖 Read in Hindi';}
-}
-
-// ══════════════════════════════════════
-// AI EXPLAIN
-// ══════════════════════════════════════
-async function triggerExplain(){
-  if(!currentQ)return;
-  const panel=document.getElementById('aiPanel'),loading=document.getElementById('aiLoading'),textDiv=document.getElementById('aiHindiText'),speakRow=document.getElementById('aiSpeakRow');
-  panel.classList.remove('hidden');loading.style.display='flex';textDiv.classList.add('hidden');speakRow.classList.add('hidden');
-  speakHI('रुको, मैं समझाती हूँ!');
-  const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
-  const ans=currentQ.a||currentQ.answer||'';
-  const prompt=`तुम Class ${localStorage.getItem('lh_classLevel')||3} की प्यारी Teacher हो।
-Chapter: ${ch?ch.name:''}
-सवाल: "${currentQ.q}"
-सही जवाब: "${ans}"
-बच्चे को सिर्फ देवनागरी हिंदी में समझाओ। अंग्रेज़ी शब्दों की जगह हिंदी शब्द लिखो। 5-6 वाक्य। एक emoji। सीधे concept समझाओ।`;
-  const reply=await callGemini(prompt,'तुम अनुभवी Teacher हो। सिर्फ देवनागरी हिंदी में पढ़ाती हो।',1024);
-  const text=reply||'सही जवाब है: '+ans+'। इसे याद रखो! 📖✨';
-  loading.style.display='none';textDiv.textContent=text;textDiv.classList.remove('hidden');speakRow.classList.remove('hidden');
-  document.getElementById('aiSpeakBtn').onclick=()=>speakHI(text);speakHI(text);
-}
-async function triggerConfused(){
-  if(!currentQ)return;
-  const panel=document.getElementById('aiPanel'),loading=document.getElementById('aiLoading'),textDiv=document.getElementById('aiHindiText'),speakRow=document.getElementById('aiSpeakRow');
-  panel.classList.remove('hidden');loading.style.display='flex';textDiv.classList.add('hidden');speakRow.classList.add('hidden');
-  speakHI('कोई बात नहीं! और आसानी से समझाती हूँ!');
-  const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
-  const ans=currentQ.a||currentQ.answer||'';
-  const prompt=`बच्चे को यह सवाल समझ नहीं आया: "${currentQ.q}" सही जवाब: "${ans}"
-सिर्फ देवनागरी हिंदी में, बहुत आसान शब्दों में, एक और मजेदार example देकर समझाओ। अंग्रेज़ी शब्दों की जगह हिंदी शब्द लिखो। छोटे वाक्य। emoji।`;
-  const reply=await callGemini(prompt,'धैर्यवान Teacher। बच्चा confuse है। सिर्फ देवनागरी हिंदी में बोलो।',1024);
-  const text=reply||'कोई बात नहीं! याद रखो: '+ans+'। 💪📖';
-  loading.style.display='none';textDiv.textContent=text;textDiv.classList.remove('hidden');speakRow.classList.remove('hidden');
-  document.getElementById('aiSpeakBtn').onclick=()=>speakHI(text);speakHI(text);
-}
-
-// ══════════════════════════════════════
-// TIMER
-// ══════════════════════════════════════
-function startTimer(){
-  timerSeconds=30;document.getElementById('timerPill').classList.remove('hidden');
-  document.getElementById('timerDisplay').textContent=timerSeconds;
-  document.getElementById('timerPill').classList.remove('warning');
-  stopTimer();
-  timerInterval=setInterval(()=>{
-    timerSeconds--;document.getElementById('timerDisplay').textContent=timerSeconds;
-    if(timerSeconds<=10)document.getElementById('timerPill').classList.add('warning');
-    if(timerSeconds<=0){stopTimer();if(!answered){
-      answered=true;const correct=currentQ.a||currentQ.answer||'';
-      document.getElementById('feedback').textContent="⏱️ Time's up! "+correct;document.getElementById('feedback').className='feedback no';
-      document.getElementById('nextBtn').classList.add('show');document.getElementById('explainBtn').classList.add('show');document.getElementById('confusedBtn').classList.add('show');
-      wrongAnswers.push({q:currentQ.q,correct,a:'timeout'});
-      if(currentQ.type==='fill'){const i=document.getElementById('fillInput');if(i)i.disabled=true;}
-      else document.querySelectorAll('.opt-btn').forEach(b=>{b.disabled=true;if(b.textContent===correct)b.classList.add('correct');});
-    }
-  }
-},1000);
-}
-function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}document.getElementById('timerPill').classList.add('hidden');}
-
-// ══════════════════════════════════════
-// END
-// ══════════════════════════════════════
-function showEnd(){
-  stopTimer();document.getElementById('mainQ').style.display='none';document.getElementById('aiPanel').classList.add('hidden');
-  document.getElementById('endScreen').style.display='block';document.getElementById('progFill').style.width='100%';
-  if(endAnimObj)try{endAnimObj.destroy()}catch(e){}
-  endAnimObj=loadLottie(document.getElementById('endAnim'),L.trophy,false);
-  const pct=score/shuffledQs.length*100;const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
-  let ti,ms;
-  if(pct===100){ti='Perfect Score! 🏆';ms='All correct! ⭐';launchConfetti();}
-  else if(pct>=70){ti='Great Job! 🎉';ms=score+'/'+shuffledQs.length+'! Fantastic!';}
-  else if(pct>=50){ti='Good Try! 💪';ms=score+'/'+shuffledQs.length+'. Review once more!';}
-  else{ti='Keep Trying! 😊';ms=score+'/'+shuffledQs.length+'. Try again!';}
-  document.getElementById('endTitle').textContent=ti;document.getElementById('endTitle').style.color=ch?ch.color:'#2D2A4A';
-  document.getElementById('endMsg').textContent=ms;
-  let sh='<div class="summary-stats" style="margin:14px 0"><div class="summary-stat" style="background:#D5F5E3"><div class="num">'+score+'</div><div class="lbl">Correct</div></div><div class="summary-stat" style="background:#FADBD8"><div class="num">'+(shuffledQs.length-score)+'</div><div class="lbl">Wrong</div></div></div>';
-  if(wrongAnswers.length>0){sh+='<div class="wrong-list"><strong style="font-family:\'Baloo 2\',cursive;color:#E74C3C">📝 Review:</strong>';wrongAnswers.forEach(w=>{sh+=`<div class="wrong-item">${(w.q||'').split('\n')[0]} → <strong>${w.correct}</strong></div>`;});sh+='</div>';}
-  document.getElementById('endSummary').innerHTML=sh;
-  recordScore(ch?ch.id:'unknown',score,shuffledQs.length,wrongAnswers);
-  speakHI(ti+'. '+ms);
-}
-
-// ══════════════════════════════════════
-// Q BOX
-// ══════════════════════════════════════
-function toggleQBox(){qboxOpen=!qboxOpen;document.getElementById('qboxBody').style.display=qboxOpen?'block':'none';document.getElementById('qboxIcon').classList.toggle('open',qboxOpen);}
-function setQBoxLang(lang){
-  theoryLang=lang;
-  localStorage.setItem('lh_theoryLang',lang);
-  document.getElementById('qboxLangEn').className='qbox-lang-btn'+(lang==='en'?' active':'');
-  document.getElementById('qboxLangHi').className='qbox-lang-btn'+(lang==='hi'?' active':'');
-  document.getElementById('qboxInput').placeholder=lang==='hi'?'अपना प्रश्न लिखें...':'Type your question...';
-  const chat=document.getElementById('qboxChat');
-  if(chat.children.length===1){
-    chat.innerHTML=lang==='hi'?'<div class="bubble ai"><span>नमस्ते! 🌸 मैं आपकी टीचर हूँ। कोई भी सवाल पूछिए!</span><div class="bubble-speak" onclick="speakHI(this.parentElement.querySelector(\'span\').textContent)">🔊 Listen</div></div>':'<div class="bubble ai"><span>Hello! 🌸 I\'m your Teacher. Ask me any subject question!</span><div class="bubble-speak" onclick="speakHI(this.parentElement.querySelector(\'span\').textContent)">🔊 Listen</div></div>';
-  }
-}
-async function sendQuestion(){
-  const inp=document.getElementById('qboxInput');const q=inp.value.trim();if(!q)return;inp.value='';
-  addBubble(q,'user');chatHistory.push({role:'user',content:q});const loadId=addLoadingBubble();
-  const sub=SUBJECTS.find(s=>s.id===curSubjectId);const name=localStorage.getItem('lh_name')||'श्रावणी';
-  const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
-  const subName=sub?getSubjectName(sub):'';const chName=ch?' — '+ch.name:'';
-  var sys;
-  if(theoryLang==='hi'){
-    sys='तुम प्यारी Teacher हो। '+name+' '+subName+chName+' पढ़ रहा/रही है। सिर्फ हिंदी (देवनागरी लिपि) में जवाब दो। अंग्रेज़ी शब्दों की जगह हिंदी शब्द इस्तेमाल करो। 2-3 वाक्य। emoji।';
-  }else{
-    sys='You are a friendly Teacher. '+name+' is studying '+subName+chName+'. Answer in English. Use simple words for a young student. 2-3 sentences. Add an emoji.';
-  }
-  const prompt=chatHistory.map(m=>(m.role==='user'?name+': ':'Teacher: ')+m.content).join('\n')+'\nTeacher:';
-  const reply=await callGemini(prompt,sys,1024);
-  removeLoadingBubble(loadId);
-  const answer=reply||(theoryLang==='hi'?"Sorry, samajh nahi aaya. Dobara pucho! 😊":"Sorry, I didn't understand. Ask again! 😊");
-  addBubble(answer,'ai',true);chatHistory.push({role:'assistant',content:answer});
-  if(theoryLang==='hi')speakHI(answer);else speakEN(answer);
-}
-function addBubble(text,role,ws=false){const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble '+role;const s=document.createElement('span');s.textContent=text;d.appendChild(s);if(ws){const sp=document.createElement('div');sp.className='bubble-speak';sp.textContent='🔊 Listen';sp.onclick=()=>{if(theoryLang==='hi')speakHI(text);else speakEN(text);};d.appendChild(sp);}chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
-let lbId=0;function addLoadingBubble(){const id=++lbId;const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble loading';d.id='lb_'+id;d.innerHTML='<span class="loading-dots"><span></span><span></span><span></span></span>';chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return id;}
-function removeLoadingBubble(id){const el=document.getElementById('lb_'+id);if(el)el.remove();}
-
-// ══════════════════════════════════════
-// SETTINGS
-// ══════════════════════════════════════
-function showSettingsModal(){
-  document.getElementById('settingsModal').classList.remove('hidden');
-}
-function showAdminPanel(){
-  document.getElementById('adminModal').classList.remove('hidden');
-  const container=document.getElementById('usageStatsContainer');
-  if(container)container.innerHTML=showUsageStats();
-  const sUrl=document.getElementById('serverUrlInput');
-  if(sUrl)sUrl.value=SL_SERVER;
-}
-
-async function convertOldChapters(){
-  const key=getGeminiKey();
-  if(!key){alert('Pehle Gemini API Key daalo!');return;}
-  const btn=document.getElementById('convertBtn');const status=document.getElementById('convertStatus');
-  btn.disabled=true;btn.textContent='⏳ Converting...';
-
-  let total=0,done=0;
-
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(!k||!k.startsWith('lh_sub_'))continue;
-    const subId=k.replace('lh_sub_','');
-    const data=getSubjectData(subId);
-    if(!data||!data.chapters||!data.chapters.length)continue;
-
-    for(let ci=0;ci<data.chapters.length;ci++){
-      const ch=data.chapters[ci];
-      total++;
-      try{
-        let updated=false;
-        const toConvert=[];
-
-        if(ch.theory){
-          if(ch.theory.title&&/[a-zA-Z]{3,}/.test(ch.theory.title))toConvert.push({obj:ch.theory,key:'title',val:ch.theory.title});
-          if(ch.theory.sections){
-            for(let s=0;s<ch.theory.sections.length;s++){
-              const sec=ch.theory.sections[s];
-              const txt=sec.text||sec.content||sec.description||'';
-              if(/[a-zA-Z]{3,}/.test(txt))toConvert.push({obj:sec,key:sec.text?'text':sec.content?'content':'description',val:txt});
-            }
-          }
-          if(ch.theory.text&&/[a-zA-Z]{3,}/.test(ch.theory.text))toConvert.push({obj:ch.theory,key:'text',val:ch.theory.text});
-        }
-
-        if(ch.name&&/[a-zA-Z]{3,}/.test(ch.name))toConvert.push({obj:ch,key:'name',val:ch.name});
-        if(ch.label&&/[a-zA-Z]{3,}/.test(ch.label))toConvert.push({obj:ch,key:'label',val:ch.label});
-
-        const qFields=['learn','exercise'];
-        for(const field of qFields){
-          if(ch[field]&&Array.isArray(ch[field])){
-            for(let qi=0;qi<ch[field].length;qi++){
-              const q=ch[field][qi];
-              if(q.q&&/[a-zA-Z]{3,}/.test(q.q))toConvert.push({obj:q,key:'q',val:q.q});
-              if(Array.isArray(q.o)){
-                for(let oi=0;oi<q.o.length;oi++){
-                  if(/[a-zA-Z]{3,}/.test(q.o[oi]))toConvert.push({obj:q.o,key:oi,val:q.o[oi]});
-                }
-              }
-              if(q.answer&&/[a-zA-Z]{3,}/.test(q.answer))toConvert.push({obj:q,key:'answer',val:q.answer});
-              if(q.display&&/[a-zA-Z]{3,}/.test(q.display))toConvert.push({obj:q,key:'display',val:q.display});
-            }
-          }
-        }
-
-        const batchText=toConvert.map((t,idx)=>`[${idx}]: ${t.val}`).join('\n');
-        if(batchText.length>5){
-           const r=await callGemini('Convert each line to pure Hindi (Devanagari script only). Replace all English words with Hindi equivalents. Keep meaning same. Return ONLY converted lines in same format [0]: text [1]: text etc:\n'+batchText,'You convert Hinglish/English to pure Devanagari Hindi. Output format must match input. Example: [0]: My name is Ram → [0]: मेरा नाम राम है',2000);
-          if(r){
-            const lines=r.split(/\n/).filter(l=>l.trim());
-            for(const line of lines){
-              const m=line.match(/^\[(\d+)\]:\s*(.+)/);
-              if(m){
-                const idx=parseInt(m[1]);const val=m[2].trim();
-                if(idx<toConvert.length&&val.length>1){
-                  toConvert[idx].obj[toConvert[idx].key]=toConvert[idx].key===parseInt(toConvert[idx].key)?val:val;
-                  updated=true;
-                }
-              }
-            }
-          }
-        }
-
-        if(updated){
-          data.chapters[ci]=ch;
-          saveSubjectData(subId,data);
-        }
-        done++;
-        status.textContent=`✅ ${done}/${total} chapters converted`;
-      }catch(e){done++;        status.textContent=`⚠️ ${done}/${total} (some errors)`;}
-    }
-  }
-  btn.disabled=false;btn.textContent='🔄 Convert All Chapters';
-  status.textContent=`✅ Done! ${done} chapters processed.`;
-}
-
-// ══════════════════════════════════════
-// WIFI SYNC
-// ══════════════════════════════════════
-const SYNC_URL = location.protocol === 'file:' ? null : location.origin;
-let syncConnected = false;
-
-async function checkSync() {
-  const statusEl = document.getElementById('syncStatus');
-  const infoEl = document.getElementById('syncServerInfo');
-  const urlEl = document.getElementById('syncURL');
-  if (!SYNC_URL) {
-    statusEl.textContent = '⚠️ File mode — open from server to sync';
-    statusEl.style.color = '#E74C3C';
-    infoEl.style.display = 'none';
-    return;
-  }
-  try {
-    const res = await fetch(SYNC_URL + '/api/status');
-    const data = await res.json();
-    if (data.ok) {
-      syncConnected = true;
-      window.__syncConnected = true;
-      statusEl.textContent = '✅ Connected to laptop server!';
-      statusEl.style.color = '#27AE60';
-      infoEl.style.display = 'block';
-      urlEl.textContent = data.url;
-    }
-  } catch (e) {
-    syncConnected = false;
-    window.__syncConnected = false;
-    statusEl.textContent = '❌ Server not found — run `node server.js` on laptop';
-    statusEl.style.color = '#E74C3C';
-    infoEl.style.display = 'none';
-  }
-}
-
-async function syncToServer() {
-  if (!SYNC_URL) { alert('Open on server first!'); return; }
-  const btn = document.getElementById('syncUpBtn');
-  const result = document.getElementById('syncResult');
-  btn.textContent = '⏳ Syncing...'; btn.disabled = true;
-  try {
-    const data = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      try { data[key] = JSON.parse(localStorage.getItem(key)); } catch(e) { data[key] = localStorage.getItem(key); }
-    }
-    const res = await fetch(SYNC_URL + '/api/data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const out = await res.json();
-    result.textContent = '✅ Synced! ' + Object.keys(out).length + ' items saved';
-    result.style.color = '#27AE60';
-  } catch (e) {
-    result.textContent = '❌ Sync failed: ' + e.message;
-    result.style.color = '#E74C3C';
-  }
-  btn.textContent = '📤 Sync to Laptop'; btn.disabled = false;
-}
-
-async function syncFromServer() {
-  if (!SYNC_URL) { alert('Open on server first!'); return; }
-  const btn = document.getElementById('syncDownBtn');
-  const result = document.getElementById('syncResult');
-  btn.textContent = '⏳ Loading...'; btn.disabled = true;
-  try {
-    const res = await fetch(SYNC_URL + '/api/data');
-    const data = await res.json();
-    let count = 0;
-    for (const key of Object.keys(data)) {
-      const existing = localStorage.getItem(key);
-      const incoming = JSON.stringify(data[key]);
-      if (!existing || incoming.length > existing.length) {
-        localStorage.setItem(key, incoming);
-        count++;
-      }
-    }
-    result.textContent = '✅ Loaded! ' + count + ' items restored';
-    result.style.color = '#27AE60';
-    if (count > 0) setTimeout(() => location.reload(), 1000);
-  } catch (e) {
-    result.textContent = '❌ Load failed: ' + e.message;
-    result.style.color = '#E74C3C';
-  }
-  btn.textContent = '📥 Load from Laptop'; btn.disabled = false;
-}
-
-// ══════════════════════════════════════
-// EXPORT / IMPORT
-// ══════════════════════════════════════
-function exportData() {
-  const data = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    try { data[key] = JSON.parse(localStorage.getItem(key)); } catch(e) { data[key] = localStorage.getItem(key); }
-  }
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'ai_teacher_backup_' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function importData(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    try {
-      const data = JSON.parse(ev.target.result);
-      let count = 0;
-      for (const key of Object.keys(data)) {
-        localStorage.setItem(key, JSON.stringify(data[key]));
-        count++;
-      }
-      alert('✅ ' + count + ' items imported! Page will reload.');
-      location.reload();
-    } catch (err) {
-      alert('❌ Invalid JSON file!');
-    }
-  };
-  reader.readAsText(file);
-}
-
-// ══════════════════════════════════════
-// CONFETTI
-// ══════════════════════════════════════
-function launchConfetti(){
-  const c=document.getElementById('confettiCanvas');const ctx=c.getContext('2d');
-  c.width=window.innerWidth;c.height=window.innerHeight;
-  const colors=['#FF6B9D','#FFD93D','#6BCB77','#48CAE4','#C77DFF','#FF9F43'];
-  const ps=Array.from({length:70},()=>({x:Math.random()*c.width,y:Math.random()*c.height-c.height,r:Math.random()*7+4,color:colors[Math.floor(Math.random()*colors.length)],tilt:Math.random()*10-10,ta:0,ts:Math.random()*.1+.05,s:Math.random()*2+1}));
-  let f=0;function draw(){ctx.clearRect(0,0,c.width,c.height);ps.forEach(p=>{ctx.beginPath();ctx.lineWidth=p.r/2;ctx.strokeStyle=p.color;ctx.moveTo(p.x+p.tilt+p.r/4,p.y);ctx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/4);ctx.stroke();p.ta+=p.ts;p.y+=p.s*1.8;p.tilt=Math.sin(p.ta)*15;if(p.y>c.height){p.x=Math.random()*c.width;p.y=-20;}});f++;if(f<100)requestAnimationFrame(draw);else ctx.clearRect(0,0,c.width,c.height);}draw();
-}
-
-// Triple-tap on subject header title to open settings
-(function(){
-  var _tapCount=0,_tapTimer=null;
-  var titleEl=document.querySelector('#subjectScreen .sub-header-title');
-  if(titleEl){
-    titleEl.style.cursor='pointer';
-    titleEl.addEventListener('click',function(){
-      _tapCount++;
-      clearTimeout(_tapTimer);
-      _tapTimer=setTimeout(function(){_tapCount=0;},1500);
-      if(_tapCount>=3){_tapCount=0;document.getElementById('adminModal').classList.remove('hidden');document.getElementById('usageStatsContainer').innerHTML=showUsageStats();var sUrl=document.getElementById('serverUrlInput');if(sUrl)sUrl.value=SL_SERVER;}
-    });
-  }
-})();
-</script>
+<script src="js/components.js?v=24"></script>
+<script src="js/ai/config.js?v=24"></script>
+<script src="js/ai/providers.js?v=24"></script>
+<script src="js/ai/optimizer.js?v=24"></script>
+<script src="js/ai/ai-service.js?v=24"></script>
+<script src="js/app.js?v=24"></script>
 </body>
 </html>

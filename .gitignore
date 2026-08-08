@@ -4,3 +4,5 @@ android/
 .capacitor/
 *.apk
 .DS_Store
+www-backup-*/
+*.bak

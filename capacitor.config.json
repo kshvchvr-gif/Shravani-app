@@ -1,0 +1,13 @@
+{
+  "appId": "com.shravani.learning.v2",
+  "appName": "Ai Teacher",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "http"
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
+}
