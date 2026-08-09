@@ -758,7 +758,8 @@ async function checkForUpdate(){
     if(!isVersionNewer(latestVersion,APP_VERSION))return;
     const apkAsset=release.assets.find(a=>a.name.endsWith('.apk'));
     if(!apkAsset)return;
-    showUpdatePopup(latestVersion,apkAsset.browser_download_url);
+    const dlUrl=apkAsset.url||apkAsset.browser_download_url;
+    showUpdatePopup(latestVersion,dlUrl);
   }catch(e){console.log('Update check failed:',e);}
 }
 function showUpdatePopup(version,url){
