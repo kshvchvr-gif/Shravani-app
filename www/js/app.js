@@ -738,7 +738,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.21';
+const APP_VERSION='1.0.22';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
@@ -787,6 +787,23 @@ async function downloadUpdate(url){
   const status=document.getElementById('updateStatus');
   const btn=document.getElementById('updateBtn');
   progress.style.display='block';btn.style.display='none';
+  if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.Plugins&&window.Capacitor.Plugins.UpdatePlugin){
+    status.textContent='⬇️ Downloading new version...';
+    bar.style.width='30%';
+    try{
+      window.Capacitor.Plugins.UpdatePlugin.downloadAndInstall({url:url}).then(function(r){
+        bar.style.width='100%';
+        status.textContent='📦 Downloaded! Tap "Install" jab popup aaye...';
+      }).catch(function(e){
+        status.textContent='Download failed: '+(e&&e.message?e.message:'try again');
+        fallbackDownloadLink(url,status,bar,btn);
+      });
+      return;
+    }catch(e){}
+  }
+  fallbackDownloadLink(url,status,bar,btn);
+}
+function fallbackDownloadLink(url,status,bar,btn){
   try{
     bar.style.width='50%';
     status.textContent='Copy link and paste in browser to download';
