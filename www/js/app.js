@@ -690,7 +690,11 @@ function adminImport(e){
   reader.onload=function(ev){
     try{
       var data=JSON.parse(ev.target.result);var count=0;
-      for(var key of Object.keys(data)){localStorage.setItem(key,JSON.stringify(data[key]));count++;}
+      for(var key of Object.keys(data)){
+        var val=data[key];
+        localStorage.setItem(key,(typeof val==='string')?val:JSON.stringify(val));
+        count++;
+      }
       alert('✅ '+count+' items imported! Reloading...');location.reload();
     }catch(err){alert('❌ Invalid JSON!');}
   };
@@ -746,7 +750,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.23';
+const APP_VERSION='1.0.24';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
