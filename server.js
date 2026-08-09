@@ -288,6 +288,19 @@ var server=http.createServer(function(req,res){
     return;
   }
 
+  // ─── SERVE APK DOWNLOADS (apk/) ───
+  if(req.method==='GET'&&pathname.startsWith('/apk')){
+    var apkPath=path.join(__dirname,'apk',pathname.replace('/apk','').replace(/^\//,''));
+    try{
+      var apkContent=fs.readFileSync(apkPath);
+      res.writeHead(200,{'Content-Type':'application/vnd.android.package-archive','Access-Control-Allow-Origin':'*'});
+      res.end(apkContent);
+    }catch(e){
+      jsonResponse(res,404,{error:'APK not found'});
+    }
+    return;
+  }
+
   // ─── SERVE APP STATIC FILES (www/) ───
   if(req.method==='GET'&&pathname.startsWith('/app')){
     var filePath=pathname==='/app'||pathname==='/app/'?'/index.html':pathname.replace('/app','');

@@ -673,8 +673,16 @@ function prefillAdminKeys(){
 function adminExport(){
   var data={};
   for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);try{data[key]=JSON.parse(localStorage.getItem(key));}catch(e){data[key]=localStorage.getItem(key);}}
-  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='shravani_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);
+  var json=JSON.stringify(data,null,2);
+  var fileName='shravani_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.ExportPlugin){
+    window.Capacitor.Plugins.ExportPlugin.saveJson({content:json,fileName:fileName}).then(function(){
+      alert('✅ Backup exported!');
+    }).catch(function(err){alert('❌ Export failed: '+(err.message||err));});
+    return;
+  }
+  var blob=new Blob([json],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName;a.click();URL.revokeObjectURL(a.href);
 }
 function adminImport(e){
   var file=e.target.files[0];if(!file)return;
@@ -738,7 +746,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.22';
+const APP_VERSION='1.0.23';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
@@ -759,7 +767,7 @@ async function checkForUpdate(){
     const apkAsset=release.assets.find(a=>a.name.endsWith('.apk'));
     if(!apkAsset)return;
     const serverUrl=typeof SL_SERVER==='string'?SL_SERVER:'';
-    const dlUrl=serverUrl?serverUrl+'/app/Ai-Teacher-'+latestVersion+'.apk':(apkAsset.url||apkAsset.browser_download_url);
+    const dlUrl=serverUrl?serverUrl+'/apk/Ai-Teacher-'+latestVersion+'.apk':(apkAsset.url||apkAsset.browser_download_url);
     showUpdatePopup(latestVersion,dlUrl);
   }catch(e){console.log('Update check failed:',e);}
 }

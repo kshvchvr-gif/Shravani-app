@@ -3,7 +3,7 @@ admin-data/
 android/
 .capacitor/
 *.apk
-!www/Ai-Teacher-v1.0.22.apk
+!apk/*.apk
 .DS_Store
 www-backup-*/
 *.bak
