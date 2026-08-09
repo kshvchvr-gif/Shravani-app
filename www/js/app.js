@@ -695,7 +695,9 @@ function adminExport(){
     return;
   }
   var blob=new Blob([json],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName;a.click();URL.revokeObjectURL(a.href);
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName;
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},1000);
 }
 function adminImport(e){
   var file=e.target.files[0];if(!file)return;
@@ -764,7 +766,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.26';
+const APP_VERSION='1.0.27';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
