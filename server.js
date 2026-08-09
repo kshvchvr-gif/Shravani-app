@@ -312,7 +312,14 @@ var server=http.createServer(function(req,res){
       res.writeHead(200,{'Content-Type':mimeTypes[ext]||'text/plain','Access-Control-Allow-Origin':'*'});
       res.end(content);
     }catch(e){
-      jsonResponse(res,404,{error:'Not found'});
+      var apkFallback=path.join(__dirname,'apk',path.basename(fullPath));
+      try{
+        var apkContent=fs.readFileSync(apkFallback);
+        res.writeHead(200,{'Content-Type':'application/vnd.android.package-archive','Access-Control-Allow-Origin':'*'});
+        res.end(apkContent);
+      }catch(e2){
+        jsonResponse(res,404,{error:'Not found'});
+      }
     }
     return;
   }
