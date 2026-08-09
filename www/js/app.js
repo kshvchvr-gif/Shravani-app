@@ -320,7 +320,16 @@ function parseJsonArray(text){
 }
 function getSubjectData(subId){return safeParse(localStorage.getItem('lh_sub_'+subId),null);}
 function saveSubjectData(subId,data){localStorage.setItem('lh_sub_'+subId,JSON.stringify(data));}
-function getSubjectChapters(subId){const d=getSubjectData(subId);return d?d.chapters:[];}
+function getSubjectChapters(subId){
+  const d=getSubjectData(subId);
+  const local=d?d.chapters:[];
+  const pushed=safeParse(localStorage.getItem('sl_chapters_'+subId),[]);
+  if(!pushed||!pushed.length)return local;
+  const merged=local.slice();
+  const ids={};local.forEach(c=>{if(c&&c.id)ids[c.id]=true;});
+  pushed.forEach(c=>{if(c&&c.id&&!ids[c.id]){ids[c.id]=true;merged.push(c);}});
+  return merged;
+}
 function saveSubjectChapters(subId,chapters){const d=getSubjectData(subId)||{scores:{},wrong:[],totalC:0,totalA:0};d.chapters=chapters;saveSubjectData(subId,d);}
 function getProgress(){return{streak:parseInt(localStorage.getItem('lh_streak')||'0'),lastPlay:localStorage.getItem('lh_lastPlay')||'',totalC:parseInt(localStorage.getItem('lh_totalC')||'0'),totalA:parseInt(localStorage.getItem('lh_totalA')||'0'),name:localStorage.getItem('lh_name')||'Student'};}
 function saveProgressUpdate(){
@@ -418,6 +427,8 @@ function checkRemoteLock(){
           var chapters=safeParse(localStorage.getItem('sl_chapters_'+subId),[]);
           chapters.push(upd.data.chapter);
           localStorage.setItem('sl_chapters_'+subId,JSON.stringify(chapters));
+          var merged=getSubjectChapters(subId);
+          saveSubjectChapters(subId,merged);
         }
         if(upd.type==='remove_chapter'&&upd.data){
           var subId2=upd.data.subjectId;
@@ -426,6 +437,8 @@ function checkRemoteLock(){
             var chapters2=safeParse(localStorage.getItem('sl_chapters_'+subId2),[]);
             chapters2=chapters2.filter(function(c){return c.id!==chId;});
             localStorage.setItem('sl_chapters_'+subId2,JSON.stringify(chapters2));
+            var merged2=getSubjectChapters(subId2);
+            saveSubjectChapters(subId2,merged2);
           }
         }
       });
@@ -751,7 +764,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.25';
+const APP_VERSION='1.0.26';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
