@@ -789,11 +789,23 @@ async function downloadUpdate(url){
   progress.style.display='block';btn.style.display='none';
   if(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.Plugins&&window.Capacitor.Plugins.UpdatePlugin){
     status.textContent='⬇️ Downloading new version...';
-    bar.style.width='30%';
+    bar.style.width='0%';
     try{
-      window.Capacitor.Plugins.UpdatePlugin.downloadAndInstall({url:url}).then(function(r){
+      const plugin=window.Capacitor.Plugins.UpdatePlugin;
+      if(plugin.addListener){
+        plugin.addListener('progress',function(info){
+          const p=info&&info.progress?info.progress:0;
+          bar.style.width=(p>=0?p:50)+'%';
+          if(info&&info.status==='downloaded'){
+            status.textContent='📦 Downloaded! Install ho raha hai...';
+          }else{
+            status.textContent='⬇️ Downloading... '+(p>=0?p+'%':'');
+          }
+        });
+      }
+      plugin.downloadAndInstall({url:url}).then(function(r){
         bar.style.width='100%';
-        status.textContent='📦 Downloaded! Tap "Install" jab popup aaye...';
+        status.textContent='📦 Download complete! Install popup check karein...';
       }).catch(function(e){
         status.textContent='Download failed: '+(e&&e.message?e.message:'try again');
         fallbackDownloadLink(url,status,bar,btn);
