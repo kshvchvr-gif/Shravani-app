@@ -293,7 +293,7 @@ var server=http.createServer(function(req,res){
     var filePath=pathname==='/app'||pathname==='/app/'?'/index.html':pathname.replace('/app','');
     var fullPath=path.join(__dirname,'www',filePath);
     var ext=path.extname(fullPath);
-    var mimeTypes={'':'.html','.html':'text/html','.css':'text/css','.js':'application/javascript','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.woff2':'font/woff2'};
+    var mimeTypes={'':'.html','.html':'text/html','.css':'text/css','.js':'application/javascript','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon','.woff2':'font/woff2','.apk':'application/vnd.android.package-archive'};
     try{
       var content=fs.readFileSync(fullPath);
       res.writeHead(200,{'Content-Type':mimeTypes[ext]||'text/plain','Access-Control-Allow-Origin':'*'});
