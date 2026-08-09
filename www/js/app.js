@@ -686,11 +686,16 @@ function prefillAdminKeys(){
 function adminExport(){
   var data={};
   for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);try{data[key]=JSON.parse(localStorage.getItem(key));}catch(e){data[key]=localStorage.getItem(key);}}
+  var keys=Object.keys(data);
+  if(keys.length===0){alert('⚠️ No data to export! Aapke is device ke localStorage me koi data nahi hai. Data sirf wahan hota hai jahan aapne banaya tha — phone app me data banao, ya pehle import/sync karo.');return;}
   var json=JSON.stringify(data,null,2);
+  var size=(new Blob([json])).size;
+  var sizeKB=size>=1024?(size/1024).toFixed(1)+' KB':size+' B';
   var fileName='shravani_backup_'+new Date().toISOString().slice(0,10)+'.json';
-  if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.ExportPlugin){
+  var hasPlugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.ExportPlugin;
+  if(hasPlugin){
     window.Capacitor.Plugins.ExportPlugin.saveJson({content:json,fileName:fileName}).then(function(){
-      alert('✅ Backup exported!');
+      alert('✅ Backup exported! '+keys.length+' items, '+sizeKB);
     }).catch(function(err){alert('❌ Export failed: '+(err.message||err));});
     return;
   }
@@ -698,6 +703,7 @@ function adminExport(){
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName;
   document.body.appendChild(a);a.click();
   setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},1000);
+  if(!hasPlugin)alert('📤 Export started (browser download): '+keys.length+' items, '+sizeKB+'. Agar download nahi hua, to ye browser mode hai.');
 }
 function adminImport(e){
   var file=e.target.files[0];if(!file)return;
@@ -766,7 +772,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.27';
+const APP_VERSION='1.0.28';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
