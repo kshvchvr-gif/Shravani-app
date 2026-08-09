@@ -751,7 +751,7 @@ async function callGeminiVisionMulti(images,prompt,systemPrompt='',maxTokens=400
 // ══════════════════════════════════════
 // AUTO UPDATE CHECKER
 // ══════════════════════════════════════
-const APP_VERSION='1.0.24';
+const APP_VERSION='1.0.25';
 const GITHUB_REPO='kshvchvr-gif/Shravani-app';
 function isVersionNewer(v,cur){
   const a=v.split('.').map(Number),b=cur.split('.').map(Number);
