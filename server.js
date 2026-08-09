@@ -290,14 +290,8 @@ var server=http.createServer(function(req,res){
 
   // ─── SERVE APK DOWNLOADS (apk/) ───
   if(req.method==='GET'&&pathname.startsWith('/apk')){
-    var apkPath=path.join(__dirname,'apk',pathname.replace('/apk','').replace(/^\//,''));
-    try{
-      var apkContent=fs.readFileSync(apkPath);
-      res.writeHead(200,{'Content-Type':'application/vnd.android.package-archive','Access-Control-Allow-Origin':'*'});
-      res.end(apkContent);
-    }catch(e){
-      jsonResponse(res,404,{error:'APK not found'});
-    }
+    var apkName=pathname.replace('/apk','').replace(/^\//,'');
+    serveApk(res,apkName);
     return;
   }
 
@@ -312,20 +306,28 @@ var server=http.createServer(function(req,res){
       res.writeHead(200,{'Content-Type':mimeTypes[ext]||'text/plain','Access-Control-Allow-Origin':'*'});
       res.end(content);
     }catch(e){
-      var apkFallback=path.join(__dirname,'apk',path.basename(fullPath));
-      try{
-        var apkContent=fs.readFileSync(apkFallback);
-        res.writeHead(200,{'Content-Type':'application/vnd.android.package-archive','Access-Control-Allow-Origin':'*'});
-        res.end(apkContent);
-      }catch(e2){
-        jsonResponse(res,404,{error:'Not found'});
-      }
+      serveApk(res,path.basename(fullPath));
     }
     return;
   }
 
   jsonResponse(res,404,{error:'Not found'});
 });
+
+function serveApk(res,name){
+  if(!name||path.extname(name)!=='.apk'){jsonResponse(res,404,{error:'Not found'});return;}
+  var candidates=[name,name.replace(/Ai-Teacher-/,'Ai-Teacher-v')];
+  for(var i=0;i<candidates.length;i++){
+    var apkPath=path.join(__dirname,'apk',candidates[i]);
+    try{
+      var apkContent=fs.readFileSync(apkPath);
+      res.writeHead(200,{'Content-Type':'application/vnd.android.package-archive','Access-Control-Allow-Origin':'*'});
+      res.end(apkContent);
+      return;
+    }catch(e){}
+  }
+  jsonResponse(res,404,{error:'APK not found'});
+}
 
 function readBody(req,cb){
   var body='';

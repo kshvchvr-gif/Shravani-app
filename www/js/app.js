@@ -767,7 +767,7 @@ async function checkForUpdate(){
     const apkAsset=release.assets.find(a=>a.name.endsWith('.apk'));
     if(!apkAsset)return;
     const serverUrl=typeof SL_SERVER==='string'?SL_SERVER:'';
-    const dlUrl=serverUrl?serverUrl+'/apk/Ai-Teacher-'+latestVersion+'.apk':(apkAsset.url||apkAsset.browser_download_url);
+    const dlUrl=serverUrl?serverUrl+'/apk/Ai-Teacher-v'+latestVersion+'.apk':(apkAsset.url||apkAsset.browser_download_url);
     showUpdatePopup(latestVersion,dlUrl);
   }catch(e){console.log('Update check failed:',e);}
 }
