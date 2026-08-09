@@ -713,7 +713,8 @@ function adminSyncDown(){
       var count=0;
       for(var key of Object.keys(data)){
         var existing=localStorage.getItem(key);
-        var incoming=JSON.stringify(data[key]);
+        var val=data[key];
+        var incoming=(typeof val==='string')?val:JSON.stringify(val);
         if(!existing||incoming.length>existing.length){localStorage.setItem(key,incoming);count++;}
       }
       alert('✅ Loaded! '+count+' items restored');

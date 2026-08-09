@@ -12,6 +12,7 @@ var CONFIG_FILE=path.join(DATA_DIR,'config.json');
 var CONTENT_FILE=path.join(DATA_DIR,'content.json');
 var DEVICES_FILE=path.join(DATA_DIR,'devices.json');
 var VISITORS_FILE=path.join(DATA_DIR,'visitors.json');
+var SYNC_FILE=path.join(DATA_DIR,'sync.json');
 
 function loadJSON(f,def){try{return JSON.parse(fs.readFileSync(f,'utf8'));}catch(e){return def;}}
 function saveJSON(f,d){fs.writeFileSync(f,JSON.stringify(d,null,2));}
@@ -30,12 +31,14 @@ if(!appConfig.nvidiaKey&&process.env.NVIDIA_KEY)appConfig.nvidiaKey=process.env.
 var contentUpdates=loadJSON(CONTENT_FILE,[]);
 var devices=loadJSON(DEVICES_FILE,{});
 var visitors=loadJSON(VISITORS_FILE,{total:0,unique:{},history:[]});
+var syncData=loadJSON(SYNC_FILE,{});
 
 function saveUsage(){saveJSON(USAGE_FILE,allUsage);}
 function saveConfig(){saveJSON(CONFIG_FILE,appConfig);}
 function saveContent(){saveJSON(CONTENT_FILE,contentUpdates);}
 function saveDevices(){saveJSON(DEVICES_FILE,devices);}
 function saveVisitors(){saveJSON(VISITORS_FILE,visitors);}
+function saveSync(){saveJSON(SYNC_FILE,syncData);}
 
 function trackVisitor(req){
   var ip=req.headers['x-forwarded-for']||req.socket.remoteAddress||'unknown';
@@ -117,17 +120,17 @@ var server=http.createServer(function(req,res){
   }
 
   // ─── WIFI SYNC (laptop ↔ phone data) ───
-  var _syncData={};
   if(req.method==='GET'&&pathname==='/api/data'){
-    jsonResponse(res,200,_syncData);
+    jsonResponse(res,200,syncData);
     return;
   }
   if(req.method==='POST'&&pathname==='/api/data'){
     return readBody(req,function(body){
       try{
         var incoming=JSON.parse(body);
-        Object.keys(incoming).forEach(function(k){_syncData[k]=incoming[k];});
-        jsonResponse(res,200,{ok:true,count:Object.keys(_syncData).length});
+        Object.keys(incoming).forEach(function(k){syncData[k]=incoming[k];});
+        saveSync();
+        jsonResponse(res,200,{ok:true,count:Object.keys(syncData).length});
       }catch(e){jsonResponse(res,400,{error:'Bad JSON'});}
     });
   }
