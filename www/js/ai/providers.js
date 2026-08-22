@@ -100,8 +100,9 @@ function createGeminiAdapter(cfg){
 
       const key = _aiKeyFrom(cfg.keyStorage, cfg.keyInput);
       if (!key) {
-        // proxy ne text to diya par woh cut gaya, aur client key nahi hai
-        if (serverText && serverText.truncated) return { ok: false, status: 0, errorType: 'truncated' };
+        // proxy ka text cut gaya tha aur client key nahi — aadha jawab
+        // bhi jawab hai, fail se behtar (warna cooldown chain shuru hoti hai)
+        if (serverText && serverText.text) return { ok: true, text: serverText.text };
         return { ok: false, status: 0, errorType: 'no-key' };
       }
 
@@ -120,11 +121,8 @@ function createGeminiAdapter(cfg){
         const text = (cand && cand.content && cand.content.parts &&
           cand.content.parts[0].text) || null;
         if (text) {
-          // finishReason = MAX_TOKENS → output cut hai; silent success
-          // mat bhejo — service ko next provider par switch karne do
-          if (cand.finishReason === 'MAX_TOKENS') {
-            return { ok: false, status: res.status, errorType: 'truncated' };
-          }
+          // MAX_TOKENS (cut hua output) bhi success maano — aadha jawab
+          // poore fail se behtar, warna cooldown-chain sab band kar deti hai
           return { ok: true, text: text };
         }
         return { ok: false, status: res.status, errorType: null };
@@ -192,9 +190,8 @@ function createOpenAIAdapter(cfg){
             if (typeof c === 'string') text = c;
             else if (Array.isArray(c)) text = c.map(function(x){ return (x && x.text) || ''; }).join('');
             if (text && text.trim()) {
-              if (data.choices[0].finish_reason === 'length') {
-                return { ok: false, status: res.status, errorType: 'truncated' };
-              }
+              // finish_reason = 'length' (cut hua output) bhi success —
+              // aadha jawab fail se behtar
               return { ok: true, text: text };
             }
             return { ok: false, status: res.status, errorType: null };
@@ -221,10 +218,8 @@ function createOpenAIAdapter(cfg){
         if (typeof c === 'string') text = c;
         else if (Array.isArray(c)) text = c.map(function(x){ return (x && x.text) || ''; }).join('');
         if (text && text.trim()) {
-          // finish_reason = length → output cut hai (max_tokens hit)
-          if (data.choices[0].finish_reason === 'length') {
-            return { ok: false, status: res.status, errorType: 'truncated' };
-          }
+          // finish_reason = length → output cut hai (max_tokens hit),
+          // phir bhi success — aadha jawab > cooldown-chain
           return { ok: true, text: text };
         }
         return { ok: false, status: res.status, errorType: null };

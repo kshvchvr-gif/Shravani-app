@@ -907,11 +907,21 @@
 
 <div id="globalStopTTS" onclick="stopSpeaking()" style="position:fixed;bottom:24px;right:24px;z-index:99999;background:#FF6B6B;color:white;border:none;border-radius:50px;padding:12px 20px;font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(255,0,0,.3);display:none;align-items:center;gap:6px">⏹️ Band Karo</div>
 
-<script src="js/components.js?v=24"></script>
-<script src="js/ai/config.js?v=24"></script>
-<script src="js/ai/providers.js?v=24"></script>
-<script src="js/ai/optimizer.js?v=24"></script>
-<script src="js/ai/ai-service.js?v=24"></script>
-<script src="js/app.js?v=24"></script>
+<!-- FULLSCREEN INFOGRAPHIC OVERLAY -->
+<div class="infoviz-overlay hidden" id="infovizOverlay" onclick="closeInfoviz()">
+  <button class="infoviz-close" onclick="closeInfoviz()">✕</button>
+  <img id="infovizImg" src="" alt="Educational Infographic">
+  <div class="infoviz-label">Shravani — Your AI Teacher</div>
+</div>
+
+<script src="js/components.js?v=28"></script>
+<script src="js/ai/config.js?v=28"></script>
+<script src="js/ai/providers.js?v=28"></script>
+<script src="js/ai/optimizer.js?v=28"></script>
+<script src="js/ai/ai-service.js?v=28"></script>
+<script src="js/ai/embedder.js?v=28"></script>
+<script src="js/ai/rag.js?v=28"></script>
+<script src="js/ai/visualizer.js?v=28"></script>
+<script src="js/app.js?v=28"></script>
 </body>
 </html>

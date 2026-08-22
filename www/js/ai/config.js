@@ -39,7 +39,7 @@ const AI_CONFIG = {
     },
     {
       id: 'openrouter',
-      name: 'OpenRouter (Qwen2.5-VL)',
+      name: 'Gemma 4 26B (via OpenRouter)',
       enabled: true,
       apiKey: '',                       // admin panel se set hoti hai
       keyStorage: ['openrouter_key'],   // runtime: user apni key localStorage me dal sakta hai (priority)
@@ -47,8 +47,6 @@ const AI_CONFIG = {
       openaiCompat: true,
       endpoint: 'https://openrouter.ai/api/v1/chat/completions',
       models: {
-        // 2026 me qwen :free models hata diye gaye the; gemma-4-26b multimodal
-        // hai (text + vision dono), free, fast, verified 7s
         text: 'google/gemma-4-26b-a4b-it:free',
         vision: 'google/gemma-4-26b-a4b-it:free'
       }
@@ -81,7 +79,7 @@ const AI_CONFIG = {
   // Gemini free-tier gen request ~60-75s leta hai; timeout 120s rakha
   // taaki sahi response cut na ho.
   retry: {
-    delaysMs: [3000, 6000, 12000],
+    delaysMs: [2000, 4000, 8000],
     maxAttempts: 3
   },
 
@@ -95,6 +93,13 @@ const AI_CONFIG = {
       { minClass: 4,  maxClass: 6,  maxWidth: 1300, quality: 0.75 },  // Class 4-6: medium pages
       { minClass: 7,  maxClass: 10, maxWidth: 1600, quality: 0.80 }   // Class 7-10: dense pages
     ]
+  },
+
+  // ── EMBEDDING (RAG ke liye) ──────────────────────────────────
+  embedding: {
+    model: 'text-embedding-004',
+    dimensions: 768,
+    batchSize: 20
   },
 
   // ── FETCH TIMEOUT (network/timeout error classify hone ke liye) ─

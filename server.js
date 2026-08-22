@@ -276,7 +276,14 @@ var server=http.createServer(function(req,res){
             res.end(data);
           });
         });
-        proxyReq.on('error',function(e){jsonResponse(res,500,{error:e.message});});
+        proxyReq.on('socket',function(s){
+          // upstream hang guard — client 90s pe chhod deta hai, hum 85s
+          // pe kaat dete hain warna Render me hung requests jama hote hain
+          s.setTimeout(85000,function(){proxyReq.destroy(new Error('upstream timeout'));});
+        });
+        proxyReq.on('error',function(e){
+          if(!res.headersSent)jsonResponse(res,504,{error:e.message});
+        });
         if(nvReq.body)proxyReq.write(nvReq.body);
         proxyReq.end();
       }catch(e){jsonResponse(res,400,{error:'Bad request'});}

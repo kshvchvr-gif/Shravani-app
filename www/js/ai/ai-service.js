@@ -23,6 +23,10 @@ const AIProvider = (function(){
   let _activeCtrl = null;
   let _epoch = 0;                 // cancel detection counter
   let _statusListeners = [];
+  let _providerFailUntil = {};     // { providerId: unlockTimestamp }
+  const SKIP_QUOTA_MS = 120000;    // 429/403 quota — 2 min cooldown
+  const SKIP_TRANSIENT_MS = 30000; // timeout/network/5xx — sirf 30s (jaldi recover)
+  const MANUAL_TIMEOUT_MS = 90000;   // 90s manual timeout (CapacitorHttp ignores AbortController)
 
   // compatibility: purana global (app.js `var lastGeminiStatus` bhi
   // yahi window property par point karta hai)
@@ -127,6 +131,13 @@ const AIProvider = (function(){
     for (let pi = 0; pi < count; pi++) {
       const p = providers[(_providerIdx + pi) % count];
 
+      // cooldown check — provider recently fail hua toh skip
+      const failUntil = _providerFailUntil[p.id] || 0;
+      if (failUntil > Date.now()) {
+        aiLog('skip', { provider: p.id, retryInMs: failUntil - Date.now() });
+        continue;
+      }
+
       for (let attempt = 0; attempt < maxAttempts; attempt++) {
         if (_epoch !== myEpoch) return null;   // cancel ho chuka
 
@@ -181,7 +192,9 @@ const AIProvider = (function(){
         // seedha next provider par switch karo.
         const fastNetDown = res && res.errorType === 'network' &&
           (Date.now() - start) < 3000;
-        if (cls.retryable && !fastNetDown && attempt < maxAttempts - 1) {
+        const is429 = res && res.status === 429;
+        const isTimeout = res && res.errorType === 'timeout';
+        if (cls.retryable && !fastNetDown && !is429 && !isTimeout && attempt < maxAttempts - 1) {
           const waitMs = delays[attempt] || delays[delays.length - 1];
           aiLog('retry', { provider: p.id, waitMs: waitMs, retryCount: attempt + 1 });
           notify({ type: 'retry', provider: p.id });
@@ -193,6 +206,11 @@ const AIProvider = (function(){
         const reason = 'status=' + (res && res.status) +
           ((res && res.errorType) ? ' ' + res.errorType : '');
         aiLog('switch', { from: p.id, reason: reason });
+        // quota fail (429/403) pe lamba cooldown, transient pe chhota —
+        // timeout/network errors seconds me theek ho jate hain
+        const quotaFail = res && (res.status === 429 || res.status === 403);
+        _providerFailUntil[p.id] = Date.now() +
+          (quotaFail ? SKIP_QUOTA_MS : SKIP_TRANSIENT_MS);
         notify({ type: 'switch', from: p.id, reason: reason });
         break;
       }
@@ -205,20 +223,27 @@ const AIProvider = (function(){
 
   // ── SAFE SEND: timeout + abort-aware ──────────────────────────
   async function safeSend(p, req, ctrl){
-    const timeoutMs = AI_CONFIG.timeoutMs || 75000;
-    const timer = setTimeout(function(){ ctrl.abort(); }, timeoutMs);
+    const timeoutMs = MANUAL_TIMEOUT_MS;
     try {
-      const res = await p.send(req, { signal: ctrl.signal });
+      // Promise.race: fetch vs manual timeout (CapacitorHttp ignores AbortController)
+      const fetchPromise = p.send(req, { signal: ctrl.signal });
+      const timeoutPromise = new Promise(function(_, reject){
+        setTimeout(function(){ reject(new Error('timeout')); }, timeoutMs);
+      });
+      const res = await Promise.race([fetchPromise, timeoutPromise]);
       if (res && res.ok === false && res.errorType === 'no-key') return res;
       return res;
     } catch (err) {
+      if (err && err.message === 'timeout') {
+        return { ok: false, status: 0, errorType: 'timeout' };
+      }
       if (ctrl.signal.aborted) {
         if (ctrl.__cancel) return { ok: false, status: 0, errorType: 'aborted' };
         return { ok: false, status: 0, errorType: 'timeout' };
       }
       return { ok: false, status: 0, errorType: 'network' };
     } finally {
-      clearTimeout(timer);
+      // cleanup — timeout promise auto-garbage-collects
     }
   }
 

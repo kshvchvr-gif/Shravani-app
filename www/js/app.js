@@ -380,7 +380,9 @@ window.addEventListener('offline',showOfflineBanner);
 function getUsers(){try{return JSON.parse(localStorage.getItem('sl_users')||'[]');}catch(e){return[];}}
 function saveUsers(u){localStorage.setItem('sl_users',JSON.stringify(u));}
 
+var _usageInFlight=false;
 function reportUsage(){
+  if(_usageInFlight)return;
   var users=getUsers();
   var report={deviceId:DEVICE_ID,device:navigator.userAgent,users:[]};
   users.forEach(function(u){
@@ -388,7 +390,8 @@ function reportUsage(){
     var usage=safeParse(localStorage.getItem(key),{});
     report.users.push({name:u.name,usage:usage});
   });
-  fetch(SL_SERVER+'/api/usage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)}).then(function(r){}).catch(function(e){});
+  _usageInFlight=true;
+  fetch(SL_SERVER+'/api/usage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)}).then(function(r){}).catch(function(e){}).finally(function(){_usageInFlight=false;});
 }
 
 var _lastSync=localStorage.getItem('sl_last_sync')||'0';
@@ -885,8 +888,15 @@ window.addEventListener('DOMContentLoaded',()=>{
   loadExtraSubjects();
   const savedKey=localStorage.getItem('gemini_key');if(savedKey){const i=document.getElementById('apiKeyInput');if(i)i.value=savedKey;}
 
-  // Always show login screen — user picks account
-  localStorage.removeItem('sl_current_user');
+  // Auto-login: saved user (bina PIN) ho to seedha andar — bar bar
+  // login screen pe na jana pade. PIN wala account protected hai,
+  // usko har baar picker dikhata hai. Explicit logout se hi logout.
+  const savedUserName=localStorage.getItem('sl_current_user');
+  const savedUser=savedUserName?getUsers().find(function(u){return u.name===savedUserName;}):null;
+  if(savedUser&&!savedUser.pin){
+    doLogin(savedUser);
+    return;
+  }
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('welcomeScreen').style.display='none';
   renderLoginScreen();
@@ -1275,9 +1285,11 @@ function showUploadModal(){
 function closeUploadModal(){document.getElementById('uploadModal').classList.add('hidden');uploadedImages=[];const p=document.getElementById('previewImg');if(p){p.removeAttribute('src');p.classList.add('hidden');}}
 function compressImage(dataUrl,maxDim,quality){
   // Backward-compatible wrapper → ImageOptimizer (www/js/ai/optimizer.js).
-  // Adaptive class-based settings default hain; explicit maxDim/quality
-  // diye gaye to wahi use hote hain.
-  return ImageOptimizer.compress(dataUrl,{maxWidth:maxDim,quality:quality});
+  // Pipeline: auto-crop (page ke bahar ka background hatao) → adaptive
+  // class-based compression. Explicit maxDim/quality diye to wahi use hote hain.
+  return ImageOptimizer.autoCrop(dataUrl).then(function(cropped){
+    return ImageOptimizer.compress(cropped,{maxWidth:maxDim,quality:quality});
+  });
 }
 function previewImages(e){
   const files=Array.from(e.target.files);
@@ -1285,7 +1297,10 @@ function previewImages(e){
   files.forEach(f=>{
     const reader=new FileReader();
     reader.onload=function(ev){
-      ImageOptimizer.compress(ev.target.result).then(function(compressed){
+      // Pipeline: auto-crop → compress → upload list
+      ImageOptimizer.autoCrop(ev.target.result).then(function(cropped){
+        return ImageOptimizer.compress(cropped);
+      }).then(function(compressed){
         uploadedImages.push(compressed);
         const cnt=uploadedImages.length;
         document.getElementById('uploadPageCount').textContent='📷 '+cnt+' pages selected';
@@ -1500,6 +1515,21 @@ ${rulesText}`;
     const chapters=getSubjectChapters(curSubjectId)||[];
     chapters.push(chapterData);
     saveSubjectChapters(curSubjectId,chapters);
+
+    // RAG: auto-embed new chapter in background (non-blocking)
+    if(typeof RAG!=='undefined'){
+      (async function(){
+        try{
+          var idx=chapters.length-1;
+          var chunks=RAG.chunkChapter(chapterData,curSubjectId,idx);
+          if(chunks.length){
+            chunks=await RAG.embedChunks(chunks);
+            RAG.saveRagData(curSubjectId,chunks);
+            console.log('[RAG] Embedded',chunks.length,'chunks for',curSubjectId,'ch'+idx);
+          }
+        }catch(e){console.warn('[RAG] Auto-embed failed:',e);}
+      })();
+    }
 
     setGenStep(3);document.getElementById('genProgressFill').style.width='100%';
     document.getElementById('genStatus').textContent='✅ Chapter ready!';
@@ -2660,6 +2690,13 @@ async function triggerExplain(){
   if(lang==='hi')speakHI('रुको, मैं समझाती हूँ!');else speakEN('Wait, let me explain!');
   const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
   const ans=currentQ.a||currentQ.answer||'';
+
+  // RAG: get relevant context from current subject
+  var ragCtx='';
+  if(typeof RAG!=='undefined'){
+    try{ragCtx=await RAG.getRagContext(currentQ.q||ans,curSubjectId);}catch(e){}
+  }
+
   const prompt=(lang==='hi')
     ?`तुम Class ${localStorage.getItem('lh_classLevel')||3} की प्यारी Teacher हो।
 Chapter: ${ch?ch.name:''}
@@ -2671,7 +2708,8 @@ Chapter: ${ch?ch.name:''}
 Question: "${currentQ.q}"
 Correct answer: "${ans}"
 Explain the concept directly to the child in simple English. 5-6 sentences. One emoji. No complicated words.`;
-  const sys=(lang==='hi')?'तुम अनुभवी Teacher हो। सिर्फ देवनागरी हिंदी में पढ़ाती हो।':'You are an experienced Teacher. Teach in simple English for a young student.';
+  var sysBase=(lang==='hi')?'तुम अनुभवी Teacher हो। सिर्फ देवनागरी हिंदी में पढ़ाती हो।':'You are an experienced Teacher. Teach in simple English for a young student.';
+  var sys=ragCtx?ragCtx+'\n\n'+sysBase:sysBase;
   const reply=await callGemini(prompt,sys,1024);
   const text=reply||((lang==='hi')?'सही जवाब है: '+ans+'। इसे याद रखो! 📖✨':'The correct answer is: '+ans+'. Remember it! 📖✨');
   loading.style.display='none';textDiv.textContent=text;textDiv.classList.remove('hidden');speakRow.classList.remove('hidden');
@@ -2688,12 +2726,20 @@ async function triggerConfused(){
   if(lang==='hi')speakHI('कोई बात नहीं! और आसानी से समझाती हूँ!');else speakEN('No problem! Let me explain more easily!');
   const chapters=getSubjectChapters(curSubjectId)||[];const ch=chapters[curChIdx];
   const ans=currentQ.a||currentQ.answer||'';
+
+  // RAG: get relevant context from current subject
+  var ragCtx='';
+  if(typeof RAG!=='undefined'){
+    try{ragCtx=await RAG.getRagContext(currentQ.q||ans,curSubjectId);}catch(e){}
+  }
+
   const prompt=(lang==='hi')
     ?`बच्चे को यह सवाल समझ नहीं आया: "${currentQ.q}" सही जवाब: "${ans}"
 सिर्फ देवनागरी हिंदी में, बहुत आसान शब्दों में, एक और मजेदार example देकर समझाओ। अंग्रेज़ी शब्दों की जगह हिंदी शब्द लिखो। छोटे वाक्य। emoji।`
     :`The child did not understand this question: "${currentQ.q}" Correct answer: "${ans}"
 Explain in very simple English words with a fun example. Short sentences. Add an emoji.`;
-  const sys=(lang==='hi')?'धैर्यवान Teacher। बच्चा confuse है। सिर्फ देवनागरी हिंदी में बोलो।':'You are a patient Teacher. The child is confused. Speak in simple English.';
+  var sysBase=(lang==='hi')?'धैर्यवान Teacher। बच्चा confuse है। सिर्फ देवनागरी हिंदी में बोलो।':'You are a patient Teacher. The child is confused. Speak in simple English.';
+  var sys=ragCtx?ragCtx+'\n\n'+sysBase:sysBase;
   const reply=await callGemini(prompt,sys,1024);
   const text=reply||((lang==='hi')?'कोई बात नहीं! याद रखो: '+ans+'। 💪📖':'No problem! Remember: '+ans+' 💪📖');
   loading.style.display='none';textDiv.textContent=text;textDiv.classList.remove('hidden');speakRow.classList.remove('hidden');
@@ -2890,16 +2936,58 @@ async function sendQuestion(){
   }else{
     sys='You are a friendly Teacher. '+name+' is studying '+subName+chName+'. Answer in English. Use simple words for a young student. 2-3 sentences. Add an emoji.';
   }
+  var ragCtx='';var ragChunks=[];
+  if(typeof RAG!=='undefined'){
+    try{
+      ragChunks=await RAG.searchRelevant(q,curSubjectId,3);
+      ragCtx=await RAG.getRagContext(q,curSubjectId);
+    }catch(e){}
+  }
+  if(ragCtx)sys=ragCtx+'\n\n'+sys;
   const prompt=chatHistory.map(m=>(m.role==='user'?name+': ':'Teacher: ')+m.content).join('\n')+'\nTeacher:';
   const reply=await callGemini(prompt,sys,1024);
   removeLoadingBubble(loadId);
   const answer=reply||(theoryLang==='hi'?"Sorry, samajh nahi aaya. Dobara pucho! 😊":"Sorry, I didn't understand. Ask again! 😊");
   addBubble(answer,'ai',true);chatHistory.push({role:'assistant',content:answer});trimChat(chatHistory,50);
   if(theoryLang==='hi')speakHI(answer);else speakEN(answer);
+  // Generate infographic → fullscreen overlay
+  if(typeof Visualizer!=='undefined' && ragChunks.length){
+    Visualizer.generate({
+      chunks:ragChunks, answer:answer, lang:theoryLang,
+      subjectName:subName, chapterName:ch?ch.name:''
+    }).then(function(dataUrl){
+      if(dataUrl){
+        showInfoviz(dataUrl);
+        // Also add "View again" button in chat
+        var chat=document.getElementById('qboxChat');
+        var btn=document.createElement('button');
+        btn.textContent='📊 View Infographic';
+        btn.style.cssText='margin:4px auto 8px;display:block;padding:6px 16px;border:2px solid #C77DFF;background:#F3E8FF;color:#6B3FA0;border-radius:20px;font-family:Nunito,sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;';
+        btn.onclick=function(){showInfoviz(dataUrl);};
+        chat.appendChild(btn);
+        chat.scrollTop=chat.scrollHeight;
+      }
+    });
+  }
 }
 function addBubble(text,role,ws=false){const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble '+role;const s=document.createElement('span');s.textContent=text;d.appendChild(s);if(ws){const sp=document.createElement('div');sp.className='bubble-speak';sp.textContent='🔊 Listen';sp.onclick=()=>{if(theoryLang==='hi')speakHI(text);else speakEN(text);};d.appendChild(sp);}chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
 let lbId=0;function addLoadingBubble(){const id=++lbId;const chat=document.getElementById('qboxChat');const d=document.createElement('div');d.className='bubble loading';d.id='lb_'+id;d.innerHTML='<span class="loading-dots"><span></span><span></span><span></span></span>';chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return id;}
 function removeLoadingBubble(id){const el=document.getElementById('lb_'+id);if(el)el.remove();}
+
+// ══════════════════════════════════════
+// FULLSCREEN INFOGRAPHIC
+// ══════════════════════════════════════
+function showInfoviz(dataUrl, label){
+  var overlay=document.getElementById('infovizOverlay');
+  var img=document.getElementById('infovizImg');
+  if(!overlay||!img)return;
+  img.src=dataUrl;
+  overlay.classList.remove('hidden');
+}
+function closeInfoviz(){
+  var overlay=document.getElementById('infovizOverlay');
+  if(overlay)overlay.classList.add('hidden');
+}
 
 // ══════════════════════════════════════
 // SETTINGS — Learning Preferences Center
@@ -3344,9 +3432,35 @@ function sendHomeQuestion(){
   loadBubble.innerHTML='<span class="loading-dots"><span></span><span></span><span></span></span>';
   loadBubble.id='_homeLoad';
   chat.appendChild(loadBubble);
+
+  // RAG: find relevant context from all embedded subjects
   var sys='You are a friendly Teacher. Answer simply for a young student (age 5-12). 2-3 sentences. Add an emoji.';
-  var prompt=_homeChatHistory.map(function(m){return(m.role==='user'?'Student: ':'Teacher: ')+m.content;}).join('\n')+'\nTeacher:';
-  callGemini(prompt,sys,1024).then(function(reply){
+  var lang=theoryLang||'en';
+  if(lang==='hi') sys='तुम प्यारी Teacher हो। छात्र के स्तर के अनुसार सरल हिंदी में जवाब दो। 2-3 वाक्य। emoji।';
+  var ragPromise;var ragChunks=[];
+  if(typeof RAG!=='undefined'){
+    ragPromise=(async function(){
+      try{
+        var subjects=['evs','maths','hindi','grammar','gk','custom1','custom2'];
+        var allCtx=[];
+        for(var si=0;si<subjects.length;si++){
+          var chunks=await RAG.searchRelevant(q,subjects[si],3);
+          if(chunks.length){
+            allCtx.push(await RAG.getRagContext(q,subjects[si]));
+            if(!ragChunks.length) ragChunks=chunks;
+          }
+        }
+        return allCtx.join('\n\n');
+      }catch(e){return '';}
+    })();
+  }else{ragPromise=Promise.resolve('');}
+
+  ragPromise.then(function(ragCtx){
+    var sysFinal=sys;
+    if(ragCtx)sysFinal=ragCtx+'\n\n'+sys;
+    var prompt=_homeChatHistory.map(function(m){return(m.role==='user'?'Student: ':'Teacher: ')+m.content;}).join('\n')+'\nTeacher:';
+    return callGemini(prompt,sysFinal,1024);
+  }).then(function(reply){
     var loadEl=document.getElementById('_homeLoad');
     if(loadEl)loadEl.remove();
     var answer=reply||'Sorry, I didn\'t understand. Ask again! 😊';
@@ -3355,12 +3469,29 @@ function sendHomeQuestion(){
     var textSpan=document.createElement('span');textSpan.textContent=answer;
     bubble.appendChild(textSpan);
     var speakBtn=document.createElement('div');speakBtn.className='bubble-speak';speakBtn.textContent='🔊 Listen';
-    speakBtn.onclick=function(){speakHI(answer);};
+    speakBtn.onclick=function(){if(lang==='hi')speakHI(answer);else speakEN(answer);};
     bubble.appendChild(speakBtn);
     chat.appendChild(bubble);
     chat.scrollTop=chat.scrollHeight;
     _homeChatHistory.push({role:'assistant',content:answer});trimChat(_homeChatHistory,50);
-    speakHI(answer);
+    if(lang==='hi')speakHI(answer);else speakEN(answer);
+    // Generate infographic → fullscreen overlay
+    if(typeof Visualizer!=='undefined' && ragChunks.length){
+      Visualizer.generate({
+        chunks:ragChunks, answer:answer, lang:lang, subjectName:'', chapterName:''
+      }).then(function(dataUrl){
+        if(dataUrl){
+          showInfoviz(dataUrl);
+          // "View again" button in chat
+          var btn=document.createElement('button');
+          btn.textContent='📊 View Infographic';
+          btn.style.cssText='margin:4px auto 8px;display:block;padding:6px 16px;border:2px solid #C77DFF;background:#F3E8FF;color:#6B3FA0;border-radius:20px;font-family:Nunito,sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;';
+          btn.onclick=function(){showInfoviz(dataUrl);};
+          chat.appendChild(btn);
+          chat.scrollTop=chat.scrollHeight;
+        }
+      });
+    }
   });
 }
 
